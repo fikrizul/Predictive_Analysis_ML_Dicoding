@@ -819,7 +819,7 @@ data.describe()
 
 
 
-###Missing Value & Duplicate Data
+### Missing Value & Duplicate Data
 
 
 ```python
@@ -1141,7 +1141,7 @@ data.duplicated().sum()
 
 
 
-###Outliers
+### Outliers
 
 
 ```python
@@ -1182,7 +1182,7 @@ for i in range(len(kolom)):
     
 
 
-###Data Type
+### Data Type
 
 
 ```python
@@ -1194,7 +1194,7 @@ data['Experience_Level_cat'] = data['Experience_Level_cat'].astype(object)
 
 ```
 
-###Univariate Data Analysis
+### Univariate Data Analysis
 
 
 ```python
@@ -1549,7 +1549,7 @@ tipe_olahraga
 
 
 
-####1.Distribusi Jenis Workout
+#### 1.Distribusi Jenis Workout
 
 
 ```python
@@ -1577,7 +1577,7 @@ plt.show()
     
 
 
-####2.Jumlah Nilai Kategorikal
+#### 2.Jumlah Nilai Kategorikal
 
 
 ```python
@@ -1624,7 +1624,7 @@ plt.show()
     
 
 
-####3.Histogram Nilai Numerik
+#### 3.Histogram Nilai Numerik
 
 
 ```python
@@ -1666,9 +1666,9 @@ plt.show()
     
 
 
-###Multivariate Data Analysis
+### Multivariate Data Analysis
 
-####1.Distribusi Jenis Workout Berdasarkan Jenis Kelamin
+#### 1.Distribusi Jenis Workout Berdasarkan Jenis Kelamin
 
 
 ```python
@@ -1701,7 +1701,7 @@ plt.show()
     
 
 
-####2.Frekuensi Workout Berdasarkan Jenis Kelamin
+#### 2.Frekuensi Workout Berdasarkan Jenis Kelamin
 
 
 ```python
@@ -1734,7 +1734,7 @@ plt.show()
     
 
 
-####3.Tingkat Kemahiran Berdasarkan Jenis Kelamin
+#### 3.Tingkat Kemahiran Berdasarkan Jenis Kelamin
 
 
 
@@ -1769,7 +1769,7 @@ plt.show()
     
 
 
-####4.Frekuensi Workout Berdasarkan Jenis Kelamin
+#### 4.Frekuensi Workout Berdasarkan Jenis Kelamin
 
 
 ```python
@@ -1798,7 +1798,7 @@ plt.show()
     
 
 
-####5.Distribusi Jenis Workout Berdasarkan Level Kemahiran
+#### 5.Distribusi Jenis Workout Berdasarkan Level Kemahiran
 
 
 ```python
@@ -1832,7 +1832,7 @@ plt.show()
     
 
 
-####6.Persentase Jenis Workout Berdasarkan Level Kemahiran
+#### 6.Persentase Jenis Workout Berdasarkan Level Kemahiran
 
 
 ```python
@@ -1867,7 +1867,7 @@ plt.show()
     
 
 
-####7.Persentase Lemak di setiap Tingkat Kemahiran
+#### 7.Persentase Lemak di setiap Tingkat Kemahiran
 
 
 ```python
@@ -1903,7 +1903,7 @@ plt.show()
     
 
 
-####8.Persentase Lemak di setiap Frekuensi Workout
+#### 8.Persentase Lemak di setiap Frekuensi Workout
 
 
 ```python
@@ -1950,7 +1950,7 @@ plt.show()
     
 
 
-####9.Kalori Terbakar dibandingkan Tingkat Kemahiran
+#### 9.Kalori Terbakar dibandingkan Tingkat Kemahiran
 
 
 ```python
@@ -1986,7 +1986,7 @@ plt.show()
     
 
 
-####10.Heat Map
+#### 10.Heat Map
 
 
 ```python
@@ -2011,7 +2011,7 @@ plt.show()
     
 
 
-####11.Pair Plot
+#### 11.Pair Plot
 
 
 ```python
@@ -2033,7 +2033,7 @@ sns.pairplot(data, diag_kind = 'kde')
     
 
 
-####12.Kalori Terbakar di setiap Frekuensi Workout
+#### 12.Kalori Terbakar di setiap Frekuensi Workout
 
 
 ```python
@@ -2080,7 +2080,7 @@ plt.show()
     
 
 
-####13.Distribusi BMI di setiap Tingkat Kemahiran
+#### 13.Distribusi BMI di setiap Tingkat Kemahiran
 
 
 ```python
@@ -2116,7 +2116,7 @@ plt.show()
     
 
 
-####14.Distribusi BMI di setiap Frekuensi Workout
+#### 14.Distribusi BMI di setiap Frekuensi Workout
 
 
 ```python
@@ -2162,7 +2162,7 @@ plt.show()
     
 
 
-####12.Perbandingan Kalori yang Terbakar di Setiap Persentase Lemak
+#### 12.Perbandingan Kalori yang Terbakar di Setiap Persentase Lemak
 
 
 ```python
@@ -2203,7 +2203,7 @@ plt.show()
     
 
 
-####13.Perbandingan Antara Persen Lemak dengan Durasi Workout
+#### 13.Perbandingan Antara Persen Lemak dengan Durasi Workout
 
 
 ```python
@@ -2233,7 +2233,7 @@ plt.show()
     
 
 
-#Data Preparation
+# Data Preparation
 
 
 ```python
@@ -2275,7 +2275,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y,
 
 #Modelling & Evaluation
 
-##Random Forest
+## Random Forest
 
 
 ```python
@@ -2730,7 +2730,7 @@ print(f"Adjusted R2: {r2_adj:.4f}")
     Adjusted R2: 0.9710
 
 
-##KNN
+## KNN
 
 
 ```python
@@ -3185,7 +3185,7 @@ print(f"Adjusted R2: {r2_adj:.4f}")
     Adjusted R2: 0.7980
 
 
-##Adaboost
+## Adaboost
 
 
 ```python
@@ -3639,7 +3639,7 @@ print(f"Adjusted R2: {r2_adj:.4f}")
     Adjusted R2: 0.8663
 
 
-##XGBoost
+## XGBoost
 
 
 ```python
