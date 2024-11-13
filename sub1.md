@@ -1,4 +1,4 @@
-#Import Library
+# Import Library
 
 
 ```python
@@ -18,7 +18,7 @@ from sklearn.preprocessing import LabelEncoder, OrdinalEncoder, OneHotEncoder
 from sklearn.metrics import ConfusionMatrixDisplay, accuracy_score, classification_report
 ```
 
-#Data Understanding
+# Data Understanding
 
 
 ## Data Loading
