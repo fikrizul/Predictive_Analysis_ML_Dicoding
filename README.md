@@ -205,6 +205,7 @@ Variabel `Workout_Type` yang berarti Jenis Latihan memiliki penjelasan nilai var
 
 ##### Tipe Variabel
 
+```
   <class 'pandas.core.frame.DataFrame'>
     RangeIndex: 973 entries, 0 to 972
     Data columns (total 17 columns):
@@ -229,6 +230,7 @@ Variabel `Workout_Type` yang berarti Jenis Latihan memiliki penjelasan nilai var
      16  Experience_Level_cat           973 non-null    object 
     dtypes: float64(7), int64(6), object(4)
     memory usage: 129.4+ KB
+```
 
 Ditemukan ada enam variabel bertipe int64, dua variabel bertipe object dan tujuh variabel bertipe float64. Selanjutnya dapat dilihat bahwa seluruh data bertipe float64 adalah variabel numerik dan seluruh data bertipe object adalah variabel kategorik. Sedangkan data bertipe int64, dua diantaranya bisa digunakan sebagai variabel kategorik dan empat diantaranya adalah variabel numerik.
 
