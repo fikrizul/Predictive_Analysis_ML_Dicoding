@@ -2910,11 +2910,11 @@ Model terbaik untuk variabel Kadar Lemak Tubuh ternyata adalah model Random Fore
 Kesimpulan berdasarkan hasil dari *goal* yang telah dicapai:  
 
 1. **Model Prediksi Kalori Terbakar**  
-   Model prediksi kalori terbakar menunjukkan kinerja yang sangat baik dengan *adjusted R²* sebesar **0.9854**, menandakan bahwa model mampu menjelaskan sebagian besar variabilitas dalam jumlah kalori yang terbakar. Hal ini menunjukkan potensi yang tinggi untuk mengimplementasikan model ini dalam memberikan rekomendasi latihan yang efisien.
+   Model prediksi kalori terbakar menunjukkan kinerja yang sangat baik dengan *adjusted R²* sebesar **0.9854** dengan menggunakan algoritma XGBoost, menandakan bahwa model mampu menjelaskan sebagian besar variabilitas dalam jumlah kalori yang terbakar. Hal ini menunjukkan potensi yang tinggi untuk mengimplementasikan model ini dalam memberikan rekomendasi latihan yang efisien.
 
 
 2. **Model Prediksi Kadar Lemak Tubuh**  
-   Model prediksi kadar lemak tubuh memiliki *adjusted R²* sebesar **0.7891**, menunjukkan bahwa model ini cukup baik dalam memprediksi kadar lemak tubuh. Namun, masih ada ruang untuk meningkatkan akurasi model, mungkin dengan menambahkan variabel atau data yang lebih relevan.  
+   Model prediksi kadar lemak tubuh memiliki *adjusted R²* sebesar **0.7891** dengan mengunakan algoritma Random Forest, menunjukkan bahwa model ini cukup baik dalam memprediksi kadar lemak tubuh. Namun, masih ada ruang untuk meningkatkan akurasi model, mungkin dengan menambahkan variabel atau data yang lebih relevan.  
 
 3. **Preferensi Latihan Berdasarkan Gender**  
    Analisis tidak menemukan perbedaan yang signifikan dalam preferensi latihan antara laki-laki dan perempuan. Hal ini mengindikasikan bahwa program latihan dapat dirancang dengan pendekatan yang lebih universal tanpa perlu segregasi berdasarkan gender.  
