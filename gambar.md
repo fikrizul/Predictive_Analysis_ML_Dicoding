@@ -1,4 +1,40 @@
-# Mengimpor Library
+# Laporan Proyek Machine Learning - Fikri Zulfialdi
+
+## Domain Proyek
+
+Optimalisasi aktivitas latihan di pusat kebugaran telah menjadi fokus utama dalam upaya meningkatkan kesehatan masyarakat modern, terutama dalam konteks efektivitas pembakaran kalori. Pemahaman mendalam tentang aktivitas yang menghasilkan pembakaran kalori optimal tidak hanya penting bagi individu yang mengejar tujuan kebugaran pribadi, tetapi juga memiliki implikasi signifikan terhadap kesehatan masyarakat secara keseluruhan. Data dari Organisasi Kesehatan Dunia (WHO, 2020) menunjukkan bahwa tingkat aktivitas fisik yang memadai dapat secara substansial mengurangi risiko berbagai penyakit kronis, namun mayoritas populasi global masih belum mencapai tingkat aktivitas fisik yang direkomendasikan. Tantangan ini semakin diperumit oleh keterbatasan waktu yang dihadapi masyarakat modern, mendorong kebutuhan akan pemahaman yang lebih baik tentang efektivitas berbagai jenis latihan dalam memaksimalkan pembakaran kalori dalam waktu yang tersedia.
+
+Penelitian yang dilakukan oleh Gough et al. (2018) mengungkapkan adanya pergeseran signifikan dalam preferensi masyarakat terhadap program latihan yang lebih efisien namun tetap efektif, mencerminkan kebutuhan akan optimalisasi waktu dalam konteks kesehatan modern. Tren ini memperkuat pentingnya mengidentifikasi dan memahami aktivitas gym yang memberikan manfaat maksimal dalam durasi minimal, memungkinkan individu untuk mencapai tujuan kesehatan mereka meskipun menghadapi kendala waktu. Lebih lanjut, McAuley et al. (2011) menekankan peran krusial faktor psikososial dalam efektivitas latihan, menunjukkan bahwa dukungan sosial dan kepercayaan diri secara signifikan mempengaruhi intensitas dan konsistensi latihan. Temuan ini menggarisbawahi pentingnya mempertimbangkan tidak hanya aspek fisiologis dari pembakaran kalori, tetapi juga konteks psikologis dan sosial yang mempengaruhi efektivitas latihan secara keseluruhan.
+
+Dalam konteks kesehatan masyarakat yang lebih luas, pemahaman tentang efektivitas pembakaran kalori dalam berbagai aktivitas gym memiliki implikasi penting untuk pengembangan strategi intervensi kesehatan yang lebih efektif. Hal ini menjadi semakin relevan mengingat meningkatnya prevalensi penyakit terkait gaya hidup sedenter, seperti obesitas, diabetes, dan penyakit kardiovaskular. Optimalisasi program latihan berdasarkan pemahaman yang lebih baik tentang efektivitas pembakaran kalori dapat membantu mengatasi tantangan kesehatan ini dengan lebih efektif, sambil mempertimbangkan keterbatasan waktu dan sumber daya yang dihadapi masyarakat modern. Dengan demikian, penelitian tentang efektivitas pembakaran kalori dalam aktivitas gym tidak hanya berkontribusi pada pengembangan program kebugaran yang lebih efisien, tetapi juga berperan penting dalam upaya yang lebih luas untuk meningkatkan kesehatan masyarakat dan mengurangi beban penyakit kronis.
+
+Penerapan machine learning memungkinkan identifikasi perilaku gym yang paling efektif, dengan algoritma seperti k-Nearest Neighbors (KNN), Random Forest, dan Boosting. KNN dapat menyarankan latihan berdasarkan karakteristik individu, sementara Random Forest menggabungkan berbagai faktor untuk prediksi pembakaran kalori yang akurat. Boosting meningkatkan ketepatan rekomendasi latihan dengan terus belajar dari kesalahan sebelumnya. Dengan model ini, pusat kebugaran bisa memberikan rekomendasi yang lebih dipersonalisasi, membantu pengguna mencapai tujuan kebugaran secara efisien sekaligus mendukung peningkatan kesehatan masyarakat melalui gaya hidup aktif. Data yang digunakan diambil dari kaggle yang bisa diakses dari link [berikut](https://www.kaggle.com/datasets/valakhorasani/gym-members-exercise-dataset/data)
+
+
+
+
+Dataset ini mencakup profil kebugaran individu, meliputi detail demografis (usia, jenis kelamin), komposisi tubuh (berat badan, tinggi badan, BMI, persentase lemak), metrik detak jantung (Max_BPM, Avg_BPM, Resting_BPM), dan kebiasaan olahraga (Jenis Olahraga, Durasi Sesi, Kalori Terbakar, Frekuensi Olahraga). **BMI** dan **Persentase Lemak** memberikan gambaran tentang komposisi tubuh, dengan **Persentase Lemak** yang biasanya memberikan gambaran yang lebih akurat dibandingkan BMI, terutama untuk individu dengan massa otot yang tinggi. Metrik detak jantung menyoroti kebugaran kardiovaskular, di mana **Resting_BPM** sering kali lebih rendah pada individu yang lebih fit.
+
+Data olahraga menunjukkan intensitas dan preferensi, dengan aktivitas berintensitas tinggi (seperti HIIT atau Kardio) yang cenderung membakar lebih banyak kalori dan memiliki **Avg_BPM** lebih tinggi dibandingkan dengan latihan berintensitas rendah seperti Yoga. **Asupan Air** dan **Tingkat Pengalaman** menambah kedalaman informasi, menunjukkan kebiasaan hidrasi dan tingkat keakraban dengan kebugaran, yang dapat memengaruhi hasil latihan dan detak jantung saat istirahat. Dataset ini memungkinkan pemahaman yang luas tentang tingkat kebugaran individu dan memberikan wawasan yang berguna untuk personalisasi rencana kebugaran dan kesehatan.
+
+
+## Business Understanding
+### Problem Statement
+1. Bagaimana cara meningkatkan efektifitas jumlah Kalori Terbakar pada Latihan?
+2. Bagaimana cara optimalkan latihan, jika ingin mencapai target Kadar Lemak Tubuh tertentu?
+3. Apakah ada perbedaan antara Laki-laki dan Perempuan dalam preferensi latihan?
+4. Apakah Tingkat Kemahiran mempengaruhi preferensi latihan?
+
+### Goals
+1. Membuat model yang memprediksi Kalori Terbakar dalam Latihan.
+2. Membuat model yang memprediksi Kadar Lemak Tubuh.
+3. Mencari perbedaan preferensi Laki-laki dan Perempuan.
+4. Mencari preferensi setiap tingkat Kemahiran.
+
+### Solution
+1. Menggunakan 4 Algoritma Machine Learning untuk membuat model yang memprediksi Kalori Terbakar dan Kadar Lemak Tubuh.
+2. Menggunakan Exploratory Data Analysis (EDA) untuk menentukan pengaruh Jenis Kelamin dan Tingkat Kemahiran dalam preferensi Latihan.
+## Mengimpor Library
 
 Semua *Library* diimpor terlebih dahulu untuk digunakan pada tahap selanjutnya.
 
@@ -37,10 +73,10 @@ import kagglehub
 import shutil
 ```
 
-# **Pemahaman Data**
+## **Pemahaman Data**
 
 
-## Pemuatan Data
+### Pemuatan Data
 
 Data diambil dari kaggle pada tautan berikut "valakhorasani/gym-members-exercise-dataset" dan diunduh ke dalam root sistem Google Colab.
 
@@ -218,12 +254,12 @@ data.head()
 
 Tampilan diatas menunjukkan ada 973 rekod data dengan 15 jenis informasi yang dapat dianalisis.
 
-## Analisis Data Eksploratif (*EDA*)
+### Analisis Data Eksploratif (*EDA*)
 
 
-### Deskripsi Variabel
+#### Deskripsi Variabel
 
-#### Arti Variabel
+##### Arti Variabel
 
 Berikut ini adalah arti dari setiap variabel yang akan digunakan.
 
@@ -259,7 +295,7 @@ Variabel `Workout_Type` yang berarti Jenis Latihan memiliki penjelasan nilai var
 
 
 
-#### Tipe Variabel
+##### Tipe Variabel
 
 
 ```python
@@ -294,7 +330,7 @@ data.info()
 
 Ditemukan ada enam variabel bertipe int64, dua variabel bertipe object dan tujuh variabel bertipe float64. Selanjutnya dapat dilihat bahwa seluruh data bertipe float64 adalah variabel numerik dan seluruh data bertipe object adalah variabel kategorik. Sedangkan data bertipe int64, dua diantaranya bisa digunakan sebagai variabel kategorik dan empat diantaranya adalah variabel numerik.
 
-#### Deskripsi statistik dari data
+##### Deskripsi statistik dari data
 
 
 ```python
@@ -445,7 +481,7 @@ data.describe()
 
 Informasi statistik tersebut menunjukkan simpangan baku yang cukup tinggi yang menandakan perbedaan profil yang cukup signifikan antar responden. Beragam profil dalam data bisa berarti adanya berbagai demografi yang tercangkup dari data tersebut yang dapat dianalisis.
 
-#### Pembersihan Data
+##### Pembersihan Data
 
 
 
@@ -550,7 +586,7 @@ data.duplicated().sum()
 
 Tidak ditemukan adanya data ganda.
 
-#### Pencilan
+##### Pencilan
 
 *Boxplot* digunakan untuk melihat penyebaran data.
 
@@ -592,7 +628,7 @@ for i in range(len(kolom)):
 
 Tampilan diatas menunjukkan tiga kolom informasi yang mempunyai nilai datum diluar batas kuartil. Kolom berat badan dan BMI mempunyai beberapa potensi pencilan yaitu beberapa datum yang berada diatas nilai kuartil atas. Namun data ini masih terbilang wajar mengingat pusat kebugaran merupakan tempat yang mengakomodasi program penurunan berat badan jadi memiliki berat badan tinggi bukan merupakan anomali. Data kalori terbakar juga memiliki beberapa datum yang berada diluar kuartil atas. Ini bukan merupakan pencilan yang harus dihilangkan karena sangat memungkinkan untuk seseorang mahir dalam latihan kebugaran sehingga dapat membakar kalori lebih banyak dalam satu waktu.
 
-#### Koreksi tipe data
+##### Koreksi tipe data
 
 Dua kolom informasi bertipe int64 dapat diperlakukan sebagai data kategorik. Oleh karena itu dibuatlah kolom baru mengunakan data tersebut dengan mengubah jenis data menjadi string. Selanjutnya string tersebut diubah menjadi tipe data object agar bisa dikenali filter tipe object seperti data kategorik lainnya.
 
@@ -608,7 +644,7 @@ data['Experience_Level_cat'] = data['Experience_Level_cat'].astype("object")
 
 ```
 
-### Analisis Univariat
+#### Analisis Univariat
 
 
 ```python
@@ -867,9 +903,9 @@ Variabel `Durasi Latihan` dan `Kalori Terbakar` memiliki data yang terdistribusi
 
 
 
-### Analisis Multivariat
+#### Analisis Multivariat
 
-#### 1. Analisis Berbagai Distribusi Kategori Berdasarkan Jenis Kelamin
+##### 1. Analisis Berbagai Distribusi Kategori Berdasarkan Jenis Kelamin
 
 
 ```python
@@ -939,7 +975,7 @@ plt.show()
 
 Distribusi penyebaran data antara laki-laki dan perempuan memiliki penyebaran yang hampir sama pada setiap kategori. Perbedaan hanya terlihat pada kategori `Jenis Latihan` yaitu perempuan lebih terdistribusi ke `Kardio` sedangkan laki-laki surplus distribusi pada jenis latihan `Yoga`.
 
-#### 2. Distribusi Jenis Latihan Berdasarkan Level Kemahiran
+##### 2. Distribusi Jenis Latihan Berdasarkan Level Kemahiran
 
 
 ```python
@@ -984,7 +1020,7 @@ plt.show()
 
 `Tingkat Kemahiran` tidak memengaruhi preferensi jenis latihan yang dilakukan karena secara persentase distribusinya serupa. Namun terlihat dari jumlah total `Tingkat Kemahiran` 1 dan 2 mayoritas melakukan latihan `Strength` sedangkan pada `Tingkat Kemahiran` 3 lebih banyak yang melakukan `Yoga`.
 
-#### 3. Distribusi Nilai Kadar Lemak Tubuh dari berbagai Kategori
+##### 3. Distribusi Nilai Kadar Lemak Tubuh dari berbagai Kategori
 
 
 
@@ -1041,7 +1077,7 @@ plt.show()
 
 `Tingkat Kemahiran` 3 mempunyai `Kadar Lemak Tubuh` antara 10-15% sedangkan Tingkat Kemahiran 1 dan 2 antara 20-35%. `Kadar Lemak Tubuh` yang relatif tinggi ditemukan pada pengunjung yang datang dua sampai tiga kali seminggu yaitu antara 20-35%. Pengunjung yang datang lima kali dalam seminggu mempunyai rentang `Kadar Lemak Tubuh` relatif rendah antar 10-20% sedangkan pada kelompok pengunjung yang datang empat kali dalam seminggu tersebar antara 10-35% `Kadar Lemak Tubuh`.
 
-#### 4. Distribusi Kalori Terbakar dari berbagai Kategori
+##### 4. Distribusi Kalori Terbakar dari berbagai Kategori
 
 
 ```python
@@ -1118,7 +1154,7 @@ plt.show()
 Tingkat Kemahiran 1 memiliki sebaran luas, 400-1300 kalori terbakar per latihan. Tingkat Kemahiran 2 lebih terfokus, 600-1400 kalori. Tingkat Kemahiran 3 memiliki sebaran jarang dengan rentang tinggi, 900-1800 kalori.
 Orang yang datang 2-3 kali seminggu memiliki sebaran 400-1400 kalori terbakar per latihan. Pengunjung dengan kehadiran 4 kali seminggu lebih tersebar, 600-1800 kalori. Pengunjung yang datang 5 kali seminggu memiliki nilai rentang tinggi, 900-1800 kalori.
 
-#### 5. Distribusi Indeks Massa Tubuh dari berbagai Kategori
+##### 5. Distribusi Indeks Massa Tubuh dari berbagai Kategori
 
 
 ```python
@@ -1178,7 +1214,7 @@ Peserta yang berlatih 2-3 kali seminggu memiliki nilai IMT yang tersebar luas, t
 
 Peserta Yoga dan HIIT memiliki distribusi IMT yang cukup luas, termasuk beberapa dengan IMT di atas 40. Sebaliknya, peserta yang memilih latihan Kardio dan Latihan Kekuatan cenderung lebih terkonsentrasi dalam rentang IMT 25-35.
 
-#### 6. *Heat Map*
+##### 6. *Heat Map*
 
 
 ```python
@@ -1205,7 +1241,7 @@ plt.show()
 
 Berdasarkan heatmap korelasi, BMI memiliki korelasi positif yang sangat kuat dengan berat badan (0.85), karena memang merupakan faktor utama dalam perhitungan BMI. Frekuensi latihan berhubungan positif dengan durasi sesi latihan (0.64) dan pembakaran kalori (0.36), yang juga mencerminkan bahwa tingkat kemahiran meningkat seiring dengan lebih banyaknya frekuensi dan durasi latihan (korelasi dengan tingkat kemahiran adalah 0.69 dan 0.76). Selain itu, asupan air memiliki hubungan positif dengan frekuensi latihan (0.44) dan durasi latihan (0.28), menunjukkan bahwa peserta yang lebih aktif cenderung mengonsumsi lebih banyak air. Di sisi lain, persentase lemak tubuh memiliki korelasi negatif dengan pembakaran kalori (-0.60) dan frekuensi latihan (-0.54), mengindikasikan bahwa aktivitas fisik yang lebih sering dan pembakaran kalori yang lebih tinggi cenderung berhubungan dengan lemak tubuh yang lebih rendah. Secara keseluruhan, aktivitas fisik yang teratur dan intens berkontribusi pada tingkat kebugaran yang lebih baik, asupan air yang lebih tinggi, dan lemak tubuh yang lebih rendah.
 
-#### 7. *Pair Plot*
+##### 7. *Pair Plot*
 
 
 ```python
@@ -1228,7 +1264,7 @@ sns.pairplot(data, diag_kind = 'kde')
 
 Berdasarkan pairplot, variabel numerik seperti berat badan, tinggi badan, dan durasi sesi latihan menunjukkan distribusi yang mendekati normal, sementara variabel seperti frekuensi latihan dan tingkat kemahiran bersifat kategorikal. Hubungan positif yang kuat terlihat antara BMI dan berat badan, serta antara kalori terbakar dan durasi sesi latihan, menunjukkan bahwa berat badan memengaruhi BMI dan durasi sesi yang lebih lama menghasilkan pembakaran kalori yang lebih banyak. Selain itu, asupan air cenderung meningkat seiring dengan frekuensi latihan yang lebih tinggi. Di sisi lain, variabel seperti detak jantung (Max_BPM dan Resting_BPM) tidak menunjukkan hubungan yang jelas dengan variabel lain. Beberapa pencilan teridentifikasi pada variabel seperti BMI dan kalori terbakar, yang dapat mencerminkan pola unik pada peserta tertentu. Secara keseluruhan, pairplot ini menunjukkan beberapa hubungan signifikan antarvariabel, meskipun beberapa variabel lain memiliki korelasi yang lemah atau tidak jelas, mencerminkan keragaman data peserta.
 
-#### 8. Perbandingan Kalori Terbakar dengan Kadar Lemak Tubuh
+##### 8. Perbandingan Kalori Terbakar dengan Kadar Lemak Tubuh
 
 
 ```python
@@ -1264,7 +1300,7 @@ plt.show()
 
 Terdapat korelasi negatif antara kedua variabel antara Kalori Terbakar saat latihan dengan Kadar Lemak Tubuh. Semakin banyak seseorang memiliki kalori terbakar saat latihan mengindikasikan bahwa orang tersebut Kadar Lemak Tubuhnya semakin rendah.
 
-#### 9. Perbandingan Antara Kadar Lemak Tubuh dengan Berbagai Variabel Numerik
+##### 9. Perbandingan Antara Kadar Lemak Tubuh dengan Berbagai Variabel Numerik
 
 
 ```python
@@ -1342,7 +1378,7 @@ plt.show()
 
 Grafik ini menunjukkan hubungan antara persentase lemak tubuh dengan beberapa variabel numerik lainnya. Pada hubungan antara **persentase lemak tubuh dan asupan air (Water Intake)** terlihat adanya korelasi negatif, di mana semakin tinggi persentase lemak tubuh, rata-rata asupan air cenderung menurun. Pola serupa juga terlihat pada hubungan dengan **durasi latihan (Session Duration)**, yang menunjukkan bahwa individu dengan persentase lemak tubuh lebih tinggi cenderung memiliki durasi olahraga yang lebih pendek. Namun, untuk hubungan dengan variabel seperti **denyut jantung maksimum (Max BPM)**, **denyut jantung rata-rata (Avg BPM)**, dan **denyut jantung istirahat (Resting BPM)**, tidak ditemukan korelasi yang signifikan, karena data tampak tersebar secara acak. Begitu pula untuk **usia**, grafik menunjukkan bahwa persentase lemak tubuh tidak memiliki hubungan yang jelas dengan umur. Secara keseluruhan, hubungan paling menonjol adalah antara lemak tubuh dengan asupan air dan durasi olahraga, sedangkan variabel lain tidak menunjukkan pola yang jelas.
 
-#### 10. Perbandingan Antara Kalori Terbakar dengan Berbagai Variabel Numerik
+##### 10. Perbandingan Antara Kalori Terbakar dengan Berbagai Variabel Numerik
 
 
 ```python
@@ -1420,7 +1456,7 @@ plt.show()
 
 Grafik ini menunjukkan hubungan antara jumlah kalori yang terbakar dengan berbagai variabel numerik lainnya. Hubungan yang paling kuat terlihat pada grafik **Calories Burned vs. Session Duration**, di mana semakin lama durasi sesi olahraga, semakin banyak kalori yang terbakar, menunjukkan korelasi linear yang jelas. Pada hubungan dengan **water intake**, terdapat korelasi positif ringan, di mana asupan air cenderung meningkat seiring dengan kalori yang terbakar, meskipun data tersebar cukup luas. Korelasi positif juga terlihat pada hubungan dengan **Average BPM (denyut jantung rata-rata)**, di mana kalori yang terbakar cenderung lebih tinggi pada aktivitas dengan denyut rata-rata lebih besar. Sebaliknya, variabel seperti **Max BPM (denyut jantung maksimum)** dan **Resting BPM (denyut istirahat)** tidak menunjukkan pola hubungan yang signifikan, dengan data yang tersebar acak. Pada hubungan dengan **usia**, terdapat pola negatif lemah, di mana jumlah kalori yang terbakar sedikit menurun pada individu yang lebih tua, meskipun hubungan ini tidak terlalu signifikan. Secara keseluruhan, durasi sesi olahraga memiliki hubungan paling signifikan dengan jumlah kalori yang terbakar, sementara variabel lainnya menunjukkan hubungan yang lemah atau tidak signifikan.
 
-# **Rekayasa Fitur**
+## **Rekayasa Fitur**
 
 **Intensity Score**
 
@@ -1504,7 +1540,7 @@ plt.show()
 
 Grafik ini menunjukkan hubungan antara `HR Index (Heart Rate Index)` dengan `Fat Percentage` dan `Calories Burned`. Hubungan antara `Fat Percentage` dan `HR Index`, terlihat bahwa tidak ada korelasi signifikan, dengan data yang tersebar acak di sekitar garis regresi yang mendatar, menunjukkan bahwa HR Index tidak dipengaruhi oleh persentase lemak tubuh. Sementara itu, hubungan antara `Calories Burned` dan `HR Index` menunjukkan korelasi negatif yang lemah, di mana `HR Index` sedikit menurun seiring meningkatnya jumlah kalori yang terbakar, meskipun hubungan ini tidak terlalu kuat karena data masih tersebar di sekitar garis regresi.
 
-# **Persiapan Data**
+## **Persiapan Data**
 
 Dilakukan drop pada `Workout_Frequency_cat` dan `Experiens_Level_cat` karena sudah ada dalam data sebagai numerikal. Lalu beberapa variabel kategorikal dikodifikasi dengan encoder. Setelah itu semua data numerik digunakan Standard Scaler untuk normalisasi.
 
@@ -1529,9 +1565,9 @@ numerical_cols = data_processed.select_dtypes(include=[np.number]).columns
 data_processed[numerical_cols] = scaler.fit_transform(data_processed[numerical_cols])
 ```
 
-# **Pemodelan dan Evaluasi**
+## **Pemodelan dan Evaluasi**
 
-## Model Kalori Terbakar
+### Model Kalori Terbakar
 
 Pembuatan data untuk model Kalori Terbakar yaitu dengan mendrop kolom Kalori Terbakar dari keseluruhan Data untuk membentuk nilai X sebagai variabel bebas. Semua kolom digunakan kecuali kolom Kalori Terbakar yang akan digunakan sebagai y atau variabek terikat.
 
@@ -1713,7 +1749,7 @@ metrics_df.head()
 
 
 
-### Random Forest
+#### Random Forest
 
 Model pertama yang dibuat adalah Random Forest Regressor dengan n_estimators sebesar 100 dan random_state sebesar 42.
 
@@ -1808,7 +1844,7 @@ plt.show()
 
 Model yang dihasilkan cukup bagus dengan Adjusted Rsquared sebesar 0.9676 dan MSE 0.0334 yang berada dibawah 0.1 nilainya.
 
-### KNN
+#### KNN
 
 Model selanjutnya adalah K-Nearest Neighbors dengan jumlah n_neighbors=10.
 
@@ -1896,7 +1932,7 @@ plt.show()
 
 Model ini tidak sebagus model sebelumnya namun masih cukup bagus di Adjusted Rsquared sebesar 0.8365 dan nilai MSE di atas 0.1 yaitu 0.1685 pada model ini.
 
-### SVR
+#### SVR
 
 Model Support Vector Regression dengan C sebesar 100 dan epsilon sebesar 0.1 ini digunakan untuk menentukan regresi.
 
@@ -1986,7 +2022,7 @@ plt.show()
 
 Hasil dari model ini sangat baik dengan Adjusted Rsquared sebesar 0.9696 dan MSE 0.0314.
 
-### XGBoost
+#### XGBoost
 
 Model terakhir diperkenalkan Algoritma Boosting dengan metode Extreme Gradient atau XGBoost. berikut parameter model yang digunakan yaitu n_estimators sebesar 100, learning rate 0.1, max_depth sebesar 6, colsample_bytree sebesar 0.8, dan subsample 0.8 poin.
 
@@ -2092,7 +2128,7 @@ plt.show()
 
 Hasilnya sangat bagus dengn Adjusted Rsquares sebesar 0.9854 dan MSE yang sangat kecil yaitu 0.0150 jauh dibawah model lainnya.
 
-### Model Terbaik
+#### Model Terbaik
 
 
 ```python
@@ -2141,7 +2177,7 @@ plt.show()
 
 Model terbaik untuk variabel Kalori Terbakar adalah dengan Metode XGBoost yaitu dengan Adjusted Rsquared 0.9854.
 
-## **Model Kadar Lemak Tubuh**
+### **Model Kadar Lemak Tubuh**
 
 Proses pembuatan data untuk model Kadar Lemak Tubuh dilakukan dengan menghapus kolom Kadar Lemak Tubuh dari seluruh dataset, sehingga menghasilkan nilai X sebagai variabel independen. Semua kolom lainnya digunakan, kecuali kolom Kadar Lemak Tubuh yang akan menjadi variabel dependen atau y.
 
@@ -2311,7 +2347,7 @@ metrics_df.head()
 
 
 
-### Random Forest
+#### Random Forest
 
 Model pertama yang dibuat adalah Random Forest Regressor dengan n_estimators sebesar 100 dan random_state sebesar 42.
 
@@ -2403,7 +2439,7 @@ plt.show()
 
 Model yang dihasilkan kurang bagus dengan Adjusted Rsquared sebesar 0.7891 dan MSE 0.1981 yang relatif besar galatnya.
 
-### KNN
+#### KNN
 
 Model selanjutnya adalah K-Nearest Neighbors dengan jumlah n_neighbors=10.
 
@@ -2491,7 +2527,7 @@ plt.show()
 
 Model ini lebih buruk dari model sebelumnya namun masih cukup di Adjusted Rsquared sebesar 0.7590 dan nilai MSE tinggi di atas 0.1 yaitu 0.2264 pada model ini.
 
-### SVR
+#### SVR
 
 Model Support Vector Regression menggunakan teknik Gridsearch untuk menentukan parameternya. Gridsearcgh digunakan karena model awal SVR memiliki nilai metrik akurasi yang kurang bisa dipertanggung-jawabkan.
 
@@ -2608,7 +2644,7 @@ plt.show()
 
 Hasil dari model ini kurang baik dengan Adjusted Rsquared sebesar 0.7469 dan MSE 0.2378.
 
-### XGBoost
+#### XGBoost
 
 Model terakhir diperkenalkan Algoritma Boosting dengan metode Extreme Gradient atau XGBoost. Berikut parameter model yang digunakan yaitu dicari melalu Gridsearch karena hasil iterasi pertama model menghasilkan akurasi yang sangat rendah.
 
@@ -2768,7 +2804,7 @@ plt.show()
 
 Hasilnya agak sedikit lebih baik dengn Adjusted Rsquares sebesar 0.777978 dan MSE yang masih diatas 0.1 yaitu 0.2086 poin.
 
-### Model Terbaik
+#### Model Terbaik
 
 
 ```python
@@ -2821,7 +2857,7 @@ plt.show()
 
 Model terbaik untuk variabel Kadar Lemak Tubuh ternyata adalah model Random Forest dengan Adjusted Rsquared sebesar 0.7891 terbesar dari yang lain.
 
-# Kesimpulan
+## Kesimpulan
 
 Kesimpulan berdasarkan hasil dari *goal* yang telah dicapai:  
 
@@ -2841,7 +2877,7 @@ Kesimpulan berdasarkan hasil dari *goal* yang telah dicapai:
 
 Secara keseluruhan, model prediksi yang kuat untuk kalori terbakar dan kadar lemak tubuh telah berhasil dibuat. Hasil analisis preferensi menunjukkan bahwa pendekatan universal dapat diambil tanpa perlu memperhatikan perbedaan gender atau tingkat kemahiran. Langkah selanjutnya dapat difokuskan pada pengembangan program latihan berbasis data, peningkatan model kadar lemak tubuh, atau eksplorasi faktor-faktor lain yang mungkin memengaruhi preferensi individu.
 
-# Akhir
+## Akhir
 
 
 ```python
@@ -2892,7 +2928,7 @@ Secara keseluruhan, model prediksi yang kuat untuk kalori terbakar dan kadar lem
 
 
 
-## Referensi
+### Referensi
 
 - Gough, A., et al. (2018). Personalized Fitness: Trends in the Digital Fitness Industry. *Journal of Health & Wellness*.
 
