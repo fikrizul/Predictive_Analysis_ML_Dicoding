@@ -1567,6 +1567,54 @@ data_processed[numerical_cols] = scaler.fit_transform(data_processed[numerical_c
 
 ## **Pemodelan dan Evaluasi**
 
+Ada 4 algoritma yang dipilih dengan framework yang berbeda yaitu Random Forest, K-Nearest Neighbors, Support Vector Rgeressor dan XGboost. Random Forest (RF) unggul dalam menangani data kompleks dan besar, serta dapat mengurangi risiko overfitting dengan menggunakan banyak pohon keputusan tanpa membutuhkan praproses data yang rumit. Namun, proses pelatihan dan prediksi bisa lebih lambat dan sulit diinterpretasi. K-Nearest Neighbors (KNN) sederhana dan mudah dipahami, tidak memerlukan pelatihan, serta dapat digunakan untuk regresi dan klasifikasi, tetapi kinerjanya menurun pada dataset besar dan sangat sensitif terhadap noise serta data yang tidak seimbang. Support Vector Regression (SVR) efektif untuk data dengan dimensi tinggi dan linearitas kompleks serta dapat menangani noise, namun kurang efisien untuk dataset besar dan sulit diinterpretasi karena bergantung pada pemilihan kernel dan parameter yang tepat. XGBoost cepat, efisien, dan sering menghasilkan akurasi tinggi dengan regularisasi yang baik untuk mengurangi overfitting, namun dapat overfit jika tidak dikonfigurasi dengan benar, memerlukan pemilihan hyperparameter yang tepat, dan model yang dihasilkan sulit diinterpretasi.
+
+Setelah itu dipilih dua metrik untuk digunakan sebagai pembanding yaitu Adjusted R² dan Mean Squared Error. Keduanya dipilih karena variabel independen digunakan tidak hanya satu jadi dibutuhkan metrik yang andal dengan jumlah variabel independen yang lebih dari satu.
+
+* Adjusted R² (Adjusted R-Squared)
+
+R² mengukur seberapa baik model regresi linier dapat menjelaskan variasi data. Nilainya antara 0 hingga 1, semakin tinggi nilai R², semakin baik model dalam menjelaskan data. Namun, R² bisa meningkat hanya dengan menambahkan variabel independen ke dalam model, meskipun variabel tersebut mungkin tidak relevan. Karena itu, Adjusted R² digunakan untuk memberikan penilaian yang lebih akurat.
+
+Formula Adjusted R²:
+
+`Adjusted R² = 1 - ((1 - R²) * (n - 1)) / (n - p - 1)`
+
+R²: Koefisien determinasi
+
+n: Jumlah data (observasi)
+
+p: Jumlah variabel independen
+
+Cara Kerja:
+
+Adjusted R² memperhitungkan jumlah variabel dan jumlah data, membuatnya lebih andal daripada R² saat membandingkan model dengan jumlah variabel yang berbeda.
+Jika variabel baru ditambahkan dan relevan, Adjusted R² akan meningkat. Sebaliknya, jika variabel tersebut tidak relevan, Adjusted R² akan menurun, menunjukkan model menjadi lebih kompleks tanpa nilai tambah.
+Adjusted R² lebih cocok digunakan untuk membandingkan model yang memiliki jumlah variabel yang berbeda.
+Contoh:
+Jika Adjusted R² sebuah model adalah 0.85, itu berarti model tersebut dapat menjelaskan 85% variasi data dengan memperhitungkan jumlah variabel dalam model.
+
+* MSE (Mean Squared Error)
+
+MSE adalah ukuran yang digunakan untuk menghitung rata-rata kesalahan kuadrat antara nilai yang diprediksi oleh model dan nilai aktual. Ini adalah alat yang digunakan untuk mengevaluasi akurasi prediksi model.
+
+Formula MSE:
+
+`MSE = (1 / n) * Σ(yᵢ - ŷᵢ)²`
+
+yᵢ: Nilai aktual (observasi sebenarnya)
+
+ŷᵢ: Nilai prediksi model
+
+n: Jumlah data (observasi)
+
+Cara Kerja:
+
+MSE mengukur rata-rata kuadrat selisih antara nilai yang diprediksi dan nilai yang sebenarnya.
+Nilai MSE yang lebih kecil menunjukkan model yang lebih baik, karena perbedaan antara nilai yang diprediksi dan nilai aktual lebih kecil.
+MSE sangat sensitif terhadap outlier, karena kesalahan dihitung dalam bentuk kuadrat. Jadi, jika ada data yang sangat berbeda, MSE bisa menjadi lebih besar.
+Contoh:
+Jika MSE model adalah 4, itu berarti rata-rata kuadrat perbedaan antara nilai prediksi dan nilai aktual adalah 4, menunjukkan model memiliki kesalahan yang relatif besar dibandingkan dengan model dengan MSE lebih kecil.
+
 ### Model Kalori Terbakar
 
 Pembuatan data untuk model Kalori Terbakar yaitu dengan mendrop kolom Kalori Terbakar dari keseluruhan Data untuk membentuk nilai X sebagai variabel bebas. Semua kolom digunakan kecuali kolom Kalori Terbakar yang akan digunakan sebagai y atau variabek terikat.
