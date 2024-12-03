@@ -542,7 +542,6 @@ Ada 4 variabel kategorik yang bisa digunakan untuk mengelompokkan data.
     </tr>
   </tbody>
 </table>
-</div><br><label><b>dtype:</b> int64</label>
 
 
     
@@ -556,7 +555,7 @@ Distribusi jumlah pelanggan sesuai jenis latihan yang dilakukan cukup tersebar m
     
 
 
-Pengunjung pusat kebugaran lebih banyak laki-laki meskipun bedanya tidak banyak dengan pengunjung perempuan. Pengunjung yang paling banyak datang ke pusat kebugaran adalah yang datang dua kali seminggu. Jumlah anggota variabel `Tingkat Kemahiran` cukup timpang dengan `Tingkat Kemahiran` 3 mempunyai anggota paling sedikit dibanding yang lain.
+Pengunjung pusat kebugaran lebih banyak laki-laki meskipun bedanya tidak banyak dengan pengunjung perempuan. Pengunjung yang paling banyak datang ke pusat kebugaran adalah yang datang dua kali seminggu. Jumlah anggota variabel `Tingkat Kemahiran` cukup timpang dengan `Tingkat Kemahiran 3` mempunyai anggota paling sedikit dibanding yang lain.
 
 
 
