@@ -10,9 +10,59 @@ Dalam konteks kesehatan masyarakat yang lebih luas, pemahaman tentang efektivita
 
 Penerapan machine learning memungkinkan identifikasi perilaku gym yang paling efektif, dengan algoritma seperti k-Nearest Neighbors (KNN), Random Forest, dan Boosting. KNN dapat menyarankan latihan berdasarkan karakteristik individu, sementara Random Forest menggabungkan berbagai faktor untuk prediksi pembakaran kalori yang akurat. Boosting meningkatkan ketepatan rekomendasi latihan dengan terus belajar dari kesalahan sebelumnya. Dengan model ini, pusat kebugaran bisa memberikan rekomendasi yang lebih dipersonalisasi, membantu pengguna mencapai tujuan kebugaran secara efisien sekaligus mendukung peningkatan kesehatan masyarakat melalui gaya hidup aktif. Data yang digunakan diambil dari kaggle yang bisa diakses dari link [berikut](https://www.kaggle.com/datasets/valakhorasani/gym-members-exercise-dataset/data)
 
+
+
+
+Dataset ini mencakup profil kebugaran individu, meliputi detail demografis (usia, jenis kelamin), komposisi tubuh (berat badan, tinggi badan, BMI, persentase lemak), metrik detak jantung (Max_BPM, Avg_BPM, Resting_BPM), dan kebiasaan olahraga (Jenis Olahraga, Durasi Sesi, Kalori Terbakar, Frekuensi Olahraga). **BMI** dan **Persentase Lemak** memberikan gambaran tentang komposisi tubuh, dengan **Persentase Lemak** yang biasanya memberikan gambaran yang lebih akurat dibandingkan BMI, terutama untuk individu dengan massa otot yang tinggi. Metrik detak jantung menyoroti kebugaran kardiovaskular, di mana **Resting_BPM** sering kali lebih rendah pada individu yang lebih fit.
+
+Data olahraga menunjukkan intensitas dan preferensi, dengan aktivitas berintensitas tinggi (seperti HIIT atau Kardio) yang cenderung membakar lebih banyak kalori dan memiliki **Avg_BPM** lebih tinggi dibandingkan dengan latihan berintensitas rendah seperti Yoga. **Asupan Air** dan **Tingkat Pengalaman** menambah kedalaman informasi, menunjukkan kebiasaan hidrasi dan tingkat keakraban dengan kebugaran, yang dapat memengaruhi hasil latihan dan detak jantung saat istirahat. Dataset ini memungkinkan pemahaman yang luas tentang tingkat kebugaran individu dan memberikan wawasan yang berguna untuk personalisasi rencana kebugaran dan kesehatan.
+
 Referensi:
 - World Health Organization. (2020). Physical Activity. WHO Fact Sheets.
 - Gough, A., et al. (2018). Personalized Fitness: Trends in the Digital Fitness Industry. Journal of Health & Wellness.
 - McAuley, E., et al. (2011). Social Support and Self-Efficacy in Exercise. Health Psychology.
 
+- Here is the updated reference list, including the new citation:
+
+**References:**
+
+- Gough, A., et al. (2018). Personalized Fitness: Trends in the Digital Fitness Industry. *Journal of Health & Wellness*.
+  
+- McAuley, E., et al. (2011). Social Support and Self-Efficacy in Exercise. *Health Psychology*.
+
+- World Health Organization. (2020). *Physical Activity*. Retrieved from [WHO](https://www.who.int/news-room/fact-sheets/detail/physical-activity).
+
+- Tan, J. S. A., Che Embi, Z., & Hashim, N. (2024). Comparison of Machine Learning Methods for Calories Burn Prediction. *Journal of Informatics and Web Engineering*, 3(1), 182-191. doi: [10.33093/jiwe.2024.3.1.12](https://doi.org/10.33093/jiwe.2024.3.1.12).
+
+- Kadam, A., Shrivastava, A., Pawar, S. K., Patil, V. H., Michaelson, J., & Singh, A. (n.d.). *Calories Burned Prediction Using Machine Learning*. IEEE. Retrieved from [Calories Burn Prediction](https://hossainlab.github.io/projects/Calories_Burnt/02_Calories%20Burnt%20Prediction.html).
+
+References:
+
+Gough, A., et al. (2018). Personalized Fitness: Trends in the Digital Fitness Industry. Journal of Health & Wellness.
+
+McAuley, E., et al. (2011). Social Support and Self-Efficacy in Exercise. Health Psychology.
+
+World Health Organization. (2020). Physical Activity. Retrieved from https://www.who.int/news-room/fact-sheets/detail/physical-activity
+
+Tan, J. S. A., Che Embi, Z., & Hashim, N. (2024). Comparison of Machine Learning Methods for Calories Burn Prediction. Journal of Informatics and Web Engineering, 3(1), 182-191. https://doi.org/10.33093/jiwe.2024.3.1.12
+
+Kadam, A., Shrivastava, A., Pawar, S. K., Patil, V. H., Michaelson, J., & Singh, A. (n.d.). Calories Burned Prediction Using Machine Learning. IEEE. Retrieved from https://hossainlab.github.io/projects/Calories_Burnt/02_Calories%20Burnt%20Prediction.html
+
 ## Business Understanding
+### Problem Statement
+1. Bagaimana cara meningkatkan efektifitas jumlah Kalori Terbakar pada Latihan?
+2. Bagaimana cara optimalkan latihan, jika ingin mencapai target Kadar Lemak Tubuh tertentu?
+3. Apakah ada perbedaan antara Laki-laki dan Perempuan dalam preferensi latihan?
+4. Apakah Tingkat Kemahiran mempengaruhi preferensi latihan?
+
+### Goals
+1. Membuat model yang memprediksi Kalori Terbakar dalam Latihan.
+2. Membuat model yang memprediksi Kadar Lemak Tubuh.
+3. Mencari perbedaan preferensi Laki-laki dan Perempuan.
+4. Mencari preferensi setiap tingkat Kemahiran.
+
+### Solution
+1. Menggunakan 4 Algoritma Machine Learning untuk membuat model yang memprediksi Kalori Terbakar dan Kadar Lemak Tubuh.
+2. Menggunakan Exploratory Data Analysis (EDA) untuk menentukan pengaruh Jenis Kelamin dan Tingkat Kemahiran dalam preferensi Latihan.
+
+
