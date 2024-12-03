@@ -34,103 +34,15 @@ Data olahraga menunjukkan intensitas dan preferensi, dengan aktivitas berintensi
 ### Solution
 1. Menggunakan 4 Algoritma Machine Learning untuk membuat model yang memprediksi Kalori Terbakar dan Kadar Lemak Tubuh.
 2. Menggunakan Exploratory Data Analysis (EDA) untuk menentukan pengaruh Jenis Kelamin dan Tingkat Kemahiran dalam preferensi Latihan.
-## Mengimpor Library
 
-Semua *Library* diimpor terlebih dahulu untuk digunakan pada tahap selanjutnya.
-
-
-```python
-import textwrap
-import numpy as np
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-import xgboost as xgb
-
-from xgboost import XGBClassifier
-from sklearn.svm import SVC
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import GridSearchCV, RandomizedSearchCV, train_test_split
-from sklearn.preprocessing import LabelEncoder, OrdinalEncoder, OneHotEncoder, StandardScaler
-from sklearn.metrics import (
-    ConfusionMatrixDisplay,
-    accuracy_score,
-    classification_report,
-    mean_absolute_error,
-    mean_squared_error,
-    r2_score,
-    explained_variance_score
-)
-
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.svm import SVR
-from sklearn.neighbors import KNeighborsRegressor
-from xgboost import XGBRegressor
-import kagglehub
-import shutil
-```
 
 ## **Pemahaman Data**
 
 
 ### Pemuatan Data
 
-Data diambil dari kaggle pada tautan berikut "valakhorasani/gym-members-exercise-dataset" dan diunduh ke dalam root sistem Google Colab.
-
-
-```python
-path = kagglehub.dataset_download("valakhorasani/gym-members-exercise-dataset")
-print("Path to dataset files:" , path)
-```
-
-    Downloading from https://www.kaggle.com/api/v1/datasets/download/valakhorasani/gym-members-exercise-dataset?dataset_version_number=1...
-
-
-    100%|██████████| 21.6k/21.6k [00:00<00:00, 8.17MB/s]
-
-    Extracting files...
-    Path to dataset files: /root/.cache/kagglehub/datasets/valakhorasani/gym-members-exercise-dataset/versions/1
-
-
-    
-
-
-Data dipindahkan ke dalam drive agar dapat memudahkan penggunaan di Google Colab.
-
-
-```python
-source_path = '/root/.cache/kagglehub/datasets/valakhorasani/gym-members-exercise-dataset/versions/1/gym_members_exercise_tracking.csv'
-destination_path = '/content/drive/MyDrive/Predictive/'
-shutil.copy(source_path, destination_path)
-```
-
-
-
-
-    '/content/drive/MyDrive/Predictive/gym_members_exercise_tracking.csv'
-
-
-
-Data dibuka melalui dataframe dan ditampilkan sekilas menggunakan fungsi .head() dan .shape
-
-
-```python
-data = pd.read_csv("/content/drive/MyDrive/Predictive/gym_members_exercise_tracking.csv")
-# Menampilkan ukuran data
-print(data.shape)
-# Melihat 5 baris pertama data
-data.head()
-```
-
-    (973, 15)
-
-
-
-
-
+Data diambil dari kaggle pada tautan berikut "valakhorasani/gym-members-exercise-dataset" dengan usability 10.00 dan view sebesar 103k pada saat diakses yang selanjutnya diunduh ke dalam root sistem Google Colab. Data dipindahkan ke dalam drive agar dapat memudahkan penggunaan di Google Colab.
+Data dibuka melalui dataframe dan ditampilkan sekilas menggunakan fungsi `.head()` dan `.shape` sebagai berikut
 
   
 <table border="1" class="dataframe">
@@ -248,10 +160,6 @@ data.head()
   </tbody>
 </table>
 
-
-
-
-
 Tampilan diatas menunjukkan ada 973 rekod data dengan 15 jenis informasi yang dapat dianalisis.
 
 ### Analisis Data Eksploratif (*EDA*)
@@ -297,12 +205,7 @@ Variabel `Workout_Type` yang berarti Jenis Latihan memiliki penjelasan nilai var
 
 ##### Tipe Variabel
 
-
-```python
-data.info()
-```
-
-    <class 'pandas.core.frame.DataFrame'>
+  <class 'pandas.core.frame.DataFrame'>
     RangeIndex: 973 entries, 0 to 972
     Data columns (total 17 columns):
      #   Column                         Non-Null Count  Dtype  
@@ -327,21 +230,11 @@ data.info()
     dtypes: float64(7), int64(6), object(4)
     memory usage: 129.4+ KB
 
-
 Ditemukan ada enam variabel bertipe int64, dua variabel bertipe object dan tujuh variabel bertipe float64. Selanjutnya dapat dilihat bahwa seluruh data bertipe float64 adalah variabel numerik dan seluruh data bertipe object adalah variabel kategorik. Sedangkan data bertipe int64, dua diantaranya bisa digunakan sebagai variabel kategorik dan empat diantaranya adalah variabel numerik.
 
 ##### Deskripsi statistik dari data
 
-
-```python
-data.describe()
-```
-
-
-
-
-
-  
+ 
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -477,21 +370,9 @@ data.describe()
 
 
 
-
-
 Informasi statistik tersebut menunjukkan simpangan baku yang cukup tinggi yang menandakan perbedaan profil yang cukup signifikan antar responden. Beragam profil dalam data bisa berarti adanya berbagai demografi yang tercangkup dari data tersebut yang dapat dianalisis.
 
 ##### Pembersihan Data
-
-
-
-
-```python
-pd.DataFrame({'Nilai yang Kosong':data.isnull().sum()})
-```
-
-
-
 
 
  
@@ -570,55 +451,11 @@ pd.DataFrame({'Nilai yang Kosong':data.isnull().sum()})
 
 
 
-Tidak ditemukan adanya data yang kosong.
-
-
-```python
-data.duplicated().sum()
-```
-
-
-
-
-    0
-
-
-
-Tidak ditemukan adanya data ganda.
+Tidak ditemukan adanya data yang kosong dan data ganda sehingga tidak perlu dilakukan pembersihan data lebih lanjut.
 
 ##### Pencilan
 
 *Boxplot* digunakan untuk melihat penyebaran data.
-
-
-```python
-kolom=["Age",
-       "Weight (kg)",
-       "Height (m)",
-       "Max_BPM",
-       "Avg_BPM",
-       "Resting_BPM",
-       "Session_Duration (hours)",
-       "Calories_Burned",
-       "Fat_Percentage",
-       "Water_Intake (liters)",
-       "Workout_Frequency (days/week)",
-       "Experience_Level",
-       "BMI"]
-
-# Membentuk plot berukuran 24 x 12
-plt.figure(figsize = (24, 12))
-
-# Membentuk plot berisi 8 subplot, dengan setiap subplot merupakan boxplot
-for i in range(len(kolom)):
-
-    # Membentuk plot dengan subplot berukuran 4 x 2
-    plt.subplot(7, 2, i + 1)
-    sns.boxplot(x = data[kolom[i]])
-    plt.title('Boxplot dari {}'.format(kolom[i]))
-    plt.tight_layout()
-
-```
 
 
     
@@ -633,63 +470,12 @@ Tampilan diatas menunjukkan tiga kolom informasi yang mempunyai nilai datum dilu
 Dua kolom informasi bertipe int64 dapat diperlakukan sebagai data kategorik. Oleh karena itu dibuatlah kolom baru mengunakan data tersebut dengan mengubah jenis data menjadi string. Selanjutnya string tersebut diubah menjadi tipe data object agar bisa dikenali filter tipe object seperti data kategorik lainnya.
 
 
-```python
-# Membuat kolom baru sebagai kategori bukan numerik
-data['Workout_Frequency_cat'] = data['Workout_Frequency (days/week)'].astype("str")
-data['Experience_Level_cat'] = data['Experience_Level'].astype("str")
-
-# Menjadikan tipe data sebagai object agar bisa dikelompokkan sebagai kategorik
-data['Workout_Frequency_cat'] = data['Workout_Frequency_cat'].astype("object")
-data['Experience_Level_cat'] = data['Experience_Level_cat'].astype("object")
-
-```
-
 #### Analisis Univariat
 
-
-```python
-# Membentuk list berisi kolom-kolom numerik
-kolom_numerik = ['Age',
-                 'Weight (kg)',
-                 'Height (m)',
-                 'Max_BPM',
-                 'Avg_BPM',
-                 'Resting_BPM',
-                 'Session_Duration (hours)',
-                 'Calories_Burned',
-                 'Fat_Percentage',
-                 'Water_Intake (liters)',
-                 'Workout_Frequency (days/week)',
-                 'Experience_Level',
-                 'BMI']
-
-# Membentuk list berisi kolom-kolom kategorik
-kolom_kategorik = ['Gender', 'Workout_Type', 'Workout_Frequency_cat', 'Experience_Level_cat']
-
-# Menampilkan list kolom numerik dan kolom kategorik
-print("Kolom-kolom numerik: ", kolom_numerik)
-print("Kolom-kolom kategorik: ", kolom_kategorik)
-```
+Data dipisahkan anatara variabel numerik dan kategorik sebagai berikut.
 
     Kolom-kolom numerik:  ['Age', 'Weight (kg)', 'Height (m)', 'Max_BPM', 'Avg_BPM', 'Resting_BPM', 'Session_Duration (hours)', 'Calories_Burned', 'Fat_Percentage', 'Water_Intake (liters)', 'Workout_Frequency (days/week)', 'Experience_Level', 'BMI']
     Kolom-kolom kategorik:  ['Gender', 'Workout_Type', 'Workout_Frequency_cat', 'Experience_Level_cat']
-
-
-
-```python
-# Menghitung jumlah nilai yang unik/berbeda dari masing-masing variabel pada kolom kategorik
-jumlah_unik = data[kolom_kategorik].nunique()
-
-# Menampilkan nilai yang unik/berbeda dari masing-masing variabel pada kolom kategorik
-nilai_unik = data[kolom_kategorik].apply(lambda x: x.unique())
-
-# Menampilkan hasil dalam bentuk DataFrame
-pd.DataFrame({"Total Nilai Berbeda": jumlah_unik, "Nilai-Nilai": nilai_unik})
-```
-
-
-
-
 
  
 <table border="1" class="dataframe">
@@ -724,23 +510,7 @@ pd.DataFrame({"Total Nilai Berbeda": jumlah_unik, "Nilai-Nilai": nilai_unik})
   </tbody>
 </table>
 
-
-
-
-
 Ada 4 variabel kategorik yang bisa digunakan untuk mengelompokkan data.
-
-
-```python
-
-tipe_olahraga = data.Workout_Type.value_counts()
-tipe_olahraga
-
-```
-
-
-
-
 
 <table border="1" class="dataframe">
   <thead>
@@ -775,70 +545,11 @@ tipe_olahraga
 </div><br><label><b>dtype:</b> int64</label>
 
 
-
-
-```python
-# Membuat variabel label dan size
-label = tipe_olahraga.index.tolist()
-size = tipe_olahraga.values.tolist()
-
-# Membentuk pie chart untuk melihat penyebaran data dari masing-masing tingkat berat badan
-plt.figure(figsize = (8, 8))
-plt.pie(size, labels = label, autopct = "%1.1f%%", startangle = 120, radius = 0.75)
-
-# Menambahkan legend pada pie chart
-plt.legend(loc = "upper left", bbox_to_anchor = (1, 1))
-
-# Menambahkan judul pada plot
-plt.title("Distribusi Tipe Olahraga")
-
-# Menampilkan plot
-plt.show()
-```
-
-
     
 ![png](gambar_files/gambar_42_0.png)
     
 
-
 Distribusi jumlah pelanggan sesuai jenis latihan yang dilakukan cukup tersebar merata dengan latihan Strength sebagai latihan yang paling banyak dilakukan meskipun tidak jauh berbeda dengan jenis latihan lainnya.
-
-
-```python
-data['Workout_Frequency_cat'] = data['Workout_Frequency_cat'].astype('category')
-data['Experience_Level_cat'] = data['Experience_Level_cat'].astype('category')
-
-# Membentuk plot dengan subplot sejumlah 4 berukuran 2 x 2
-fig, axes = plt.subplots(2, 2, figsize=(9, 9))
-axes = axes.flatten()
-
-# Mendeskripsikan kolom-kolom kategorik yang akan digunakan
-kolom_kategorik = ["Gender", "Workout_Type", "Workout_Frequency_cat", "Experience_Level_cat"]
-deskripsi_kolom_kategorik = ["Jenis Kelamin", "Jenis Latihan", "Frekuensi Latihan", "Tingkat Kemahiran"]
-
-# Membentuk plot jumlah dalam bentuk bar plot untuk masing-masing kolom
-for i, kolom in enumerate(kolom_kategorik):
-    sns.countplot(x=kolom, data=data, ax=axes[i], hue=kolom)
-
-    # Menambahkan judul untuk masing-masing plot
-    judul = "\n".join(textwrap.wrap(f"Plot Jumlah dari {deskripsi_kolom_kategorik[i]}", width=40))
-    axes[i].set_title(judul, size=12)
-
-    # Mengatur label
-    axes[i].tick_params(axis="x", labelrotation=0)
-    axes[i].tick_params(axis="both", which="major", labelsize=12)
-    axes[i].set_xlabel("")
-    axes[i].set_ylabel("Jumlah")
-
-# Mengatur susunan agar tidak berhimpitan
-plt.tight_layout()
-
-# Menampilkan plot
-plt.show()
-
-```
-
 
     
 ![png](gambar_files/gambar_44_0.png)
@@ -848,50 +559,7 @@ plt.show()
 Pengunjung pusat kebugaran lebih banyak laki-laki meskipun bedanya tidak banyak dengan pengunjung perempuan. Pengunjung yang paling banyak datang ke pusat kebugaran adalah yang datang dua kali seminggu. Jumlah anggota variabel `Tingkat Kemahiran` cukup timpang dengan `Tingkat Kemahiran` 3 mempunyai anggota paling sedikit dibanding yang lain.
 
 
-```python
-# Membentuk plot dengan subplot sejumlah 8 berukuran 15 x 8
-fig, axes = plt.subplots(3, 5, figsize = (15, 9))
 
-# Mengubah array multi dimensi menjadi array 1 dimensi
-axes = axes.flatten()
-
-# Menambahkan satuan dari masing-masing kolom
-labels = ["Tahun","Kilogram", "Meter", "", "", "", "Jam", "Kalori", "Persen", "Liter", "","","Index"]
-
-# Mendeskripsikan kolom-kolom numerik yang akan digunakan
-deskripsi_kolom_numerik =  ['Usia',
-                            'Berat Badan',
-                            'Tinggi Badan',
-                            'Max_BPM',
-                            'Avg_BPM',
-                            'Resting_BPM',
-                            'Durasi Latihan',
-                            'Kalori Terbakar',
-                            'Kadar Lemak Tubuh',
-                            'Asupan Air',
-                            'Frekuensi Latihan',
-                            'Tingkat Kemahiran',
-                            'BMI']
-
-# Membentuk plot jumlah dalam bentuk histogram plot untuk masing-masing kolom
-for i, kolom in enumerate(data[kolom_numerik].columns):
-    sns.histplot(data = data, x = kolom, kde = True, ax = axes[i])
-
-    # Menambahkan judul untuk masing-masing plot
-    judul = "\n".join(textwrap.wrap(f"Plot Histogram dari {deskripsi_kolom_numerik[i]}", width = 30))
-    axes[i].set_title(judul)
-    axes[i].title.set_size(12)
-
-    # Mengatur label x
-    axes[i].set_xlabel(labels[i])
-    axes[i].set_ylabel("Total")
-
-# Mengatur susunan agar tidak berhimpitan
-plt.tight_layout()
-
-# Menampilkan plot
-plt.show()
-```
 
 
     
@@ -908,64 +576,7 @@ Variabel `Durasi Latihan` dan `Kalori Terbakar` memiliki data yang terdistribusi
 ##### 1. Analisis Berbagai Distribusi Kategori Berdasarkan Jenis Kelamin
 
 
-```python
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 
-# Mengatur ukuran keseluruhan untuk semua subplots
-fig, axes = plt.subplots(3, 2, figsize=(8, 12))  # 4 rows, 2 columns (laki-laki dan perempuan)
-fig.suptitle("Analisis Berbagai Distribusi Kategori Berdasarkan Jenis Kelamin")
-
-# Membuat subset data untuk setiap jenis kelamin
-data_male = data.query("Gender == 'Male'")
-data_female = data.query("Gender == 'Female'")
-
-# Subplot untuk Workout Type
-order = sorted(data['Workout_Type'].unique())
-sns.countplot(x="Workout_Type", data=data_male, ax=axes[0, 0], color="#1f77b4", order=order)
-axes[0, 0].set_title("Tipe Latihan untuk Laki-laki")
-axes[0, 0].set_xlabel("Jenis Latihan")
-axes[0, 0].set_ylabel("Jumlah")
-axes[0, 0].tick_params(axis='x', rotation=45)
-
-sns.countplot(x="Workout_Type", data=data_female, ax=axes[0, 1], color="#ff7f0e", order=order)
-axes[0, 1].set_title("Tipe Latihan untuk Perempuan")
-axes[0, 1].set_xlabel("Jenis Latihan")
-axes[0, 1].set_ylabel("Jumlah")
-axes[0, 1].tick_params(axis='x', rotation=45)
-
-# Subplot untuk Workout Frequency
-sns.countplot(x="Workout_Frequency_cat", data=data_male, ax=axes[1, 0], color="#1f77b4")
-axes[1, 0].set_title("Frekuensi Latihan untuk Laki-laki")
-axes[1, 0].set_xlabel("Frekuensi per minggu")
-axes[1, 0].set_ylabel("Jumlah")
-axes[1, 0].tick_params(axis='x')
-
-sns.countplot(x="Workout_Frequency_cat", data=data_female, ax=axes[1, 1], color="#ff7f0e")
-axes[1, 1].set_title("Frekuensi Latihan untuk Perempuan")
-axes[1, 1].set_xlabel("Frekuensi per minggu")
-axes[1, 1].set_ylabel("Jumlah")
-axes[1, 1].tick_params(axis='x')
-
-# Subplot untuk Tingkat Kemahiran
-sns.countplot(x="Experience_Level_cat", data=data_male, ax=axes[2, 0], color="#1f77b4")
-axes[2, 0].set_title("Tingkat Kemahiran untuk Laki-laki")
-axes[2, 0].set_xlabel("Tingkat Kemahiran")
-axes[2, 0].set_ylabel("Jumlah")
-axes[2, 0].tick_params(axis='x')
-
-sns.countplot(x="Experience_Level_cat", data=data_female, ax=axes[2, 1], color="#ff7f0e")
-axes[2, 1].set_title("Tingkat Kemahiran untuk Perempuan")
-axes[2, 1].set_xlabel("Tingkat Kemahiran")
-axes[2, 1].set_ylabel("Jumlah")
-axes[2, 1].tick_params(axis='x')
-
-# Mengatur layout agar tidak tumpang tindih
-plt.tight_layout(rect=[0, 0, 1, 0.96])
-plt.show()
-
-```
 
 
     
@@ -978,39 +589,7 @@ Distribusi penyebaran data antara laki-laki dan perempuan memiliki penyebaran ya
 ##### 2. Distribusi Jenis Latihan Berdasarkan Level Kemahiran
 
 
-```python
-# Group by Experience_Level and Workout_Type, then get counts
-workout_counts = data.groupby(['Experience_Level', 'Workout_Type'], observed=False).size().unstack(fill_value=0)
 
-# Normalize to get percentages
-workout_percentages = workout_counts.divide(workout_counts.sum(axis=1), axis=0) * 100
-
-# Create a figure with two subplots (side by side)
-fig, axes = plt.subplots(1, 2, figsize=(14, 6))  # 1 row, 2 columns
-
-# Plot the bar chart with counts on the first subplot
-workout_counts.plot(kind='bar', stacked=True, ax=axes[0], figsize=(12, 6))
-axes[0].set_title("Distribusi Jenis Latihan Berdasarkan Tingkat Kemahiran")
-axes[0].set_xlabel("Tingkat Kemahiran")
-axes[0].set_ylabel("Jumlah")
-axes[0].tick_params(axis='x', rotation=0)
-axes[0].legend(title='Jenis Latihan', bbox_to_anchor=(1.05, 1), loc='upper left')
-
-# Plot the bar chart with percentages on the second subplot
-workout_percentages.plot(kind='bar', stacked=True, ax=axes[1], figsize=(12, 6))
-axes[1].set_title("Distribusi Jenis Latihan Berdasarkan Tingkat Kemahiran (%)")
-axes[1].set_xlabel("Tingkat Kemahiran")
-axes[1].set_ylabel("Persentase (%)")
-axes[1].tick_params(axis='x', rotation=0)
-axes[1].legend(title='Jenis Latihan', bbox_to_anchor=(1.05, 1), loc='upper left')
-
-# Adjust layout to avoid overlap
-plt.tight_layout()
-
-# Show the plots
-plt.show()
-
-```
 
 
     
@@ -1025,49 +604,7 @@ plt.show()
 
 
 
-```python
-# Create a figure with three subplots (side by side)
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))  # 1 row, 3 columns
 
-# Strip plot of fat percentage against Experience_Level on the first subplot
-sns.stripplot(y="Experience_Level_cat",
-              x="Fat_Percentage",
-              data=data,
-              ax=axes[0])
-
-axes[0].set_title("Distribusi Nilai Kadar Lemak Tubuh dari Tingkat Kemahiran")
-axes[0].set_xlabel("Kadar Lemak Tubuh (%)")
-axes[0].set_ylabel("Tingkat Kemahiran")
-
-# Strip plot of fat percentage against Workout Frequency on the second subplot
-sns.stripplot(y="Workout_Frequency_cat",
-              x="Fat_Percentage",
-              data=data,
-              ax=axes[1])
-
-axes[1].set_title("Distribusi Nilai Kadar Lemak Tubuh dari Frekuensi latihan")
-axes[1].set_xlabel("Kadar Lemak Tubuh (%)")
-axes[1].set_ylabel("Frekuensi Latihan")
-
-# Strip plot of fat percentage against Workout Type on the third subplot
-sns.stripplot(y="Workout_Type",
-              x="Fat_Percentage",
-              data=data,
-              ax=axes[2])
-
-axes[2].set_title("Distribusi Nilai Kadar Lemak Tubuh dari Jenis Latihan")
-axes[2].set_xlabel("Kadar Lemak Tubuh (%)")
-axes[2].set_ylabel("Jenis Latihan")
-
-
-
-# Adjust layout to avoid overlap
-plt.tight_layout()
-
-# Show the plot
-plt.show()
-
-```
 
 
     
@@ -1080,70 +617,7 @@ plt.show()
 ##### 4. Distribusi Kalori Terbakar dari berbagai Kategori
 
 
-```python
-import seaborn as sns
-import matplotlib.pyplot as plt
 
-# Create a figure with three subplots (side by side)
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))  # 1 row, 3 columns
-
-# Strip plot of fat percentage against Experience_Level on the first subplot
-sns.stripplot(y="Experience_Level_cat",
-              x="Calories_Burned",
-              data=data,
-              ax=axes[0],
-              # jitter=True,  # Uncomment if you want to add jitter to the points
-              # dodge=False,
-              # hue="Experience_Level",  # Uncomment for color coding by experience level
-              # palette="Set2",  # Optional palette
-              # alpha=0.6
-              )
-
-axes[0].set_title("Distribusi Nilai Kalori Terbakar dari Tingkat Kemahiran")
-axes[0].set_xlabel("Kalori Terbakar")
-axes[0].set_ylabel("Tingkat Kemahiran")
-
-# Strip plot of fat percentage against Workout Frequency on the second subplot
-sns.stripplot(y="Workout_Frequency_cat",
-              x="Calories_Burned",
-              data=data,
-              ax=axes[1],
-              # jitter=True,  # Uncomment if you want to add jitter to the points
-              # dodge=False,
-              # hue="Experience_Level",  # Optional: add hue if you want different colors for Experience Level
-              # palette="Set2",  # Optional: specify palette for different hues
-              # alpha=0.6
-              )
-
-axes[1].set_title("Distribusi Nilai Kalori Terbakar dari Frekuensi Latihan")
-axes[1].set_xlabel("Kalori Terbakar")
-axes[1].set_ylabel("Frekuensi Latihan")
-
-# Strip plot of fat percentage against Workout Type on the third subplot
-sns.stripplot(y="Workout_Type",
-              x="Calories_Burned",
-              data=data,
-              ax=axes[2],
-              # jitter=True,  # Uncomment if you want to add jitter to the points
-              # dodge=False,
-              # hue="Experience_Level",  # Optional: add hue if you want different colors for Experience Level
-              # palette="Set2",  # Optional: specify palette for different hues
-              # alpha=0.6
-              )
-
-axes[2].set_title("Distribusi Nilai Kalori Terbakar dari Jenis Latihan")
-axes[2].set_xlabel("Kalori Terbakar")
-axes[2].set_ylabel("Jenis Latihan")
-
-
-
-# Adjust layout to avoid overlap
-plt.tight_layout()
-
-# Show the plot
-plt.show()
-
-```
 
 
     
@@ -1157,49 +631,7 @@ Orang yang datang 2-3 kali seminggu memiliki sebaran 400-1400 kalori terbakar pe
 ##### 5. Distribusi Indeks Massa Tubuh dari berbagai Kategori
 
 
-```python
-# Create a figure with three subplots (side by side)
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))  # 1 row, 3 columns
 
-# Strip plot of fat percentage against Experience_Level on the first subplot
-sns.stripplot(y="Experience_Level_cat",
-              x="BMI",
-              data=data,
-              ax=axes[0])
-
-axes[0].set_title("Distribusi Nilai Indeks Masa Tubuh dari Tingkat Kemahiran")
-axes[0].set_xlabel("Indeks Massa Tubuh")
-axes[0].set_ylabel("Tingkat Kemahiran")
-
-# Strip plot of fat percentage against Workout Frequency on the second subplot
-sns.stripplot(y="Workout_Frequency_cat",
-              x="BMI",
-              data=data,
-              ax=axes[1])
-
-axes[1].set_title("Distribusi Nilai Indeks Masa Tubuh dari Frekuensi latihan")
-axes[1].set_xlabel("Indeks Massa Tubuh")
-axes[1].set_ylabel("Frekuensi Latihan")
-
-# Strip plot of fat percentage against Workout Type on the third subplot
-sns.stripplot(y="Workout_Type",
-              x="BMI",
-              data=data,
-              ax=axes[2])
-
-axes[2].set_title("Distribusi Nilai Indeks Masa Tubuhh dari Jenis Latihan")
-axes[2].set_xlabel("Indeks Massa Tubuh")
-axes[2].set_ylabel("Jenis Latihan")
-
-
-
-# Adjust layout to avoid overlap
-plt.tight_layout()
-
-# Show the plot
-plt.show()
-
-```
 
 
     
@@ -1217,21 +649,7 @@ Peserta Yoga dan HIIT memiliki distribusi IMT yang cukup luas, termasuk beberapa
 ##### 6. *Heat Map*
 
 
-```python
-# Mencari korelasi antara masing-masing variabel numerik dengan korelasi pearson
-corr = data.corr(method = "pearson", numeric_only = True)
 
-# Membentuk heatmap antara masing-masing variabel numerik dan ditampilkan dalam bentuk desimal 2 angka di belakang koma
-plt.figure(figsize = (8, 6))
-sns.heatmap(corr, annot = True, fmt = ".2f", annot_kws = {"size": 10})
-
-# Menambahkan judul pada plot
-plt.title("Heatmap dari Korelasi Antara Masing-Masing Variabel Numerik")
-
-# Menampilkan plot
-plt.show()
-
-```
 
 
     
@@ -1241,18 +659,7 @@ plt.show()
 
 Berdasarkan heatmap korelasi, BMI memiliki korelasi positif yang sangat kuat dengan berat badan (0.85), karena memang merupakan faktor utama dalam perhitungan BMI. Frekuensi latihan berhubungan positif dengan durasi sesi latihan (0.64) dan pembakaran kalori (0.36), yang juga mencerminkan bahwa tingkat kemahiran meningkat seiring dengan lebih banyaknya frekuensi dan durasi latihan (korelasi dengan tingkat kemahiran adalah 0.69 dan 0.76). Selain itu, asupan air memiliki hubungan positif dengan frekuensi latihan (0.44) dan durasi latihan (0.28), menunjukkan bahwa peserta yang lebih aktif cenderung mengonsumsi lebih banyak air. Di sisi lain, persentase lemak tubuh memiliki korelasi negatif dengan pembakaran kalori (-0.60) dan frekuensi latihan (-0.54), mengindikasikan bahwa aktivitas fisik yang lebih sering dan pembakaran kalori yang lebih tinggi cenderung berhubungan dengan lemak tubuh yang lebih rendah. Secara keseluruhan, aktivitas fisik yang teratur dan intens berkontribusi pada tingkat kebugaran yang lebih baik, asupan air yang lebih tinggi, dan lemak tubuh yang lebih rendah.
 
-##### 7. *Pair Plot*
-
-
-```python
-# Mengamati hubungan antar fitur numerik dengan fungsi pairplot()
-sns.pairplot(data, diag_kind = 'kde')
-```
-
-
-
-
-    <seaborn.axisgrid.PairGrid at 0x7c6375e8d930>
+##### 7. *Pair Plot
 
 
 
@@ -1267,30 +674,6 @@ Berdasarkan pairplot, variabel numerik seperti berat badan, tinggi badan, dan du
 ##### 8. Perbandingan Kalori Terbakar dengan Kadar Lemak Tubuh
 
 
-```python
-# Membentuk plot jumlah dalam bentuk bar plot antara tingkat berat badan dengan jenis kelamin
-plt.figure(figsize = (8, 6))
-sns.regplot(x = "Fat_Percentage", data = data, y = "Calories_Burned")
-
-# Menambahkan judul pada plot
-plt.title("Perbandingan Kalori Terbakar dengan Kadar Lemak Tubuh")
-
-# Menambahkan label sumbu x dan y pada plot
-plt.xticks(rotation = 90)
-# plt.yticks([1,2,3])
-plt.xlabel("Kadar Lemak Tubuh (%)")
-plt.ylabel("Kalori Terbakar")
-
-
-# plt.xticks(np.arange(9, 50+ 1, 1))
-# ax.set_xticks(np.arange(9, 50+ 1, 1))
-# plt.xticks(range(1, 238, 10), [str(i) for i in range(12, 36, 1)])
-
-# print(plt.xticks())
-
-# Menampilkan plot
-plt.show()
-```
 
 
     
@@ -1303,72 +686,7 @@ Terdapat korelasi negatif antara kedua variabel antara Kalori Terbakar saat lati
 ##### 9. Perbandingan Antara Kadar Lemak Tubuh dengan Berbagai Variabel Numerik
 
 
-```python
-# Create a figure with six plots (2 rows, 3 columns)
-plt.figure(figsize=(14, 8))
-plt.suptitle("Perbandingan Antara Kadar Lemak Tubuh dengan Berbagai Variabel Numerik", y=1.01)
 
-# First plot: Fat Percentage vs. Water Intake
-plt.subplot(2, 3, 1)  # 2 rows, 3 columns, first subplot
-sns.regplot(x="Fat_Percentage", y="Water_Intake (liters)", data=data)
-plt.title("Fat Percentage vs. Water Intake (liters)")
-plt.xlabel("Fat Percentage (%)")
-plt.ylabel("Water Intake (liters)")
-plt.xticks(rotation=90)
-plt.xticks(np.arange(9, data["Fat_Percentage"].max() + 1, 5))
-
-# Second plot: Fat Percentage vs. Session Duration
-plt.subplot(2, 3, 2)  # 2 rows, 3 columns, second subplot
-sns.regplot(x="Fat_Percentage", y="Session_Duration (hours)", data=data)
-plt.title("Fat Percentage vs. Session Duration (hours)")
-plt.xlabel("Fat Percentage (%)")
-plt.ylabel("Session Duration (hours)")
-plt.xticks(rotation=90)
-plt.xticks(np.arange(9, data["Fat_Percentage"].max() + 1, 5))
-
-# Third plot: Fat Percentage vs. Max BPM
-plt.subplot(2, 3, 3)  # 2 rows, 3 columns, third subplot
-sns.regplot(x="Fat_Percentage", y="Max_BPM", data=data)
-plt.title("Fat Percentage vs. Max BPM")
-plt.xlabel("Fat Percentage (%)")
-plt.ylabel("Max BPM")
-plt.xticks(rotation=90)
-plt.xticks(np.arange(9, data["Fat_Percentage"].max() + 1, 5))
-
-# Fourth plot: Fat Percentage vs. Avg BPM
-plt.subplot(2, 3, 4)  # 2 rows, 3 columns, fourth subplot
-sns.regplot(x="Fat_Percentage", y="Avg_BPM", data=data)
-plt.title("Fat Percentage vs. Avg BPM")
-plt.xlabel("Fat Percentage (%)")
-plt.ylabel("Avg BPM")
-plt.xticks(rotation=90)
-plt.xticks(np.arange(9, data["Fat_Percentage"].max() + 1, 5))
-
-# Fifth plot: Fat Percentage vs. Resting BPM
-plt.subplot(2, 3, 5)  # 2 rows, 3 columns, fifth subplot
-sns.regplot(x="Fat_Percentage", y="Resting_BPM", data=data)
-plt.title("Fat Percentage vs. Resting BPM")
-plt.xlabel("Fat Percentage (%)")
-plt.ylabel("Resting BPM")
-plt.xticks(rotation=90)
-plt.xticks(np.arange(9, data["Fat_Percentage"].max() + 1, 5))
-
-# Sixth plot: Fat Percentage vs. Age
-plt.subplot(2, 3, 6)  # 2 rows, 3 columns, sixth subplot
-sns.regplot(x="Fat_Percentage", y="Age", data=data)
-plt.title("Fat Percentage vs. Age")
-plt.xlabel("Fat Percentage (%)")
-plt.ylabel("Age")
-plt.xticks(rotation=90)
-plt.xticks(np.arange(9, data["Fat_Percentage"].max() + 1, 5))
-
-# Adjust layout to avoid overlap
-plt.tight_layout()
-
-# Show the plot
-plt.show()
-
-```
 
 
     
@@ -1381,72 +699,7 @@ Grafik ini menunjukkan hubungan antara persentase lemak tubuh dengan beberapa va
 ##### 10. Perbandingan Antara Kalori Terbakar dengan Berbagai Variabel Numerik
 
 
-```python
-# Create a figure with six plots (2 rows, 3 columns)
-plt.figure(figsize=(14, 8))
-plt.suptitle("Perbandingan Antara Kalori Terbakar dengan Berbagai Variabel Numerik", y=1.01)
 
-# First plot: Calories Burned vs. Water Intake
-plt.subplot(2, 3, 1)  # 2 rows, 3 columns, first subplot
-sns.regplot(x="Calories_Burned", y="Water_Intake (liters)", data=data)
-plt.title("Calories Burned vs. Water Intake (liters)")
-plt.xlabel("Calories Burned")
-plt.ylabel("Water Intake (liters)")
-plt.xticks(rotation=90)
-plt.xticks(np.arange(9, data["Calories_Burned"].max() + 1, 500))
-
-# Second plot: Calories Burned vs. Session Duration
-plt.subplot(2, 3, 2)  # 2 rows, 3 columns, second subplot
-sns.regplot(x="Calories_Burned", y="Session_Duration (hours)", data=data)
-plt.title("Calories Burned vs. Session Duration (hours)")
-plt.xlabel("Calories Burned")
-plt.ylabel("Session Duration (hours)")
-plt.xticks(rotation=90)
-plt.xticks(np.arange(9, data["Calories_Burned"].max() + 1, 500))
-
-# Third plot: Calories Burned vs. Max BPM
-plt.subplot(2, 3, 3)  # 2 rows, 3 columns, third subplot
-sns.regplot(x="Calories_Burned", y="Max_BPM", data=data)
-plt.title("Calories Burned vs. Max BPM")
-plt.xlabel("Calories Burned")
-plt.ylabel("Max BPM")
-plt.xticks(rotation=90)
-plt.xticks(np.arange(9, data["Calories_Burned"].max() + 1, 500))
-
-# Fourth plot: Calories Burned vs. Avg BPM
-plt.subplot(2, 3, 4)  # 2 rows, 3 columns, fourth subplot
-sns.regplot(x="Calories_Burned", y="Avg_BPM", data=data)
-plt.title("Calories Burned vs. Avg BPM")
-plt.xlabel("Calories Burned")
-plt.ylabel("Avg BPM")
-plt.xticks(rotation=90)
-plt.xticks(np.arange(9, data["Calories_Burned"].max() + 1, 500))
-
-# Fifth plot: Calories Burned vs. Resting BPM
-plt.subplot(2, 3, 5)  # 2 rows, 3 columns, fifth subplot
-sns.regplot(x="Calories_Burned", y="Resting_BPM", data=data)
-plt.title("Calories Burned vs. Resting BPM")
-plt.xlabel("Calories Burned")
-plt.ylabel("Resting BPM")
-plt.xticks(rotation=90)
-plt.xticks(np.arange(9, data["Calories_Burned"].max() + 1, 500))
-
-# Sixth plot: Calories Burned vs. Age
-plt.subplot(2, 3, 6)  # 2 rows, 3 columns, sixth subplot
-sns.regplot(x="Calories_Burned", y="Age", data=data)
-plt.title("Calories Burned vs. Age")
-plt.xlabel("Calories Burned")
-plt.ylabel("Age")
-plt.xticks(rotation=90)
-plt.xticks(np.arange(9, data["Calories_Burned"].max() + 1, 500))
-
-# Adjust layout to avoid overlap
-plt.tight_layout()
-
-# Show the plot
-plt.show()
-
-```
 
 
     
@@ -1463,34 +716,6 @@ Grafik ini menunjukkan hubungan antara jumlah kalori yang terbakar dengan berbag
 Rekayasa fitur untuk menemukan **Intensity Score**, sebuah metrik yang bertujuan untuk merepresentasikan tingkat intensitas aktivitas fisik. Intensity Score dihitung dengan menggabungkan beberapa variabel terkait, seperti durasi sesi olahraga, denyut jantung rata-rata (Avg BPM), denyut jantung maksimum (Max BPM), dan kalori yang terbakar, menggunakan pendekatan berbobot atau transformasi matematis tertentu. Fitur ini diharapkan mampu memberikan gambaran yang lebih holistik tentang tingkat usaha yang dilakukan seseorang selama aktivitas fisik, sehingga dapat meningkatkan akurasi analisis dan prediksi dalam model yang digunakan.
 
 
-```python
-# Menghitung Intensity Score
-data['Intensity_Score'] = ((data['Max_BPM'] - data['Resting_BPM']) * data['Session_Duration (hours)']) / data['Avg_BPM']
-
-# Membuat subplot untuk kedua grafik
-fig, axes = plt.subplots(1, 2, figsize=(14, 6))  # Dua grafik secara horizontal
-
-# Grafik pertama: Fat Percentage vs Intensity Score
-sns.regplot(ax=axes[0], x="Fat_Percentage", y="Intensity_Score", data=data)
-axes[0].set_title("Fat Percentage vs Intensity Score")
-axes[0].set_xlabel("Fat Percentage (%)")
-axes[0].set_ylabel("Intensity Score")
-axes[0].set_xticks(np.arange(9, data["Fat_Percentage"].max() + 1, 5))
-
-# Grafik kedua: Calories Burned vs Intensity Score
-sns.regplot(ax=axes[1], x="Calories_Burned", y="Intensity_Score", data=data)
-axes[1].set_title("Calories Burned vs Intensity Score")
-axes[1].set_xlabel("Calories Burned")
-axes[1].set_ylabel("Intensity Score")
-
-# Mengatur tata letak
-plt.tight_layout()
-
-# Menampilkan plot
-plt.show()
-
-```
-
 
     
 ![png](gambar_files/gambar_81_0.png)
@@ -1504,33 +729,7 @@ plt.show()
 Langkah ini melakukan rekayasa fitur untuk menghasilkan `HR Index`, sebuah metrik yang dirancang untuk merepresentasikan tingkat intensitas aktivitas fisik berdasarkan variabel-variabel terkait denyut jantung. Fitur ini dihitung dengan menggabungkan `HR Index (Heart Rate Index)`, yang mencakup rasio antara denyut jantung saat aktivitas dan denyut jantung istirahat. HR Index diharapkan dapat memberikan gambaran yang lebih komprehensif mengenai tingkat usaha individu selama aktivitas fisik, sehingga dapat digunakan sebagai indikator utama dalam analisis performa atau prediksi tingkat kebugaran.
 
 
-```python
-# Calculate HR_Index: Max_BPM - Resting_BPM divided by Avg_BPM
-data['HR_Index'] = (data['Max_BPM'] - data['Resting_BPM']) / data['Avg_BPM']
 
-# Membuat subplot untuk kedua grafik
-fig, axes = plt.subplots(1, 2, figsize=(14, 6))  # Dua grafik secara horizontal
-
-# Grafik pertama: Fat Percentage vs Intensity Score
-sns.regplot(ax=axes[0], x="Fat_Percentage", y="HR_Index", data=data)
-axes[0].set_title("Fat Percentage vs HR Index")
-axes[0].set_xlabel("Fat Percentage (%)")
-axes[0].set_ylabel("HR Index")
-axes[0].set_xticks(np.arange(9, data["Fat_Percentage"].max() + 1, 5))
-
-# Grafik kedua: Calories Burned vs Intensity Score
-sns.regplot(ax=axes[1], x="Calories_Burned", y="HR_Index", data=data)
-axes[1].set_title("Calories Burned vs HR Index")
-axes[1].set_xlabel("Calories Burned")
-axes[1].set_ylabel("HR Index")
-
-# Mengatur tata letak
-plt.tight_layout()
-
-# Menampilkan plot
-plt.show()
-
-```
 
 
     
@@ -1545,25 +744,7 @@ Grafik ini menunjukkan hubungan antara `HR Index (Heart Rate Index)` dengan `Fat
 Dilakukan drop pada `Workout_Frequency_cat` dan `Experiens_Level_cat` karena sudah ada dalam data sebagai numerikal. Lalu beberapa variabel kategorikal dikodifikasi dengan encoder. Setelah itu semua data numerik digunakan Standard Scaler untuk normalisasi.
 
 
-```python
-# Create copy of dataframe
-data_processed = data.copy()
 
-data_processed.drop('Workout_Frequency_cat', axis=1, inplace=True)
-data_processed.drop('Experience_Level_cat', axis=1, inplace=True)
-# Label encode categorical variables
-le = LabelEncoder()
-categorical_cols = ['Gender', 'Workout_Type']
-
-for col in categorical_cols:
-    if col in data_processed.columns:
-        data_processed[col] = le.fit_transform(data_processed[col])
-
-# Scale numerical features
-scaler = StandardScaler()
-numerical_cols = data_processed.select_dtypes(include=[np.number]).columns
-data_processed[numerical_cols] = scaler.fit_transform(data_processed[numerical_cols])
-```
 
 ## **Pemodelan dan Evaluasi**
 
@@ -1618,22 +799,6 @@ Jika MSE model adalah 4, itu berarti rata-rata kuadrat perbedaan antara nilai pr
 ### Model Kalori Terbakar
 
 Pembuatan data untuk model Kalori Terbakar yaitu dengan mendrop kolom Kalori Terbakar dari keseluruhan Data untuk membentuk nilai X sebagai variabel bebas. Semua kolom digunakan kecuali kolom Kalori Terbakar yang akan digunakan sebagai y atau variabek terikat.
-
-
-```python
-# Prepare features and target
-X = data_processed.drop('Calories_Burned', axis=1)
-y = data_processed['Calories_Burned']
-
-# Split data
-X_train, X_test, y_train, y_test = train_test_split(X, y,
-                                                    test_size=0.2,
-                                                    random_state=42)
-X_train.head()
-```
-
-
-
 
 
  
@@ -1761,54 +926,9 @@ X_train.head()
 
 
 
-
-
-```python
-# DataFrame untuk menyimpan hasil evaluasi
-# if 'metrics_df' not in locals() or metrics_df.empty:  # Memastikan DataFrame kosong atau belum ada
-
-metrics_df = pd.DataFrame(columns=["Model", "R2 Score", "Adjusted R2", "RMSE", "MAE", "MSE", "Explained Variance"])
-metrics_df.head()
-```
-
-
-
-
-
- 
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Model</th>
-      <th>R2 Score</th>
-      <th>Adjusted R2</th>
-      <th>RMSE</th>
-      <th>MAE</th>
-      <th>MSE</th>
-      <th>Explained Variance</th>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
-
-
-
-
-
 #### Random Forest
 
 Model pertama yang dibuat adalah Random Forest Regressor dengan n_estimators sebesar 100 dan random_state sebesar 42.
-
-
-```python
-# Train model
-modelRF = RandomForestRegressor(n_estimators=100, random_state=42)
-modelRF.fit(X_train, y_train)
-```
-
-
 
 
 <table style="width: 100%; text-align: center;">
@@ -1827,49 +947,6 @@ modelRF.fit(X_train, y_train)
 
 
 
-```python
-# Evaluasi RF
-y_pred = modelRF.predict(X_test)
-n = len(y_test)
-p = X_test.shape[1]
-r2 = r2_score(y_test, y_pred)
-rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-mae = mean_absolute_error(y_test, y_pred)
-mse = mean_squared_error(y_test, y_pred)
-explained_var = explained_variance_score(y_test, y_pred)
-r2_adj = 1 - (1 - r2) * (n - 1) / (n - p - 1)
-
-# Tambahkan hasil ke DataFrame
-new_row = pd.DataFrame({
-    "Model": ["RF"],
-    "R2 Score": [r2],
-    "Adjusted R2": [r2_adj],
-    "RMSE": [rmse],
-    "MAE": [mae],
-    "MSE": [mse],
-    "Explained Variance": [explained_var]
-})
-
-metrics_df = pd.concat([metrics_df, new_row], ignore_index=True)
-
-# Cetak hasil evaluasi RF
-print(f"\nModel Performance (RF):")
-perf_row = new_row.T
-print(perf_row)
-
-# Plot Actual vs Predicted (RF)
-plt.figure(figsize=(8, 6))
-plt.scatter(y_test, y_pred, color='blue', alpha=0.6)
-plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], color='red', linestyle='--')  # 45-degree line
-plt.title("Actual vs Predicted Values (RF)")
-plt.xlabel("Actual Values")
-plt.ylabel("Predicted Values")
-plt.grid(True)
-plt.show()
-```
-
-    <ipython-input-108-696f89b54772>:23: FutureWarning: The behavior of DataFrame concatenation with empty or all-NA entries is deprecated. In a future version, this will no longer exclude empty or all-NA columns when determining the result dtypes. To retain the old behavior, exclude the relevant entries before the concat operation.
-      metrics_df = pd.concat([metrics_df, new_row], ignore_index=True)
 
 
     
@@ -1897,10 +974,6 @@ Model yang dihasilkan cukup bagus dengan Adjusted Rsquared sebesar 0.9676 dan MS
 Model selanjutnya adalah K-Nearest Neighbors dengan jumlah n_neighbors=10.
 
 
-```python
-modelknn = KNeighborsRegressor(n_neighbors=10)
-modelknn.fit(X_train, y_train)
-```
 
 
 
@@ -1919,46 +992,6 @@ modelknn.fit(X_train, y_train)
 
 
 
-```python
-# Evaluasi XGBoost
-y_pred = modelknn.predict(X_test)
-n = len(y_test)
-p = X_test.shape[1]
-r2 = r2_score(y_test, y_pred)
-rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-mae = mean_absolute_error(y_test, y_pred)
-mse = mean_squared_error(y_test, y_pred)
-explained_var = explained_variance_score(y_test, y_pred)
-r2_adj = 1 - (1 - r2) * (n - 1) / (n - p - 1)
-
-# Tambahkan hasil ke DataFrame
-new_row = pd.DataFrame({
-    "Model": ["KNN"],
-    "R2 Score": [r2],
-    "Adjusted R2": [r2_adj],
-    "RMSE": [rmse],
-    "MAE": [mae],
-    "MSE": [mse],
-    "Explained Variance": [explained_var]
-})
-
-metrics_df = pd.concat([metrics_df, new_row], ignore_index=True)
-
-# Cetak hasil evaluasi KNN
-print(f"\nModel Performance (KNN):")
-perf_row = new_row.T
-print(perf_row)
-
-# Plot Actual vs Predicted (KNN)
-plt.figure(figsize=(8, 6))
-plt.scatter(y_test, y_pred, color='blue', alpha=0.6)
-plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], color='red', linestyle='--')  # 45-degree line
-plt.title("Actual vs Predicted Values (KNN)")
-plt.xlabel("Actual Values")
-plt.ylabel("Predicted Values")
-plt.grid(True)
-plt.show()
-```
 
     
     Model Performance (KNN):
@@ -1985,12 +1018,7 @@ Model ini tidak sebagus model sebelumnya namun masih cukup bagus di Adjusted Rsq
 Model Support Vector Regression dengan C sebesar 100 dan epsilon sebesar 0.1 ini digunakan untuk menentukan regresi.
 
 
-```python
-modelSVR = SVR(kernel='rbf', C=100, epsilon=0.1)
-modelSVR.fit(X_train, y_train)
 
-
-```
 
 
 
@@ -2009,46 +1037,6 @@ modelSVR.fit(X_train, y_train)
 
 
 
-```python
-# Evaluasi SVR
-y_pred = modelSVR.predict(X_test)
-n = len(y_test)
-p = X_test.shape[1]
-r2 = r2_score(y_test, y_pred)
-rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-mae = mean_absolute_error(y_test, y_pred)
-mse = mean_squared_error(y_test, y_pred)
-explained_var = explained_variance_score(y_test, y_pred)
-r2_adj = 1 - (1 - r2) * (n - 1) / (n - p - 1)
-
-# Tambahkan hasil ke DataFrame
-new_row = pd.DataFrame({
-    "Model": ["SVR"],
-    "R2 Score": [r2],
-    "Adjusted R2": [r2_adj],
-    "RMSE": [rmse],
-    "MAE": [mae],
-    "MSE": [mse],
-    "Explained Variance": [explained_var]
-})
-
-metrics_df = pd.concat([metrics_df, new_row], ignore_index=True)
-
-# Cetak hasil evaluasi SVR
-print(f"\nModel Performance (SVR):")
-perf_row = new_row.T
-print(perf_row)
-
-# Plot Actual vs Predicted (SVR)
-plt.figure(figsize=(8, 6))
-plt.scatter(y_test, y_pred, color='blue', alpha=0.6)
-plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], color='red', linestyle='--')  # 45-degree line
-plt.title("Actual vs Predicted Values (SVR)")
-plt.xlabel("Actual Values")
-plt.ylabel("Predicted Values")
-plt.grid(True)
-plt.show()
-```
 
     
     Model Performance (SVR):
@@ -2075,18 +1063,7 @@ Hasil dari model ini sangat baik dengan Adjusted Rsquared sebesar 0.9696 dan MSE
 Model terakhir diperkenalkan Algoritma Boosting dengan metode Extreme Gradient atau XGBoost. berikut parameter model yang digunakan yaitu n_estimators sebesar 100, learning rate 0.1, max_depth sebesar 6, colsample_bytree sebesar 0.8, dan subsample 0.8 poin.
 
 
-```python
-# Initialize the model
-xgboost = xgb.XGBRegressor(objective='reg:squarederror',  # Regression task
-                         n_estimators=100,  # Number of boosting rounds
-                         learning_rate=0.1,  # Step size at each iteration
-                         max_depth=6,  # Maximum depth of a tree
-                         colsample_bytree=0.8,  # Proportion of features used by each tree
-                         subsample=0.8)  # Subsample ratio of the training set
 
-# Fit the model on the training data
-xgboost.fit(X_train, y_train)
-```
 
 
 
@@ -2115,46 +1092,6 @@ xgboost.fit(X_train, y_train)
 
 
 
-```python
-# Evaluasi XGBoost
-y_pred = xgboost.predict(X_test)  # Ganti `xgboost` dengan nama model Anda jika berbeda
-n = len(y_test)
-p = X_test.shape[1]
-r2 = r2_score(y_test, y_pred)
-rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-mae = mean_absolute_error(y_test, y_pred)
-mse = mean_squared_error(y_test, y_pred)
-explained_var = explained_variance_score(y_test, y_pred)
-r2_adj = 1 - (1 - r2) * (n - 1) / (n - p - 1)
-
-# Tambahkan hasil ke DataFrame
-new_row = pd.DataFrame({
-    "Model": ["XGBoost"],
-    "R2 Score": [r2],
-    "Adjusted R2": [r2_adj],
-    "RMSE": [rmse],
-    "MAE": [mae],
-    "MSE": [mse],
-    "Explained Variance": [explained_var]
-})
-
-metrics_df = pd.concat([metrics_df, new_row], ignore_index=True)
-
-# Cetak hasil evaluasi XGBoost
-print(f"\nModel Performance (XGBoost):")
-xgboost_row = new_row.T
-print(xgboost_row)
-
-# Plot Actual vs Predicted (XGBoost)
-plt.figure(figsize=(8, 6))
-plt.scatter(y_test, y_pred, color='blue', alpha=0.6)
-plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], color='red', linestyle='--')  # 45-degree line
-plt.title("Actual vs Predicted Values (XGBoost)")
-plt.xlabel("Actual Values")
-plt.ylabel("Predicted Values")
-plt.grid(True)
-plt.show()
-```
 
     
     Model Performance (XGBoost):
@@ -2179,30 +1116,7 @@ Hasilnya sangat bagus dengn Adjusted Rsquares sebesar 0.9854 dan MSE yang sangat
 #### Model Terbaik
 
 
-```python
-print(metrics_df)
 
-# Extract the Adjusted R2 values and the corresponding model names
-models = metrics_df['Model']
-adjusted_r2 = metrics_df['Adjusted R2']
-
-# Plot Adjusted R² for all models
-plt.figure(figsize=(10, 6))
-bars=plt.bar(models, adjusted_r2)
-
-for bar in bars:
-    yval = bar.get_height()  # Get the height of each bar (i.e., Adjusted R² value)
-    plt.text(bar.get_x() + bar.get_width() / 2, yval + 0.005,  # Position text above the bar
-             round(yval, 4), ha='center', va='bottom', fontsize=10)  # Format the value and position it
-
-# Adding title and labels
-plt.title('Adjusted R² for Different Models')
-plt.xlabel('Model')
-plt.ylabel('Adjusted R²')
-
-# Display the plot
-plt.show()
-```
 
          Model  R2 Score  Adjusted R2      RMSE       MAE       MSE  \
     0       RF  0.970312     0.967643  0.182629  0.138950  0.033353   
@@ -2230,18 +1144,7 @@ Model terbaik untuk variabel Kalori Terbakar adalah dengan Metode XGBoost yaitu 
 Proses pembuatan data untuk model Kadar Lemak Tubuh dilakukan dengan menghapus kolom Kadar Lemak Tubuh dari seluruh dataset, sehingga menghasilkan nilai X sebagai variabel independen. Semua kolom lainnya digunakan, kecuali kolom Kadar Lemak Tubuh yang akan menjadi variabel dependen atau y.
 
 
-```python
-# Prepare features and target
-X = data_processed.drop(['Fat_Percentage'], axis=1)
-y = data_processed['Fat_Percentage']
 
-# Split data
-X_train, X_test, y_train, y_test = train_test_split(X, y,
-                                                    test_size=0.2,
-                                                    random_state=42)
-
-X.head()
-```
 
 
 
@@ -2362,35 +1265,13 @@ X.head()
 
 
 
-```python
-# DataFrame untuk menyimpan hasil evaluasi
-# if 'metrics_df' not in locals() or metrics_df.empty:  # Memastikan DataFrame kosong atau belum ada
 
-metrics_df = pd.DataFrame(columns=["Model", "R2 Score", "Adjusted R2", "RMSE", "MAE", "MSE", "Explained Variance"])
-metrics_df.head()
-```
 
 
 
 
 
  
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Model</th>
-      <th>R2 Score</th>
-      <th>Adjusted R2</th>
-      <th>RMSE</th>
-      <th>MAE</th>
-      <th>MSE</th>
-      <th>Explained Variance</th>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
 
 
 
@@ -2400,11 +1281,7 @@ metrics_df.head()
 Model pertama yang dibuat adalah Random Forest Regressor dengan n_estimators sebesar 100 dan random_state sebesar 42.
 
 
-```python
-# Train model
-modelRF = RandomForestRegressor(n_estimators=100, random_state=42)
-modelRF.fit(X_train, y_train)
-```
+
 
 
 <table>
@@ -2422,49 +1299,7 @@ modelRF.fit(X_train, y_train)
 
 
 
-```python
-# Evaluasi RF
-y_pred = modelRF.predict(X_test)
-n = len(y_test)
-p = X_test.shape[1]
-r2 = r2_score(y_test, y_pred)
-rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-mae = mean_absolute_error(y_test, y_pred)
-mse = mean_squared_error(y_test, y_pred)
-explained_var = explained_variance_score(y_test, y_pred)
-r2_adj = 1 - (1 - r2) * (n - 1) / (n - p - 1)
 
-# Tambahkan hasil ke DataFrame
-new_row = pd.DataFrame({
-    "Model": ["RF"],
-    "R2 Score": [r2],
-    "Adjusted R2": [r2_adj],
-    "RMSE": [rmse],
-    "MAE": [mae],
-    "MSE": [mse],
-    "Explained Variance": [explained_var]
-})
-
-metrics_df = pd.concat([metrics_df, new_row], ignore_index=True)
-
-# Cetak hasil evaluasi RF
-print(f"\nModel Performance (RF):")
-perf_row = new_row.T
-print(perf_row)
-
-# Plot Actual vs Predicted (RF)
-plt.figure(figsize=(8, 6))
-plt.scatter(y_test, y_pred, color='blue', alpha=0.6)
-plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], color='red', linestyle='--')  # 45-degree line
-plt.title("Actual vs Predicted Values (RF)")
-plt.xlabel("Actual Values")
-plt.ylabel("Predicted Values")
-plt.grid(True)
-plt.show()
-```
-
-    <ipython-input-126-92d656d3cf29>:23: FutureWarning: The behavior of DataFrame concatenation with empty or all-NA entries is deprecated. In a future version, this will no longer exclude empty or all-NA columns when determining the result dtypes. To retain the old behavior, exclude the relevant entries before the concat operation.
-      metrics_df = pd.concat([metrics_df, new_row], ignore_index=True)
 
 
     
@@ -2492,10 +1327,7 @@ Model yang dihasilkan kurang bagus dengan Adjusted Rsquared sebesar 0.7891 dan M
 Model selanjutnya adalah K-Nearest Neighbors dengan jumlah n_neighbors=10.
 
 
-```python
-modelknn = KNeighborsRegressor(n_neighbors=10)
-modelknn.fit(X_train, y_train)
-```
+
 
 
 
@@ -2514,48 +1346,7 @@ modelknn.fit(X_train, y_train)
 
 
 
-```python
-# Evaluasi KNN
-y_pred = modelknn.predict(X_test)
-n = len(y_test)
-p = X_test.shape[1]
-r2 = r2_score(y_test, y_pred)
-rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-mae = mean_absolute_error(y_test, y_pred)
-mse = mean_squared_error(y_test, y_pred)
-explained_var = explained_variance_score(y_test, y_pred)
-r2_adj = 1 - (1 - r2) * (n - 1) / (n - p - 1)
 
-# Tambahkan hasil ke DataFrame
-new_row = pd.DataFrame({
-    "Model": ["KNN"],
-    "R2 Score": [r2],
-    "Adjusted R2": [r2_adj],
-    "RMSE": [rmse],
-    "MAE": [mae],
-    "MSE": [mse],
-    "Explained Variance": [explained_var]
-})
-
-metrics_df = pd.concat([metrics_df, new_row], ignore_index=True)
-
-# Cetak hasil evaluasi KNN
-print(f"\nModel Performance (KNN):")
-perf_row = new_row.T
-print(perf_row)
-
-# Plot Actual vs Predicted (KNN)
-plt.figure(figsize=(8, 6))
-plt.scatter(y_test, y_pred, color='blue', alpha=0.6)
-plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], color='red', linestyle='--')  # 45-degree line
-plt.title("Actual vs Predicted Values (KNN)")
-plt.xlabel("Actual Values")
-plt.ylabel("Predicted Values")
-plt.grid(True)
-plt.show()
-```
-
-    
     Model Performance (KNN):
                                0
     Model                    KNN
@@ -2580,26 +1371,7 @@ Model ini lebih buruk dari model sebelumnya namun masih cukup di Adjusted Rsquar
 Model Support Vector Regression menggunakan teknik Gridsearch untuk menentukan parameternya. Gridsearcgh digunakan karena model awal SVR memiliki nilai metrik akurasi yang kurang bisa dipertanggung-jawabkan.
 
 
-```python
-# Define the parameter grid
-param_grid = {
-    'C': [0.1, 1, 10, 100],
-    'epsilon': [0.01, 0.1, 0.5, 1],
-    'gamma': ['scale', 0.1, 1, 10]
-}
 
-# Initialize SVR model
-svr = SVR(kernel='rbf')
-
-# Perform grid search
-grid_search = GridSearchCV(estimator=svr, param_grid=param_grid, cv=5, scoring='neg_mean_squared_error')
-grid_search.fit(X, y)
-
-# Best parameters and score
-print("Best Parameters:", grid_search.best_params_)
-print("Best Score:", grid_search.best_score_)
-
-```
 
     Best Parameters: {'C': 1, 'epsilon': 0.5, 'gamma': 'scale'}
     Best Score: -0.23618483737773482
@@ -2608,12 +1380,7 @@ print("Best Score:", grid_search.best_score_)
 Parameter model terbaik melalui Gridsearch adalah dengan C sama dengan 1, epsilon sebesar 0.5, dan gamma bernilai 'scale'.
 
 
-```python
-modelSVR = SVR(kernel='rbf', C=1, epsilon=0.5, gamma= 'scale')
-modelSVR.fit(X_train, y_train)
 
-
-```
 
 
 
@@ -2631,46 +1398,6 @@ modelSVR.fit(X_train, y_train)
 
 
 
-```python
-# Evaluasi SVR
-y_pred = modelSVR.predict(X_test)
-n = len(y_test)
-p = X_test.shape[1]
-r2 = r2_score(y_test, y_pred)
-rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-mae = mean_absolute_error(y_test, y_pred)
-mse = mean_squared_error(y_test, y_pred)
-explained_var = explained_variance_score(y_test, y_pred)
-r2_adj = 1 - (1 - r2) * (n - 1) / (n - p - 1)
-
-# Tambahkan hasil ke DataFrame
-new_row = pd.DataFrame({
-    "Model": ["SVR"],
-    "R2 Score": [r2],
-    "Adjusted R2": [r2_adj],
-    "RMSE": [rmse],
-    "MAE": [mae],
-    "MSE": [mse],
-    "Explained Variance": [explained_var]
-})
-
-metrics_df = pd.concat([metrics_df, new_row], ignore_index=True)
-
-# Cetak hasil evaluasi SVR
-print(f"\nModel Performance (SVR):")
-perf_row = new_row.T
-print(perf_row)
-
-# Plot Actual vs Predicted (SVR)
-plt.figure(figsize=(8, 6))
-plt.scatter(y_test, y_pred, color='blue', alpha=0.6)
-plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], color='red', linestyle='--')  # 45-degree line
-plt.title("Actual vs Predicted Values (SVR)")
-plt.xlabel("Actual Values")
-plt.ylabel("Predicted Values")
-plt.grid(True)
-plt.show()
-```
 
     
     Model Performance (SVR):
@@ -2694,50 +1421,8 @@ Hasil dari model ini kurang baik dengan Adjusted Rsquared sebesar 0.7469 dan MSE
 
 #### XGBoost
 
-Model terakhir diperkenalkan Algoritma Boosting dengan metode Extreme Gradient atau XGBoost. Berikut parameter model yang digunakan yaitu dicari melalu Gridsearch karena hasil iterasi pertama model menghasilkan akurasi yang sangat rendah.
+Model terakhir diperkenalkan Algoritma Boosting dengan metode Extreme Gradient atau XGBoost. Berikut parameter model yang digunakan yaitu dicari melalui Gridsearch karena hasil iterasi pertama model menghasilkan akurasi yang sangat rendah.
 
-
-```python
-# Define the parameter grid
-param_grid = {
-    'n_estimators': [50, 100, 200],
-    'max_depth': [3, 6, 10],
-    'learning_rate': [0.01, 0.1, 0.2],
-    'subsample': [0.8, 1.0],
-    'colsample_bytree': [0.8, 1.0],
-    'gamma': [0, 0.1, 0.2],
-    'reg_alpha': [0, 0.1, 1.0],
-    'reg_lambda': [1.0, 10.0]
-}
-
-# Initialize the XGBoost model
-xgb_model = XGBRegressor(objective='reg:squarederror', random_state=42)
-
-# Set up GridSearchCV
-grid_search = GridSearchCV(
-    estimator=xgb_model,
-    param_grid=param_grid,
-    scoring='neg_mean_squared_error',
-    cv=3,
-    verbose=1,
-    n_jobs=-1
-)
-
-# Perform grid search
-grid_search.fit(X_train, y_train)
-
-# Get the best parameters and score
-best_params = grid_search.best_params_
-best_score = -grid_search.best_score_
-print("Best Parameters:", best_params)
-print("Best Training RMSE:", np.sqrt(best_score))
-
-# Evaluate the best model on the test set
-best_model = grid_search.best_estimator_
-y_pred = best_model.predict(X_test)
-test_rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-print("Test RMSE:", test_rmse)
-```
 
     Fitting 3 folds for each of 1944 candidates, totalling 5832 fits
     Best Parameters: {'colsample_bytree': 0.8, 'gamma': 0.2, 'learning_rate': 0.1, 'max_depth': 3, 'n_estimators': 50, 'reg_alpha': 0, 'reg_lambda': 10.0, 'subsample': 1.0}
@@ -2748,21 +1433,7 @@ print("Test RMSE:", test_rmse)
 Parameter yang didapat adalah n_estimators sebesar 50, learning rate 0.1, max_depth sebesar 3, colsample_bytree sebesar 0.8, subsample 1.0 lalu reg_alpha 0, dan reg_lambda sebesar 10.0 poin.
 
 
-```python
-# Initialize the model
-xgboost = xgb.XGBRegressor(objective='reg:squarederror',  # Regression task
-                         n_estimators=50,  # Number of boosting rounds
-                         learning_rate=0.1,  # Step size at each iteration
-                         max_depth=3,  # Maximum depth of a tree
-                         colsample_bytree=0.8,  # Proportion of features used by each tree
-                         subsample=1.0,  # Subsample ratio of the training set
-                         reg_alpha= 0,
-                         reg_lambda= 10.0,
-                         gamma= 0.2)
 
-# Fit the model on the training data
-xgboost.fit(X_train, y_train)
-```
 
 
 
@@ -2791,46 +1462,7 @@ xgboost.fit(X_train, y_train)
 
 
 
-```python
-# Evaluasi XGBoost
-y_pred = xgboost.predict(X_test)  # Ganti `xgboost` dengan nama model Anda jika berbeda
-n = len(y_test)
-p = X_test.shape[1]
-r2 = r2_score(y_test, y_pred)
-rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-mae = mean_absolute_error(y_test, y_pred)
-mse = mean_squared_error(y_test, y_pred)
-explained_var = explained_variance_score(y_test, y_pred)
-r2_adj = 1 - (1 - r2) * (n - 1) / (n - p - 1)
 
-# Tambahkan hasil ke DataFrame
-new_row = pd.DataFrame({
-    "Model": ["XGBoost"],
-    "R2 Score": [r2],
-    "Adjusted R2": [r2_adj],
-    "RMSE": [rmse],
-    "MAE": [mae],
-    "MSE": [mse],
-    "Explained Variance": [explained_var]
-})
-
-metrics_df = pd.concat([metrics_df, new_row], ignore_index=True)
-
-# Cetak hasil evaluasi XGBoost
-print(f"\nModel Performance (XGBoost):")
-xgboost_row = new_row.T
-print(xgboost_row)
-
-# Plot Actual vs Predicted (XGBoost)
-plt.figure(figsize=(8, 6))
-plt.scatter(y_test, y_pred, color='blue', alpha=0.6)
-plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], color='red', linestyle='--')  # 45-degree line
-plt.title("Actual vs Predicted Values (XGBoost)")
-plt.xlabel("Actual Values")
-plt.ylabel("Predicted Values")
-plt.grid(True)
-plt.show()
-```
 
     
     Model Performance (XGBoost):
@@ -2855,30 +1487,6 @@ Hasilnya agak sedikit lebih baik dengn Adjusted Rsquares sebesar 0.777978 dan MS
 #### Model Terbaik
 
 
-```python
-print(metrics_df)
-
-# Extract the Adjusted R2 values and the corresponding model names
-models = metrics_df['Model']
-adjusted_r2 = metrics_df['Adjusted R2']
-
-# Plot Adjusted R² for all models
-plt.figure(figsize=(10, 6))
-bars=plt.bar(models, adjusted_r2)
-
-for bar in bars:
-    yval = bar.get_height()  # Get the height of each bar (i.e., Adjusted R² value)
-    plt.text(bar.get_x() + bar.get_width() / 2, yval + 0.005,  # Position text above the bar
-             round(yval, 4), ha='center', va='bottom', fontsize=10)  # Format the value and position it
-
-# Adding title and labels
-plt.title('Adjusted R² for Different Models')
-plt.xlabel('Model')
-plt.ylabel('Adjusted R²')
-
-# Display the plot
-plt.show()
-```
 
          Model  R2 Score  Adjusted R2      RMSE       MAE       MSE  \
     0       RF  0.804363     0.789147  0.445087  0.377017  0.198102   
@@ -2924,55 +1532,6 @@ Kesimpulan berdasarkan hasil dari *goal* yang telah dicapai:
 
 
 Secara keseluruhan, model prediksi yang kuat untuk kalori terbakar dan kadar lemak tubuh telah berhasil dibuat. Hasil analisis preferensi menunjukkan bahwa pendekatan universal dapat diambil tanpa perlu memperhatikan perbedaan gender atau tingkat kemahiran. Langkah selanjutnya dapat difokuskan pada pengembangan program latihan berbasis data, peningkatan model kadar lemak tubuh, atau eksplorasi faktor-faktor lain yang mungkin memengaruhi preferensi individu.
-
-## Akhir
-
-
-```python
-# !pip install nbconvert
-!jupyter nbconvert --to markdown /content/gambar.ipynb
-
-```
-
-      [NbConvertApp] Converting notebook /content/gambar.ipynb to markdown
-      [NbConvertApp] Support files will be in gambar_files/
-      [NbConvertApp] Making directory /content/gambar_files
-      [NbConvertApp] Writing 238410 bytes to /content/gambar.md
-
-
-
-```python
-!zip -r gambar_files.zip gambar_files
-
-```
-
-      adding: gambar_files/ (stored 0%)
-      adding: gambar_files/gambar_112_1.png (deflated 5%)
-      adding: gambar_files/gambar_129_1.png (deflated 5%)
-      adding: gambar_files/gambar_146_1.png (deflated 22%)
-      adding: gambar_files/gambar_71_0.png (deflated 3%)
-      adding: gambar_files/gambar_143_1.png (deflated 5%)
-      adding: gambar_files/gambar_62_0.png (deflated 9%)
-      adding: gambar_files/gambar_84_0.png (deflated 3%)
-      adding: gambar_files/gambar_136_1.png (deflated 5%)
-      adding: gambar_files/gambar_77_0.png (deflated 3%)
-      adding: gambar_files/gambar_50_0.png (deflated 18%)
-      adding: gambar_files/gambar_115_1.png (deflated 22%)
-      adding: gambar_files/gambar_97_2.png (deflated 4%)
-      adding: gambar_files/gambar_74_0.png (deflated 2%)
-      adding: gambar_files/gambar_59_0.png (deflated 9%)
-      adding: gambar_files/gambar_56_0.png (deflated 9%)
-      adding: gambar_files/gambar_65_0.png (deflated 6%)
-      adding: gambar_files/gambar_32_0.png (deflated 23%)
-      adding: gambar_files/gambar_53_0.png (deflated 20%)
-      adding: gambar_files/gambar_68_1.png (deflated 3%)
-      adding: gambar_files/gambar_124_2.png (deflated 5%)
-      adding: gambar_files/gambar_44_0.png (deflated 23%)
-      adding: gambar_files/gambar_42_0.png (deflated 9%)
-      adding: gambar_files/gambar_102_1.png (deflated 4%)
-      adding: gambar_files/gambar_46_0.png (deflated 7%)
-      adding: gambar_files/gambar_107_1.png (deflated 4%)
-      adding: gambar_files/gambar_81_0.png (deflated 3%)
 
 
 
