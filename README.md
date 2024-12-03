@@ -50,8 +50,19 @@ Kadam, A., Shrivastava, A., Pawar, S. K., Patil, V. H., Michaelson, J., & Singh,
 
 ## Business Understanding
 ### Problem Statement
-1. Faktor apa saja yang mempengaruhi seberapa banyak Kalori Terbakar pada Latihan?
-2. Apa saja yang harus dioptimalkan dalam latihan jika ingin mencapai target Kadar Lemak Tubuh tertentu?
+1. Bagaimana cara meningkatkan efektifitas jumlah Kalori Terbakar pada Latihan?
+2. Bagaimana cara optimalkan latihan, jika ingin mencapai target Kadar Lemak Tubuh tertentu?
 3. Apakah ada perbedaan antara Laki-laki dan Perempuan dalam preferensi latihan?
-4. 
+4. Apakah Tingkat Kemahiran mempengaruhi preferensi latihan?
+
+### Goals
+1. Membuat model yang memprediksi Kalori Terbakar dalam Latihan.
+2. Membuat model yang memprediksi Kadar Lemak Tubuh.
+3. Mencari perbedaan preferensi Laki-laki dan Perempuan.
+4. Mencari preferensi setiap tingkat Kemahiran.
+
+### Solution
+1. Menggunakan 4 Algoritma Machine Learning untuk membuat model yang memprediksi Kalori Terbakar dan Kadar Lemak Tubuh.
+2. Menggunakan Exploratory Data Analysis (EDA) untuk menentukan pengaruh Jenis Kelamin dan Tingkat Kemahiran dalam preferensi Latihan.
+
 
