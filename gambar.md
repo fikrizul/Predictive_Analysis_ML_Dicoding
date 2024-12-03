@@ -2890,3 +2890,16 @@ Secara keseluruhan, model prediksi yang kuat untuk kalori terbakar dan kadar lem
       adding: gambar_files/gambar_107_1.png (deflated 4%)
       adding: gambar_files/gambar_81_0.png (deflated 3%)
 
+
+
+## Referensi
+
+- Gough, A., et al. (2018). Personalized Fitness: Trends in the Digital Fitness Industry. *Journal of Health & Wellness*.
+
+- McAuley, E., et al. (2011). Social Support and Self-Efficacy in Exercise. *Health Psychology*.
+
+- World Health Organization. (2020). *Physical Activity*. Retrieved from [WHO](https://www.who.int/news-room/fact-sheets/detail/physical-activity).
+
+- Tan, J. S. A., Che Embi, Z., & Hashim, N. (2024). Comparison of Machine Learning Methods for Calories Burn Prediction. *Journal of Informatics and Web Engineering*, 3(1), 182-191. [https://doi.org/10.33093/jiwe.2024.3.1.12](https://doi.org/10.33093/jiwe.2024.3.1.12)
+
+- Kadam, A., Shrivastava, A., Pawar, S. K., Patil, V. H., Michaelson, J., & Singh, A. (n.d.). *Calories Burned Prediction Using Machine Learning*. IEEE. Retrieved from [Calories Burn Prediction](https://hossainlab.github.io/projects/Calories_Burnt/02_Calories%20Burnt%20Prediction.html)
