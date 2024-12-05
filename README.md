@@ -41,7 +41,7 @@ Data olahraga menunjukkan intensitas dan preferensi, dengan aktivitas berintensi
 
 ### Pemuatan Data
 
-Data diambil dari kaggle pada tautan berikut "valakhorasani/gym-members-exercise-dataset" dengan usability 10.00 dan view sebesar 103k pada saat diakses yang selanjutnya diunduh ke dalam root sistem Google Colab. Data dipindahkan ke dalam drive agar dapat memudahkan penggunaan di Google Colab.
+Data diambil dari kaggle pada tautan berikut https://www.kaggle.com/datasets/valakhorasani/gym-members-exercise-dataset/data, dengan usability 10.00 dan view sebesar 103k pada saat diakses, yang selanjutnya diunduh ke dalam root sistem Google Colab. Data dipindahkan ke dalam drive agar dapat memudahkan penggunaan di Google Colab.
 Data dibuka melalui dataframe dan ditampilkan sekilas menggunakan fungsi `.head()` dan `.shape` sebagai berikut
 
   
@@ -710,7 +710,12 @@ Grafik ini menunjukkan hubungan antara persentase lemak tubuh dengan beberapa va
 
 Grafik ini menunjukkan hubungan antara jumlah kalori yang terbakar dengan berbagai variabel numerik lainnya. Hubungan yang paling kuat terlihat pada grafik **Calories Burned vs. Session Duration**, di mana semakin lama durasi sesi olahraga, semakin banyak kalori yang terbakar, menunjukkan korelasi linear yang jelas. Pada hubungan dengan **water intake**, terdapat korelasi positif ringan, di mana asupan air cenderung meningkat seiring dengan kalori yang terbakar, meskipun data tersebar cukup luas. Korelasi positif juga terlihat pada hubungan dengan **Average BPM (denyut jantung rata-rata)**, di mana kalori yang terbakar cenderung lebih tinggi pada aktivitas dengan denyut rata-rata lebih besar. Sebaliknya, variabel seperti **Max BPM (denyut jantung maksimum)** dan **Resting BPM (denyut istirahat)** tidak menunjukkan pola hubungan yang signifikan, dengan data yang tersebar acak. Pada hubungan dengan **usia**, terdapat pola negatif lemah, di mana jumlah kalori yang terbakar sedikit menurun pada individu yang lebih tua, meskipun hubungan ini tidak terlalu signifikan. Secara keseluruhan, durasi sesi olahraga memiliki hubungan paling signifikan dengan jumlah kalori yang terbakar, sementara variabel lainnya menunjukkan hubungan yang lemah atau tidak signifikan.
 
-## **Rekayasa Fitur**
+
+## **Persiapan Data**
+
+Memanfaatkan beberapa fitur baru yang bisa dibuat dari beberapa variabel yang ada agar didapat akurasi yang lebih maksimal dalam model maka akan dilakukan rekayasa fitur.
+
+### **Rekayasa Fitur**
 
 **Intensity Score**
 
@@ -740,66 +745,25 @@ Langkah ini melakukan rekayasa fitur untuk menghasilkan `HR Index`, sebuah metri
 
 Grafik ini menunjukkan hubungan antara `HR Index (Heart Rate Index)` dengan `Fat Percentage` dan `Calories Burned`. Hubungan antara `Fat Percentage` dan `HR Index`, terlihat bahwa tidak ada korelasi signifikan, dengan data yang tersebar acak di sekitar garis regresi yang mendatar, menunjukkan bahwa HR Index tidak dipengaruhi oleh persentase lemak tubuh. Sementara itu, hubungan antara `Calories Burned` dan `HR Index` menunjukkan korelasi negatif yang lemah, di mana `HR Index` sedikit menurun seiring meningkatnya jumlah kalori yang terbakar, meskipun hubungan ini tidak terlalu kuat karena data masih tersebar di sekitar garis regresi.
 
-## **Persiapan Data**
+### **Reduksi Variabel**
 
-Dilakukan drop pada `Workout_Frequency_cat` dan `Experiens_Level_cat` karena sudah ada dalam data sebagai numerikal. Lalu beberapa variabel kategorikal dikodifikasi dengan encoder. Setelah itu semua data numerik digunakan Standard Scaler untuk normalisasi.
+Kolom `Workout_Frequency_cat` dan `Experiences_Level_cat` sejatinya adalah kolom yang redundan karena sudah ada dalam data sebagai numerikal dalam bentuk integer atau bilangan bulat.  Tidak diperlukan encoding lebih lanjut karena sudah setara posisinya dengan bilangan ordinal.
 
+### **Encoding**
 
+Kolom `Gender` dan `Workout_Type` dilakukan encoding dengan menggunakan `LabelEncoder()` yang menghasilkan output encoding ordinal.
 
+### **Normalisasi Data**
 
-## **Pemodelan dan Evaluasi**
+Data yang sudah dalam bentuk numerik dari beberapa proses diatas akan dinormalisasi untuk mengubah nilai rata-rata setiap variabel menjadi 0, nilai maksimum sebesar 1, dan nilai minimum sebesar -1. Hal ini dilakukan agar pemodelan menjadi lebih konsisten karena memiliki batas atas dan bawah yang seragam. Proses ini menggunakan `StandarScaler` untuk semua nilai numerik.
 
-Ada 4 algoritma yang dipilih dengan framework yang berbeda yaitu Random Forest, K-Nearest Neighbors, Support Vector Rgeressor dan XGboost. Random Forest (RF) unggul dalam menangani data kompleks dan besar, serta dapat mengurangi risiko overfitting dengan menggunakan banyak pohon keputusan tanpa membutuhkan praproses data yang rumit. Namun, proses pelatihan dan prediksi bisa lebih lambat dan sulit diinterpretasi. K-Nearest Neighbors (KNN) sederhana dan mudah dipahami, tidak memerlukan pelatihan, serta dapat digunakan untuk regresi dan klasifikasi, tetapi kinerjanya menurun pada dataset besar dan sangat sensitif terhadap noise serta data yang tidak seimbang. Support Vector Regression (SVR) efektif untuk data dengan dimensi tinggi dan linearitas kompleks serta dapat menangani noise, namun kurang efisien untuk dataset besar dan sulit diinterpretasi karena bergantung pada pemilihan kernel dan parameter yang tepat. XGBoost cepat, efisien, dan sering menghasilkan akurasi tinggi dengan regularisasi yang baik untuk mengurangi overfitting, namun dapat overfit jika tidak dikonfigurasi dengan benar, memerlukan pemilihan hyperparameter yang tepat, dan model yang dihasilkan sulit diinterpretasi.
+### **Train-Test-Split
 
-Setelah itu dipilih dua metrik untuk digunakan sebagai pembanding yaitu Adjusted R² dan Mean Squared Error. Keduanya dipilih karena variabel bebas digunakan tidak hanya satu jadi dibutuhkan metrik yang andal dengan jumlah variabel bebas yang lebih dari satu.
+Data kemudian displit dengan perbandingan 80% training data dan 20% test data, proses ini dilakukan secara acak dengan `random state` bernilai 42.
 
-* Adjusted R² (Adjusted R-Squared)
+#### Model Kalori Terbakar
 
-R² mengukur seberapa baik model regresi linier dapat menjelaskan variasi data. Nilainya antara 0 hingga 1, semakin tinggi nilai R², semakin baik model dalam menjelaskan data. Namun, R² bisa meningkat hanya dengan menambahkan variabel bebas ke dalam model, meskipun variabel tersebut mungkin tidak relevan. Karena itu, Adjusted R² digunakan untuk memberikan penilaian yang lebih akurat.
-
-Formula Adjusted R²:
-
-`Adjusted R² = 1 - ((1 - R²) * (n - 1)) / (n - p - 1)`
-
-R²: Koefisien determinasi
-
-n: Jumlah data (observasi)
-
-p: Jumlah variabel bebas
-
-Cara Kerja:
-
-Adjusted R² memperhitungkan jumlah variabel dan jumlah data, membuatnya lebih andal daripada R² saat membandingkan model dengan jumlah variabel yang berbeda.
-Jika variabel baru ditambahkan dan relevan, Adjusted R² akan meningkat. Sebaliknya, jika variabel tersebut tidak relevan, Adjusted R² akan menurun, menunjukkan model menjadi lebih kompleks tanpa nilai tambah.
-Adjusted R² lebih cocok digunakan untuk membandingkan model yang memiliki jumlah variabel yang berbeda.
-Contoh:
-Jika Adjusted R² sebuah model adalah 0.85, itu berarti model tersebut dapat menjelaskan 85% variasi data dengan memperhitungkan jumlah variabel dalam model.
-
-* MSE (Mean Squared Error)
-
-MSE adalah ukuran yang digunakan untuk menghitung rata-rata kesalahan kuadrat antara nilai yang diprediksi oleh model dan nilai aktual. Ini adalah alat yang digunakan untuk mengevaluasi akurasi prediksi model.
-
-Formula MSE:
-
-`MSE = (1 / n) * Σ(yᵢ - ŷᵢ)²`
-
-yᵢ: Nilai aktual (observasi sebenarnya)
-
-ŷᵢ: Nilai prediksi model
-
-n: Jumlah data (observasi)
-
-Cara Kerja:
-
-MSE mengukur rata-rata kuadrat selisih antara nilai yang diprediksi dan nilai yang sebenarnya.
-Nilai MSE yang lebih kecil menunjukkan model yang lebih baik, karena perbedaan antara nilai yang diprediksi dan nilai aktual lebih kecil.
-MSE sangat sensitif terhadap outlier, karena kesalahan dihitung dalam bentuk kuadrat. Jadi, jika ada data yang sangat berbeda, MSE bisa menjadi lebih besar.
-Contoh:
-Jika MSE model adalah 4, itu berarti rata-rata kuadrat perbedaan antara nilai prediksi dan nilai aktual adalah 4, menunjukkan model memiliki kesalahan yang relatif besar dibandingkan dengan model dengan MSE lebih kecil.
-
-### Model Kalori Terbakar
-
-Pembuatan data untuk model Kalori Terbakar yaitu dengan mendrop kolom Kalori Terbakar dari keseluruhan Data untuk membentuk nilai X sebagai variabel bebas. Semua kolom digunakan kecuali kolom Kalori Terbakar yang akan digunakan sebagai y atau variabek terikat.
+Pembuatan data untuk model Kalori Terbakar yaitu dengan mendrop kolom Kalori Terbakar dari keseluruhan Data untuk membentuk nilai X sebagai variabel bebas. Semua kolom digunakan kecuali kolom Kalori Terbakar yang akan digunakan sebagai y atau variabel terikat.
 
 
  
@@ -923,6 +887,187 @@ Pembuatan data untuk model Kalori Terbakar yaitu dengan mendrop kolom Kalori Ter
     </tr>
   </tbody>
 </table>
+
+### **Model Kadar Lemak Tubuh**
+
+Proses pembuatan data untuk model Kadar Lemak Tubuh dilakukan dengan menghapus kolom Kadar Lemak Tubuh dari seluruh dataset, sehingga menghasilkan nilai X sebagai variabel bebas. Semua kolom lainnya digunakan, kecuali kolom Kadar Lemak Tubuh yang akan menjadi variabel terikat atau y.
+
+
+
+
+
+
+
+
+ 
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Age</th>
+      <th>Gender</th>
+      <th>Weight (kg)</th>
+      <th>Height (m)</th>
+      <th>Max_BPM</th>
+      <th>Avg_BPM</th>
+      <th>Resting_BPM</th>
+      <th>Session_Duration (hours)</th>
+      <th>Calories_Burned</th>
+      <th>Workout_Type</th>
+      <th>Water_Intake (liters)</th>
+      <th>Workout_Frequency (days/week)</th>
+      <th>Experience_Level</th>
+      <th>BMI</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1.422343</td>
+      <td>0.950847</td>
+      <td>0.681493</td>
+      <td>-0.098545</td>
+      <td>0.010081</td>
+      <td>0.922970</td>
+      <td>-0.303555</td>
+      <td>1.264598</td>
+      <td>1.495690</td>
+      <td>1.338485</td>
+      <td>1.455967</td>
+      <td>0.743295</td>
+      <td>1.609784</td>
+      <td>0.794278</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.600965</td>
+      <td>-1.051694</td>
+      <td>0.049316</td>
+      <td>-1.508604</td>
+      <td>-0.076726</td>
+      <td>0.504494</td>
+      <td>0.515749</td>
+      <td>0.127098</td>
+      <td>-0.082284</td>
+      <td>-0.439462</td>
+      <td>-0.877898</td>
+      <td>0.743295</td>
+      <td>0.257176</td>
+      <td>1.064652</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>-0.548964</td>
+      <td>-1.051694</td>
+      <td>-0.271491</td>
+      <td>-0.490228</td>
+      <td>-1.118414</td>
+      <td>-1.518142</td>
+      <td>-1.122858</td>
+      <td>-0.427068</td>
+      <td>-0.838243</td>
+      <td>-1.328435</td>
+      <td>-0.544488</td>
+      <td>0.743295</td>
+      <td>0.257176</td>
+      <td>-0.030361</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>-1.123928</td>
+      <td>0.950847</td>
+      <td>-0.974433</td>
+      <td>-0.176881</td>
+      <td>0.878155</td>
+      <td>1.411193</td>
+      <td>-0.849757</td>
+      <td>-1.943735</td>
+      <td>-1.370351</td>
+      <td>0.449512</td>
+      <td>-0.877898</td>
+      <td>-0.352502</td>
+      <td>-1.095432</td>
+      <td>-0.976669</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>-0.056137</td>
+      <td>0.950847</td>
+      <td>-1.309393</td>
+      <td>0.528148</td>
+      <td>0.704540</td>
+      <td>0.992716</td>
+      <td>0.788850</td>
+      <td>-1.797902</td>
+      <td>-1.282278</td>
+      <td>0.449512</td>
+      <td>0.289035</td>
+      <td>-0.352502</td>
+      <td>-1.095432</td>
+      <td>-1.580503</td>
+    </tr>
+  </tbody>
+</table>
+
+## **Pemodelan**
+
+Ada 4 algoritma yang dipilih dengan framework yang berbeda yaitu Random Forest, K-Nearest Neighbors, Support Vector Reressor dan XGboost. Random Forest (RF) unggul dalam menangani data kompleks dan besar, serta dapat mengurangi risiko overfitting dengan menggunakan banyak pohon keputusan tanpa membutuhkan praproses data yang rumit. Namun, proses pelatihan dan prediksi bisa lebih lambat dan sulit diinterpretasi. K-Nearest Neighbors (KNN) sederhana dan mudah dipahami, tidak memerlukan pelatihan, serta dapat digunakan untuk regresi dan klasifikasi, tetapi kinerjanya menurun pada dataset besar dan sangat sensitif terhadap noise serta data yang tidak seimbang. Support Vector Regression (SVR) efektif untuk data dengan dimensi tinggi dan linearitas kompleks serta dapat menangani noise, namun kurang efisien untuk dataset besar dan sulit diinterpretasi karena bergantung pada pemilihan kernel dan parameter yang tepat. XGBoost cepat, efisien, dan sering menghasilkan akurasi tinggi dengan regularisasi yang baik untuk mengurangi overfitting, namun dapat overfit jika tidak dikonfigurasi dengan benar, memerlukan pemilihan hyperparameter yang tepat, dan model yang dihasilkan sulit diinterpretasi.
+
+Random Forest (RF) adalah algoritma ensemble learning yang bekerja dengan membangun banyak pohon keputusan secara independen menggunakan subset data dan fitur yang dipilih secara acak. Prediksi akhir ditentukan melalui rata-rata (untuk regresi) atau voting mayoritas (untuk klasifikasi). RF unggul dalam menangani data kompleks dan besar serta dapat mengurangi risiko overfitting melalui kombinasi banyak pohon. Selain itu, algoritma ini tidak memerlukan praproses data yang rumit, sehingga dapat langsung digunakan pada data mentah dengan outlier atau nilai kosong. Namun, proses pelatihannya relatif lambat karena memerlukan waktu untuk membangun banyak pohon, dan hasilnya sulit diinterpretasi karena merupakan agregasi dari model-model individual.
+
+K-Nearest Neighbors (KNN) adalah algoritma yang sederhana dan intuitif karena tidak memerlukan proses pelatihan. Algoritma ini bekerja dengan mencari sejumlah tetangga terdekat (k) dari titik data yang akan diprediksi menggunakan metrik jarak, seperti Euclidean, kemudian membuat prediksi berdasarkan rata-rata (untuk regresi) atau voting (untuk klasifikasi) dari tetangga tersebut. KNN sangat cocok untuk dataset kecil dan mudah dipahami, serta fleksibel untuk berbagai tipe distribusi data. Namun, algoritma ini memiliki kelemahan berupa kinerja yang lambat pada dataset besar karena perhitungan jarak yang mahal, serta sangat sensitif terhadap noise dan data yang tidak seimbang.
+
+Support Vector Regressor (SVR) adalah versi regresi dari Support Vector Machine (SVM) yang bekerja dengan mencari hyperplane terbaik dalam ruang dimensi tinggi untuk memprediksi nilai target. Algoritma ini menggunakan kernel seperti linear, polynomial, atau RBF untuk menangani hubungan data yang kompleks dan non-linear. SVR sangat efektif untuk data berdimensi tinggi dan dapat menangani noise dengan baik. Namun, algoritma ini kurang efisien pada dataset besar karena waktu komputasi yang tinggi, serta sulit diinterpretasi karena hasilnya bergantung pada pemilihan kernel dan parameter yang tepat seperti C, epsilon, dan gamma.
+
+XGBoost adalah algoritma boosting berbasis pohon yang membangun model secara iteratif, di mana setiap pohon baru dirancang untuk memperbaiki kesalahan dari pohon sebelumnya. XGBoost dilengkapi dengan regularisasi L1 dan L2 yang membantu mengurangi risiko overfitting dan sering kali menghasilkan akurasi tinggi. Algoritma ini juga sangat cepat dan efisien, karena menggunakan teknik optimasi yang canggih. Namun, konfigurasi hyperparameter yang kompleks dan struktur model yang sulit diinterpretasi menjadi kelemahan utama. Selain itu, jika pengaturan model tidak tepat, XGBoost berpotensi mengalami overfitting.
+
+Setelah itu dipilih dua metrik utama untuk digunakan sebagai pembanding yaitu Adjusted R² dan Mean Squared Error. Keduanya dipilih karena variabel bebas digunakan tidak hanya satu jadi dibutuhkan metrik yang andal dengan jumlah variabel bebas yang lebih dari satu.
+
+* Adjusted R² (Adjusted R-Squared)
+
+R² mengukur seberapa baik model regresi linier dapat menjelaskan variasi data. Nilainya antara 0 hingga 1, semakin tinggi nilai R², semakin baik model dalam menjelaskan data. Namun, R² bisa meningkat hanya dengan menambahkan variabel bebas ke dalam model, meskipun variabel tersebut mungkin tidak relevan. Karena itu, Adjusted R² digunakan untuk memberikan penilaian yang lebih akurat.
+
+Formula Adjusted R²:
+
+`Adjusted R² = 1 - ((1 - R²) * (n - 1)) / (n - p - 1)`
+
+R²: Koefisien determinasi
+
+n: Jumlah data (observasi)
+
+p: Jumlah variabel bebas
+
+Cara Kerja:
+
+Adjusted R² memperhitungkan jumlah variabel dan jumlah data, membuatnya lebih andal daripada R² saat membandingkan model dengan jumlah variabel yang berbeda.
+Jika variabel baru ditambahkan dan relevan, Adjusted R² akan meningkat. Sebaliknya, jika variabel tersebut tidak relevan, Adjusted R² akan menurun, menunjukkan model menjadi lebih kompleks tanpa nilai tambah.
+Adjusted R² lebih cocok digunakan untuk membandingkan model yang memiliki jumlah variabel yang berbeda.
+Contoh:
+Jika Adjusted R² sebuah model adalah 0.85, itu berarti model tersebut dapat menjelaskan 85% variasi data dengan memperhitungkan jumlah variabel dalam model.
+
+* MSE (Mean Squared Error)
+
+MSE adalah ukuran yang digunakan untuk menghitung rata-rata kesalahan kuadrat antara nilai yang diprediksi oleh model dan nilai aktual. Ini adalah alat yang digunakan untuk mengevaluasi akurasi prediksi model.
+
+Formula MSE:
+
+`MSE = (1 / n) * Σ(yᵢ - ŷᵢ)²`
+
+yᵢ: Nilai aktual (observasi sebenarnya)
+
+ŷᵢ: Nilai prediksi model
+
+n: Jumlah data (observasi)
+
+Cara Kerja:
+
+MSE mengukur rata-rata kuadrat selisih antara nilai yang diprediksi dan nilai yang sebenarnya.
+Nilai MSE yang lebih kecil menunjukkan model yang lebih baik, karena perbedaan antara nilai yang diprediksi dan nilai aktual lebih kecil.
+MSE sangat sensitif terhadap outlier, karena kesalahan dihitung dalam bentuk kuadrat. Jadi, jika ada data yang sangat berbeda, MSE bisa menjadi lebih besar.
+Contoh:
+Jika MSE model adalah 4, itu berarti rata-rata kuadrat perbedaan antara nilai prediksi dan nilai aktual adalah 4, menunjukkan model memiliki kesalahan yang relatif besar dibandingkan dengan model dengan MSE lebih kecil.
+
+
 
 
 
@@ -1140,126 +1285,7 @@ Hasilnya sangat bagus dengn Adjusted Rsquares sebesar 0.9854 dan MSE yang sangat
 
 Model terbaik untuk variabel Kalori Terbakar adalah dengan Metode XGBoost yaitu dengan Adjusted Rsquared 0.9854.
 
-### **Model Kadar Lemak Tubuh**
 
-Proses pembuatan data untuk model Kadar Lemak Tubuh dilakukan dengan menghapus kolom Kadar Lemak Tubuh dari seluruh dataset, sehingga menghasilkan nilai X sebagai variabel bebas. Semua kolom lainnya digunakan, kecuali kolom Kadar Lemak Tubuh yang akan menjadi variabel terikat atau y.
-
-
-
-
-
-
-
-
- 
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Age</th>
-      <th>Gender</th>
-      <th>Weight (kg)</th>
-      <th>Height (m)</th>
-      <th>Max_BPM</th>
-      <th>Avg_BPM</th>
-      <th>Resting_BPM</th>
-      <th>Session_Duration (hours)</th>
-      <th>Calories_Burned</th>
-      <th>Workout_Type</th>
-      <th>Water_Intake (liters)</th>
-      <th>Workout_Frequency (days/week)</th>
-      <th>Experience_Level</th>
-      <th>BMI</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>1.422343</td>
-      <td>0.950847</td>
-      <td>0.681493</td>
-      <td>-0.098545</td>
-      <td>0.010081</td>
-      <td>0.922970</td>
-      <td>-0.303555</td>
-      <td>1.264598</td>
-      <td>1.495690</td>
-      <td>1.338485</td>
-      <td>1.455967</td>
-      <td>0.743295</td>
-      <td>1.609784</td>
-      <td>0.794278</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>0.600965</td>
-      <td>-1.051694</td>
-      <td>0.049316</td>
-      <td>-1.508604</td>
-      <td>-0.076726</td>
-      <td>0.504494</td>
-      <td>0.515749</td>
-      <td>0.127098</td>
-      <td>-0.082284</td>
-      <td>-0.439462</td>
-      <td>-0.877898</td>
-      <td>0.743295</td>
-      <td>0.257176</td>
-      <td>1.064652</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>-0.548964</td>
-      <td>-1.051694</td>
-      <td>-0.271491</td>
-      <td>-0.490228</td>
-      <td>-1.118414</td>
-      <td>-1.518142</td>
-      <td>-1.122858</td>
-      <td>-0.427068</td>
-      <td>-0.838243</td>
-      <td>-1.328435</td>
-      <td>-0.544488</td>
-      <td>0.743295</td>
-      <td>0.257176</td>
-      <td>-0.030361</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>-1.123928</td>
-      <td>0.950847</td>
-      <td>-0.974433</td>
-      <td>-0.176881</td>
-      <td>0.878155</td>
-      <td>1.411193</td>
-      <td>-0.849757</td>
-      <td>-1.943735</td>
-      <td>-1.370351</td>
-      <td>0.449512</td>
-      <td>-0.877898</td>
-      <td>-0.352502</td>
-      <td>-1.095432</td>
-      <td>-0.976669</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>-0.056137</td>
-      <td>0.950847</td>
-      <td>-1.309393</td>
-      <td>0.528148</td>
-      <td>0.704540</td>
-      <td>0.992716</td>
-      <td>0.788850</td>
-      <td>-1.797902</td>
-      <td>-1.282278</td>
-      <td>0.449512</td>
-      <td>0.289035</td>
-      <td>-0.352502</td>
-      <td>-1.095432</td>
-      <td>-1.580503</td>
-    </tr>
-  </tbody>
-</table>
 
 
 
