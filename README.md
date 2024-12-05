@@ -757,7 +757,7 @@ Kolom `Gender` dan `Workout_Type` dilakukan encoding dengan menggunakan `LabelEn
 
 Data yang sudah dalam bentuk numerik dari beberapa proses diatas akan dinormalisasi untuk mengubah nilai rata-rata setiap variabel menjadi 0, nilai maksimum sebesar 1, dan nilai minimum sebesar -1. Hal ini dilakukan agar pemodelan menjadi lebih konsisten karena memiliki batas atas dan bawah yang seragam. Proses ini menggunakan `StandarScaler` untuk semua nilai numerik.
 
-### **Train-Test-Split
+### **Train-Test-Split**
 
 Data kemudian displit dengan perbandingan 80% training data dan 20% test data, proses ini dilakukan secara acak dengan `random state` bernilai 42.
 
@@ -892,13 +892,6 @@ Pembuatan data untuk model Kalori Terbakar yaitu dengan mendrop kolom Kalori Ter
 
 Proses pembuatan data untuk model Kadar Lemak Tubuh dilakukan dengan menghapus kolom Kadar Lemak Tubuh dari seluruh dataset, sehingga menghasilkan nilai X sebagai variabel bebas. Semua kolom lainnya digunakan, kecuali kolom Kadar Lemak Tubuh yang akan menjadi variabel terikat atau y.
 
-
-
-
-
-
-
-
  
 <table border="1" class="dataframe">
   <thead>
@@ -1011,15 +1004,42 @@ Proses pembuatan data untuk model Kadar Lemak Tubuh dilakukan dengan menghapus k
 
 ## **Pemodelan**
 
+Model yang akan dibuat adalah 
+
 Ada 4 algoritma yang dipilih dengan framework yang berbeda yaitu Random Forest, K-Nearest Neighbors, Support Vector Reressor dan XGboost. Random Forest (RF) unggul dalam menangani data kompleks dan besar, serta dapat mengurangi risiko overfitting dengan menggunakan banyak pohon keputusan tanpa membutuhkan praproses data yang rumit. Namun, proses pelatihan dan prediksi bisa lebih lambat dan sulit diinterpretasi. K-Nearest Neighbors (KNN) sederhana dan mudah dipahami, tidak memerlukan pelatihan, serta dapat digunakan untuk regresi dan klasifikasi, tetapi kinerjanya menurun pada dataset besar dan sangat sensitif terhadap noise serta data yang tidak seimbang. Support Vector Regression (SVR) efektif untuk data dengan dimensi tinggi dan linearitas kompleks serta dapat menangani noise, namun kurang efisien untuk dataset besar dan sulit diinterpretasi karena bergantung pada pemilihan kernel dan parameter yang tepat. XGBoost cepat, efisien, dan sering menghasilkan akurasi tinggi dengan regularisasi yang baik untuk mengurangi overfitting, namun dapat overfit jika tidak dikonfigurasi dengan benar, memerlukan pemilihan hyperparameter yang tepat, dan model yang dihasilkan sulit diinterpretasi.
 
 Random Forest (RF) adalah algoritma ensemble learning yang bekerja dengan membangun banyak pohon keputusan secara independen menggunakan subset data dan fitur yang dipilih secara acak. Prediksi akhir ditentukan melalui rata-rata (untuk regresi) atau voting mayoritas (untuk klasifikasi). RF unggul dalam menangani data kompleks dan besar serta dapat mengurangi risiko overfitting melalui kombinasi banyak pohon. Selain itu, algoritma ini tidak memerlukan praproses data yang rumit, sehingga dapat langsung digunakan pada data mentah dengan outlier atau nilai kosong. Namun, proses pelatihannya relatif lambat karena memerlukan waktu untuk membangun banyak pohon, dan hasilnya sulit diinterpretasi karena merupakan agregasi dari model-model individual.
+Model pertama yang dibuat adalah Random Forest Regressor dengan n_estimators sebesar 100 dan random_state sebesar 42.
 
-K-Nearest Neighbors (KNN) adalah algoritma yang sederhana dan intuitif karena tidak memerlukan proses pelatihan. Algoritma ini bekerja dengan mencari sejumlah tetangga terdekat (k) dari titik data yang akan diprediksi menggunakan metrik jarak, seperti Euclidean, kemudian membuat prediksi berdasarkan rata-rata (untuk regresi) atau voting (untuk klasifikasi) dari tetangga tersebut. KNN sangat cocok untuk dataset kecil dan mudah dipahami, serta fleksibel untuk berbagai tipe distribusi data. Namun, algoritma ini memiliki kelemahan berupa kinerja yang lambat pada dataset besar karena perhitungan jarak yang mahal, serta sangat sensitif terhadap noise dan data yang tidak seimbang.
+K-Nearest Neighbors (KNN) adalah algoritma yang sederhana dan intuitif karena tidak memerlukan proses pelatihan. Algoritma ini bekerja dengan mencari sejumlah tetangga terdekat (k) dari titik data yang akan diprediksi menggunakan metrik jarak, seperti Euclidean, kemudian membuat prediksi berdasarkan rata-rata (untuk regresi) atau voting (untuk klasifikasi) dari tetangga tersebut. KNN sangat cocok untuk dataset kecil dan mudah dipahami, serta fleksibel untuk berbagai tipe distribusi data. Namun, algoritma ini memiliki kelemahan berupa kinerja yang lambat pada dataset besar karena perhitungan jarak yang mahal, serta sangat sensitif terhadap noise dan data yang tidak seimbang. Model selanjutnya adalah K-Nearest Neighbors dengan jumlah n_neighbors=10.
 
-Support Vector Regressor (SVR) adalah versi regresi dari Support Vector Machine (SVM) yang bekerja dengan mencari hyperplane terbaik dalam ruang dimensi tinggi untuk memprediksi nilai target. Algoritma ini menggunakan kernel seperti linear, polynomial, atau RBF untuk menangani hubungan data yang kompleks dan non-linear. SVR sangat efektif untuk data berdimensi tinggi dan dapat menangani noise dengan baik. Namun, algoritma ini kurang efisien pada dataset besar karena waktu komputasi yang tinggi, serta sulit diinterpretasi karena hasilnya bergantung pada pemilihan kernel dan parameter yang tepat seperti C, epsilon, dan gamma.
+Support Vector Regressor (SVR) adalah versi regresi dari Support Vector Machine (SVM) yang bekerja dengan mencari hyperplane terbaik dalam ruang dimensi tinggi untuk memprediksi nilai target. Algoritma ini menggunakan kernel seperti linear, polynomial, atau RBF untuk menangani hubungan data yang kompleks dan non-linear. SVR sangat efektif untuk data berdimensi tinggi dan dapat menangani noise dengan baik. Namun, algoritma ini kurang efisien pada dataset besar karena waktu komputasi yang tinggi, serta sulit diinterpretasi karena hasilnya bergantung pada pemilihan kernel dan parameter yang tepat seperti C, epsilon, dan gamma. Model Support Vector Regression dengan C sebesar 100 dan epsilon sebesar 0.1 ini digunakan untuk menentukan regresi. Model Support Vector Regression menggunakan teknik Gridsearch untuk menentukan parameternya. Gridsearcgh digunakan karena model awal SVR memiliki nilai metrik akurasi yang kurang bisa dipertanggung-jawabkan.
 
-XGBoost adalah algoritma boosting berbasis pohon yang membangun model secara iteratif, di mana setiap pohon baru dirancang untuk memperbaiki kesalahan dari pohon sebelumnya. XGBoost dilengkapi dengan regularisasi L1 dan L2 yang membantu mengurangi risiko overfitting dan sering kali menghasilkan akurasi tinggi. Algoritma ini juga sangat cepat dan efisien, karena menggunakan teknik optimasi yang canggih. Namun, konfigurasi hyperparameter yang kompleks dan struktur model yang sulit diinterpretasi menjadi kelemahan utama. Selain itu, jika pengaturan model tidak tepat, XGBoost berpotensi mengalami overfitting.
+
+
+
+    Best Parameters: {'C': 1, 'epsilon': 0.5, 'gamma': 'scale'}
+    Best Score: -0.23618483737773482
+
+
+Parameter model terbaik melalui Gridsearch adalah dengan C sama dengan 1, epsilon sebesar 0.5, dan gamma bernilai 'scale'.
+
+XGBoost adalah algoritma boosting berbasis pohon yang membangun model secara iteratif, di mana setiap pohon baru dirancang untuk memperbaiki kesalahan dari pohon sebelumnya. XGBoost dilengkapi dengan regularisasi L1 dan L2 yang membantu mengurangi risiko overfitting dan sering kali menghasilkan akurasi tinggi. Algoritma ini juga sangat cepat dan efisien, karena menggunakan teknik optimasi yang canggih. Namun, konfigurasi hyperparameter yang kompleks dan struktur model yang sulit diinterpretasi menjadi kelemahan utama. Selain itu, jika pengaturan model tidak tepat, XGBoost berpotensi mengalami overfitting. Model terakhir diperkenalkan Algoritma Boosting dengan metode Extreme Gradient atau XGBoost. berikut parameter model yang digunakan yaitu n_estimators sebesar 100, learning rate 0.1, max_depth sebesar 6, colsample_bytree sebesar 0.8, dan subsample 0.8 poin.
+
+Model terakhir diperkenalkan Algoritma Boosting dengan metode Extreme Gradient atau XGBoost. Berikut parameter model yang digunakan yaitu dicari melalui Gridsearch karena hasil iterasi pertama model menghasilkan akurasi yang sangat rendah.
+
+
+    Fitting 3 folds for each of 1944 candidates, totalling 5832 fits
+    Best Parameters: {'colsample_bytree': 0.8, 'gamma': 0.2, 'learning_rate': 0.1, 'max_depth': 3, 'n_estimators': 50, 'reg_alpha': 0, 'reg_lambda': 10.0, 'subsample': 1.0}
+    Best Training RMSE: 0.4484218489853021
+    Test RMSE: 0.45672201756778374
+
+
+Parameter yang didapat adalah n_estimators sebesar 50, learning rate 0.1, max_depth sebesar 3, colsample_bytree sebesar 0.8, subsample 1.0 lalu reg_alpha 0, dan reg_lambda sebesar 10.0 poin.
+
+
+
+## **Evaluasi**
 
 Setelah itu dipilih dua metrik utama untuk digunakan sebagai pembanding yaitu Adjusted R² dan Mean Squared Error. Keduanya dipilih karena variabel bebas digunakan tidak hanya satu jadi dibutuhkan metrik yang andal dengan jumlah variabel bebas yang lebih dari satu.
 
@@ -1070,12 +1090,9 @@ Jika MSE model adalah 4, itu berarti rata-rata kuadrat perbedaan antara nilai pr
 
 
 
-
+### Model Kalori Terbakar
 
 #### Random Forest
-
-Model pertama yang dibuat adalah Random Forest Regressor dengan n_estimators sebesar 100 dan random_state sebesar 42.
-
 
 <table style="width: 100%; text-align: center;">
   <tbody>
@@ -1089,13 +1106,6 @@ Model pertama yang dibuat adalah Random Forest Regressor dengan n_estimators seb
 </table>
 
 
-
-
-
-
-
-
-    
     Model Performance (RF):
                                0
     Model                     RF
@@ -1117,7 +1127,7 @@ Model yang dihasilkan cukup bagus dengan Adjusted Rsquared sebesar 0.9676 dan MS
 
 #### KNN
 
-Model selanjutnya adalah K-Nearest Neighbors dengan jumlah n_neighbors=10.
+
 
 
 
@@ -1161,7 +1171,7 @@ Model ini tidak sebagus model sebelumnya namun masih cukup bagus di Adjusted Rsq
 
 #### SVR
 
-Model Support Vector Regression dengan C sebesar 100 dan epsilon sebesar 0.1 ini digunakan untuk menentukan regresi.
+
 
 
 
@@ -1206,7 +1216,7 @@ Hasil dari model ini sangat baik dengan Adjusted Rsquared sebesar 0.9696 dan MSE
 
 #### XGBoost
 
-Model terakhir diperkenalkan Algoritma Boosting dengan metode Extreme Gradient atau XGBoost. berikut parameter model yang digunakan yaitu n_estimators sebesar 100, learning rate 0.1, max_depth sebesar 6, colsample_bytree sebesar 0.8, dan subsample 0.8 poin.
+
 
 
 
@@ -1293,19 +1303,13 @@ Model terbaik untuk variabel Kalori Terbakar adalah dengan Metode XGBoost yaitu 
 
 
 
-
-
-
-
-
- 
-
+### Model Kadar Lemak Tubuh
 
 
 
 #### Random Forest
 
-Model pertama yang dibuat adalah Random Forest Regressor dengan n_estimators sebesar 100 dan random_state sebesar 42.
+
 
 
 
@@ -1351,7 +1355,7 @@ Model yang dihasilkan kurang bagus dengan Adjusted Rsquared sebesar 0.7891 dan M
 
 #### KNN
 
-Model selanjutnya adalah K-Nearest Neighbors dengan jumlah n_neighbors=10.
+
 
 
 
@@ -1395,16 +1399,7 @@ Model ini lebih buruk dari model sebelumnya namun masih cukup di Adjusted Rsquar
 
 #### SVR
 
-Model Support Vector Regression menggunakan teknik Gridsearch untuk menentukan parameternya. Gridsearcgh digunakan karena model awal SVR memiliki nilai metrik akurasi yang kurang bisa dipertanggung-jawabkan.
 
-
-
-
-    Best Parameters: {'C': 1, 'epsilon': 0.5, 'gamma': 'scale'}
-    Best Score: -0.23618483737773482
-
-
-Parameter model terbaik melalui Gridsearch adalah dengan C sama dengan 1, epsilon sebesar 0.5, dan gamma bernilai 'scale'.
 
 
 
@@ -1448,16 +1443,7 @@ Hasil dari model ini kurang baik dengan Adjusted Rsquared sebesar 0.7469 dan MSE
 
 #### XGBoost
 
-Model terakhir diperkenalkan Algoritma Boosting dengan metode Extreme Gradient atau XGBoost. Berikut parameter model yang digunakan yaitu dicari melalui Gridsearch karena hasil iterasi pertama model menghasilkan akurasi yang sangat rendah.
 
-
-    Fitting 3 folds for each of 1944 candidates, totalling 5832 fits
-    Best Parameters: {'colsample_bytree': 0.8, 'gamma': 0.2, 'learning_rate': 0.1, 'max_depth': 3, 'n_estimators': 50, 'reg_alpha': 0, 'reg_lambda': 10.0, 'subsample': 1.0}
-    Best Training RMSE: 0.4484218489853021
-    Test RMSE: 0.45672201756778374
-
-
-Parameter yang didapat adalah n_estimators sebesar 50, learning rate 0.1, max_depth sebesar 3, colsample_bytree sebesar 0.8, subsample 1.0 lalu reg_alpha 0, dan reg_lambda sebesar 10.0 poin.
 
 
 
@@ -1532,11 +1518,6 @@ Hasilnya agak sedikit lebih baik dengn Adjusted Rsquares sebesar 0.777978 dan MS
     
 ![png](gambar_files/gambar_146_1.png)
     
-
-
-
-
-
 
 Model terbaik untuk variabel Kadar Lemak Tubuh ternyata adalah model Random Forest dengan Adjusted Rsquared sebesar 0.7891 terbesar dari yang lain.
 
