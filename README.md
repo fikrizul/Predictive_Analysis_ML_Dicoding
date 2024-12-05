@@ -1233,7 +1233,7 @@ Grafik yang disajikan dalam evaluasi ini adalah grafik antara hasil prediksi den
 
 ![png](gambar_files/gambar_97_2.png)
 
-gambar tersebut menunjukan titik-titik hasil plot antara nilai prediksi pada sumbu y dan nilai ebenarnya pada sumbu X. Ketika nilai keduanya sama maka akan memenuhi garis diagonal 45 derajat. Jika nilai prediksi lebih kecil dari nilai sebenarnya maka titik akan berada diatas garis. Dan apabila nilai prediksi lebih besar dari nilai sebenarnya, titik tersebut akan berada di bawah garis. Grafik tersebut berguna untuk melihat persebaran data yang melenceng dari nilai prediksi
+gambar tersebut menunjukan titik-titik berwarna biru hasil plot antara nilai prediksi pada sumbu y dan nilai sebenarnya pada sumbu X. Ketika nilai keduanya sama maka akan memenuhi garis diagonal 45 derajat berwarna merah. Jika nilai prediksi lebih kecil dari nilai sebenarnya maka titik akan berada diatas garis. Dan apabila nilai prediksi lebih besar dari nilai sebenarnya, titik tersebut akan berada di bawah garis. Grafik tersebut berguna untuk melihat persebaran data yang melenceng dari nilai prediksi
 
 
 ### Model Kalori Terbakar
