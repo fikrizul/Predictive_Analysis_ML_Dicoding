@@ -85,7 +85,7 @@ import shutil
 
 ## Pemuatan Data
 
-Data diambil dari kaggle pada tautan berikut "valakhorasani/gym-members-exercise-dataset" dan diunduh ke dalam root sistem Google Colab.
+Data diambil dari kaggle pada tautan berikut "https://www.kaggle.com/datasets/valakhorasani/gym-members-exercise-dataset/data" dan diunduh ke dalam root sistem Google Colab.
 """
 
 path = kagglehub.dataset_download("valakhorasani/gym-members-exercise-dataset")
@@ -805,7 +805,11 @@ plt.show()
 
 """Grafik ini menunjukkan hubungan antara jumlah kalori yang terbakar dengan berbagai variabel numerik lainnya. Hubungan yang paling kuat terlihat pada grafik **Calories Burned vs. Session Duration**, di mana semakin lama durasi sesi olahraga, semakin banyak kalori yang terbakar, menunjukkan korelasi linear yang jelas. Pada hubungan dengan **water intake**, terdapat korelasi positif ringan, di mana asupan air cenderung meningkat seiring dengan kalori yang terbakar, meskipun data tersebar cukup luas. Korelasi positif juga terlihat pada hubungan dengan **Average BPM (denyut jantung rata-rata)**, di mana kalori yang terbakar cenderung lebih tinggi pada aktivitas dengan denyut rata-rata lebih besar. Sebaliknya, variabel seperti **Max BPM (denyut jantung maksimum)** dan **Resting BPM (denyut istirahat)** tidak menunjukkan pola hubungan yang signifikan, dengan data yang tersebar acak. Pada hubungan dengan **usia**, terdapat pola negatif lemah, di mana jumlah kalori yang terbakar sedikit menurun pada individu yang lebih tua, meskipun hubungan ini tidak terlalu signifikan. Secara keseluruhan, durasi sesi olahraga memiliki hubungan paling signifikan dengan jumlah kalori yang terbakar, sementara variabel lainnya menunjukkan hubungan yang lemah atau tidak signifikan.
 
-# **Rekayasa Fitur**
+# **Persiapan Data**
+
+## **Rekayasa Fitur**
+
+Fitur-fitur baru dapat dibuat dari beberapa variabel yang ada agar didapat akurasi yang lebih maksimal dalam model. Fitur tersebut akan dibuat melalui rekayasa fitur seperti di bawah ini.
 
 **Intensity Score**
 
@@ -871,9 +875,17 @@ plt.show()
 
 """Grafik ini menunjukkan hubungan antara `HR Index (Heart Rate Index)` dengan `Fat Percentage` dan `Calories Burned`. Hubungan antara `Fat Percentage` dan `HR Index`, terlihat bahwa tidak ada korelasi signifikan, dengan data yang tersebar acak di sekitar garis regresi yang mendatar, menunjukkan bahwa HR Index tidak dipengaruhi oleh persentase lemak tubuh. Sementara itu, hubungan antara `Calories Burned` dan `HR Index` menunjukkan korelasi negatif yang lemah, di mana `HR Index` sedikit menurun seiring meningkatnya jumlah kalori yang terbakar, meskipun hubungan ini tidak terlalu kuat karena data masih tersebar di sekitar garis regresi.
 
-# **Persiapan Data**
+## **Reduksi Variabel**
 
-Dilakukan drop pada `Workout_Frequency_cat` dan `Experiens_Level_cat` karena sudah ada dalam data sebagai numerikal. Lalu beberapa variabel kategorikal dikodifikasi dengan encoder. Setelah itu semua data numerik digunakan Standard Scaler untuk normalisasi.
+Kolom `Workout_Frequency_cat` dan `Experiences_Level_cat` sejatinya adalah kolom yang redundan karena sudah ada dalam data sebagai numerikal dalam bentuk integer atau bilangan bulat. Oleh Karena itu dilakukan drop pada kedua kolom ini.  Tidak diperlukan encoding lebih lanjut karena kolom aslinya sudah setara posisinya dengan bilangan ordinal.
+
+## **Encoding**
+
+Kolom `Gender` dan `Workout_Type` dilakukan encoding dengan menggunakan `LabelEncoder()` yang menghasilkan output encoding ordinal.
+
+## **Normalisasi Data**
+
+Data yang sudah dalam bentuk numerik dari beberapa proses diatas akan dinormalisasi untuk mengubah nilai rata-rata setiap variabel menjadi 0, nilai maksimum sebesar 1, dan nilai minimum sebesar -1. Hal ini dilakukan agar pemodelan menjadi lebih konsisten karena memiliki batas atas dan bawah yang seragam. Proses ini menggunakan `StandarScaler` untuk semua nilai numerik.
 """
 
 # Create copy of dataframe
@@ -894,15 +906,209 @@ scaler = StandardScaler()
 numerical_cols = data_processed.select_dtypes(include=[np.number]).columns
 data_processed[numerical_cols] = scaler.fit_transform(data_processed[numerical_cols])
 
-"""# **Pemodelan dan Evaluasi**
+"""## **Train-Test-Split**
 
-Ada 4 algoritma yang dipilih dengan framework yang berbeda yaitu Random Forest, K-Nearest Neighbors, Support Vector Rgeressor dan XGboost. Random Forest (RF) unggul dalam menangani data kompleks dan besar, serta dapat mengurangi risiko overfitting dengan menggunakan banyak pohon keputusan tanpa membutuhkan praproses data yang rumit. Namun, proses pelatihan dan prediksi bisa lebih lambat dan sulit diinterpretasi. K-Nearest Neighbors (KNN) sederhana dan mudah dipahami, tidak memerlukan pelatihan, serta dapat digunakan untuk regresi dan klasifikasi, tetapi kinerjanya menurun pada dataset besar dan sangat sensitif terhadap noise serta data yang tidak seimbang. Support Vector Regression (SVR) efektif untuk data dengan dimensi tinggi dan linearitas kompleks serta dapat menangani noise, namun kurang efisien untuk dataset besar dan sulit diinterpretasi karena bergantung pada pemilihan kernel dan parameter yang tepat. XGBoost cepat, efisien, dan sering menghasilkan akurasi tinggi dengan regularisasi yang baik untuk mengurangi overfitting, namun dapat overfit jika tidak dikonfigurasi dengan benar, memerlukan pemilihan hyperparameter yang tepat, dan model yang dihasilkan sulit diinterpretasi.
+Data kemudian displit dengan perbandingan 80% training data dan 20% test data, proses ini dilakukan secara acak dengan `random state` bernilai 42.
 
-Setelah itu dipilih dua metrik untuk digunakan sebagai pembanding yaitu Adjusted R² dan Mean Squared Error. Keduanya dipilih karena variabel independen digunakan tidak hanya satu jadi dibutuhkan metrik yang andal dengan jumlah variabel independen yang lebih dari satu.
+### **Model Kalori Terbakar**
 
-* Adjusted R² (Adjusted R-Squared)
+Pembuatan data untuk model Kalori Terbakar yaitu dengan mendrop kolom Kalori Terbakar dari keseluruhan Data untuk membentuk nilai X sebagai variabel bebas. Semua kolom digunakan kecuali kolom Kalori Terbakar yang akan digunakan sebagai y atau variabel terikat.
+"""
 
-R² mengukur seberapa baik model regresi linier dapat menjelaskan variasi data. Nilainya antara 0 hingga 1, semakin tinggi nilai R², semakin baik model dalam menjelaskan data. Namun, R² bisa meningkat hanya dengan menambahkan variabel independen ke dalam model, meskipun variabel tersebut mungkin tidak relevan. Karena itu, Adjusted R² digunakan untuk memberikan penilaian yang lebih akurat.
+# Prepare features and target
+X = data_processed.drop('Calories_Burned', axis=1)
+y = data_processed['Calories_Burned']
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y,
+                                                    test_size=0.2,
+                                                    random_state=42)
+X_train.head()
+
+# DataFrame untuk menyimpan hasil evaluasi
+# if 'metrics_df' not in locals() or metrics_df.empty:  # Memastikan DataFrame kosong atau belum ada
+
+metrics_df = pd.DataFrame(columns=["Model", "R2 Score", "Adjusted R2", "RMSE", "MAE", "MSE", "Explained Variance"])
+metrics_df.head()
+
+"""### **Model Kadar Lemak Tubuh**
+
+Proses pembuatan data untuk model Kadar Lemak Tubuh dilakukan dengan menghapus kolom Kadar Lemak Tubuh dari seluruh dataset, sehingga menghasilkan nilai X sebagai variabel independen. Semua kolom lainnya digunakan, kecuali kolom Kadar Lemak Tubuh yang akan menjadi variabel dependen atau y.
+"""
+
+# Prepare features and target
+X = data_processed.drop(['Fat_Percentage'], axis=1)
+y = data_processed['Fat_Percentage']
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y,
+                                                    test_size=0.2,
+                                                    random_state=42)
+
+X.head()
+
+# DataFrame untuk menyimpan hasil evaluasi
+# if 'metrics_df' not in locals() or metrics_df.empty:  # Memastikan DataFrame kosong atau belum ada
+
+metrics_df = pd.DataFrame(columns=["Model", "R2 Score", "Adjusted R2", "RMSE", "MAE", "MSE", "Explained Variance"])
+metrics_df.head()
+
+"""# **Pemodelan**
+
+Model yang akan dibuat ada dua yaitu `Model Kalori Terbakar` yang digunakan untuk mencari faktor apa saja yang memengaruhi efektifitas latihan dalam gym serta `Model Kadar Lemak Tubuh` yang digunakan untuk mencari kebiasaan-kebiasaan latihan apa saja yang harus dilakukan untuk mencapai target tipe tubuh tertentu.
+
+Ada 4 algoritma yang dipilih dengan framework yang berbeda yaitu Random Forest, K-Nearest Neighbors, Support Vector Reressor dan XGboost. Random Forest (RF) unggul dalam menangani data kompleks dan besar, serta dapat mengurangi risiko overfitting dengan menggunakan banyak pohon keputusan tanpa membutuhkan praproses data yang rumit. Namun, proses pelatihan dan prediksi bisa lebih lambat dan sulit diinterpretasi. K-Nearest Neighbors (KNN) sederhana dan mudah dipahami, tidak memerlukan pelatihan, serta dapat digunakan untuk regresi dan klasifikasi, tetapi kinerjanya menurun pada dataset besar dan sangat sensitif terhadap noise serta data yang tidak seimbang. Support Vector Regression (SVR) efektif untuk data dengan dimensi tinggi dan linearitas kompleks serta dapat menangani noise, namun kurang efisien untuk dataset besar dan sulit diinterpretasi karena bergantung pada pemilihan kernel dan parameter yang tepat. XGBoost cepat, efisien, dan sering menghasilkan akurasi tinggi dengan regularisasi yang baik untuk mengurangi overfitting, namun dapat overfit jika tidak dikonfigurasi dengan benar, memerlukan pemilihan hyperparameter yang tepat, dan model yang dihasilkan sulit diinterpretasi.
+
+### Random Forest
+Random Forest (RF) adalah algoritma ensemble learning yang bekerja dengan membangun banyak pohon keputusan secara independen menggunakan subset data dan fitur yang dipilih secara acak. Prediksi akhir ditentukan melalui rata-rata (untuk regresi) atau voting mayoritas (untuk klasifikasi). RF unggul dalam menangani data kompleks dan besar serta dapat mengurangi risiko overfitting melalui kombinasi banyak pohon keputusan. Selain itu, algoritma ini tidak memerlukan praproses data yang rumit, sehingga dapat langsung digunakan pada data mentah dengan outlier atau nilai kosong. Namun, proses pelatihannya relatif lambat karena memerlukan waktu untuk membangun banyak pohon, dan hasilnya sulit diinterpretasi karena merupakan agregasi dari model-model individual.
+
+Kedua model yang dibuat adalah Random Forest Regressor dengan n_estimators sebesar 100 dan random_state sebesar 42.
+"""
+
+# Train model
+modelRF = RandomForestRegressor(n_estimators=100, random_state=42)
+modelRF.fit(X_train, y_train)
+
+"""### K-Nearest Neighbors
+
+K-Nearest Neighbors (KNN) adalah algoritma yang sederhana dan intuitif karena tidak memerlukan proses pelatihan. Algoritma ini bekerja dengan mencari sejumlah tetangga terdekat (k) dari titik data yang akan diprediksi menggunakan metrik jarak, seperti Euclidean, kemudian membuat prediksi berdasarkan rata-rata (untuk regresi) atau voting (untuk klasifikasi) dari tetangga tersebut. KNN sangat cocok untuk dataset kecil dan mudah dipahami, serta fleksibel untuk berbagai tipe distribusi data. Namun, algoritma ini memiliki kelemahan berupa kinerja yang lambat pada dataset besar karena perhitungan jarak yang mahal, serta sangat sensitif terhadap noise dan data yang tidak seimbang.
+
+Kedua model K-Nearest Neighbors yang dibuat adalah dengan jumlah n_neighbors=10.
+"""
+
+modelknn = KNeighborsRegressor(n_neighbors=10)
+modelknn.fit(X_train, y_train)
+
+"""### Support Vector Regressor
+Support Vector Regressor (SVR) adalah versi regresi dari Support Vector Machine (SVM) yang bekerja dengan mencari hyperplane terbaik dalam ruang dimensi tinggi untuk memprediksi nilai target. Algoritma ini menggunakan kernel seperti linear, polynomial, atau RBF untuk menangani hubungan data yang kompleks dan non-linear. SVR sangat efektif untuk data berdimensi tinggi dan dapat menangani noise dengan baik. Namun, algoritma ini kurang efisien pada dataset besar karena waktu komputasi yang tinggi, serta sulit diinterpretasi karena hasilnya bergantung pada pemilihan kernel dan parameter yang tepat seperti C, epsilon, dan gamma.
+
+`Model Kalori Terbakar` menggunakan Support Vector Regression dengan parameter standar dengan C sebesar 100 dan epsilon sebesar 0.1 untuk dilakukan regresi.
+"""
+
+modelSVR = SVR(kernel='rbf', C=100, epsilon=0.1)
+modelSVR.fit(X_train, y_train)
+
+"""Model Support Vector Regression pada `Model Kadar Lemak Tubuh` menggunakan teknik Gridsearch untuk menentukan parameternya. Gridsearcgh digunakan karena model awal SVR memiliki nilai metrik akurasi yang sangat rendah. Hasil GridSearch adalah sebagai berikut.
+
+"""
+
+# Define the parameter grid
+param_grid = {
+    'C': [0.1, 1, 10, 100],
+    'epsilon': [0.01, 0.1, 0.5, 1],
+    'gamma': ['scale', 0.1, 1, 10]
+}
+
+# Initialize SVR model
+svr = SVR(kernel='rbf')
+
+# Perform grid search
+grid_search = GridSearchCV(estimator=svr, param_grid=param_grid, cv=5, scoring='neg_mean_squared_error')
+grid_search.fit(X, y)
+
+# Best parameters and score
+print("Best Parameters:", grid_search.best_params_)
+print("Best Score:", grid_search.best_score_)
+
+"""Parameter model terbaik melalui Gridsearch adalah dengan C sama dengan 1, epsilon sebesar 0.5, dan gamma bernilai 'scale'."""
+
+modelSVR = SVR(kernel='rbf', C=1, epsilon=0.5, gamma= 'scale')
+modelSVR.fit(X_train, y_train)
+
+"""### XGBoost
+XGBoost adalah algoritma boosting berbasis pohon keputusan yang membangun model secara iteratif, di mana setiap pohon keputusan  baru dirancang untuk memperbaiki kesalahan dari pohon sebelumnya. XGBoost dilengkapi dengan regularisasi L1 dan L2 yang membantu mengurangi risiko overfitting dan sering kali menghasilkan akurasi tinggi. Algoritma ini juga sangat cepat dan efisien, karena menggunakan teknik optimasi yang canggih. Namun, konfigurasi hyperparameter yang kompleks dan struktur model yang sulit diinterpretasi menjadi kelemahan utama. Selain itu, jika pengaturan model tidak tepat, XGBoost berpotensi mengalami overfitting.
+
+`Model Kalori Terbakar` dengan metode Extreme Gradient atau XGBoost menggunakan parameter sebagai berikut yaitu n_estimators sebesar 100, learning rate 0.1, max_depth sebesar 6, colsample_bytree sebesar 0.8, dan subsample 0.8 poin.
+
+
+
+
+"""
+
+# Initialize the model
+xgboost = xgb.XGBRegressor(objective='reg:squarederror',  # Regression task
+                         n_estimators=100,  # Number of boosting rounds
+                         learning_rate=0.1,  # Step size at each iteration
+                         max_depth=6,  # Maximum depth of a tree
+                         colsample_bytree=0.8,  # Proportion of features used by each tree
+                         subsample=0.8)  # Subsample ratio of the training set
+
+# Fit the model on the training data
+xgboost.fit(X_train, y_train)
+
+"""Parameter `Model Kadar Lemak Tubuh` dengan algoritma boosting metode Extreme Gradient atau XGBoost dicari melalui GridSearch karena hasil iterasi pertama model menghasilkan akurasi yang kurang memuaskan.
+
+"""
+
+# Define the parameter grid
+param_grid = {
+    'n_estimators': [50, 100, 200],
+    'max_depth': [3, 6, 10],
+    'learning_rate': [0.01, 0.1, 0.2],
+    'subsample': [0.8, 1.0],
+    'colsample_bytree': [0.8, 1.0],
+    'gamma': [0, 0.1, 0.2],
+    'reg_alpha': [0, 0.1, 1.0],
+    'reg_lambda': [1.0, 10.0]
+}
+
+# Initialize the XGBoost model
+xgb_model = XGBRegressor(objective='reg:squarederror', random_state=42)
+
+# Set up GridSearchCV
+grid_search = GridSearchCV(
+    estimator=xgb_model,
+    param_grid=param_grid,
+    scoring='neg_mean_squared_error',
+    cv=3,
+    verbose=1,
+    n_jobs=-1
+)
+
+# Perform grid search
+grid_search.fit(X_train, y_train)
+
+# Get the best parameters and score
+best_params = grid_search.best_params_
+best_score = -grid_search.best_score_
+print("Best Parameters:", best_params)
+print("Best Training RMSE:", np.sqrt(best_score))
+
+# Evaluate the best model on the test set
+best_model = grid_search.best_estimator_
+y_pred = best_model.predict(X_test)
+test_rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+print("Test RMSE:", test_rmse)
+
+"""Parameter yang didapat adalah n_estimators sebesar 50, learning rate 0.1, max_depth sebesar 3, colsample_bytree sebesar 0.8, subsample 1.0 lalu reg_alpha 0, dan reg_lambda sebesar 10.0 poin."""
+
+# Initialize the model
+xgboost = xgb.XGBRegressor(objective='reg:squarederror',  # Regression task
+                         n_estimators=50,  # Number of boosting rounds
+                         learning_rate=0.1,  # Step size at each iteration
+                         max_depth=3,  # Maximum depth of a tree
+                         colsample_bytree=0.8,  # Proportion of features used by each tree
+                         subsample=1.0,  # Subsample ratio of the training set
+                         reg_alpha= 0,
+                         reg_lambda= 10.0,
+                         gamma= 0.2)
+
+# Fit the model on the training data
+xgboost.fit(X_train, y_train)
+
+"""## Model Terbaik
+
+Berdasarakan evaluasi metrik utama pembanding maka model terbaik untuk memprediksi `kalori terbakar` adalah model **XGBoost** dan model terbaik untuk memprediksi `kadar lemak tubuh` adalah model **Random Forest**. Kedua model ini dipilih karena memiliki Adjusted Rsquared paling mendekati 1 dan MSE yang paling minimum. Penjelasan lebih lanjut tentang metrik evaluasi akan dijelaskan di rubrik evaluasi.
+
+# **Evaluasi**
+
+### **Metrik**
+
+Setelah itu dipilih dua metrik utama untuk digunakan sebagai pembanding yaitu Adjusted R² dan Mean Squared Error. Keduanya dipilih karena variabel bebas digunakan tidak hanya satu jadi dibutuhkan metrik yang andal dengan jumlah variabel bebas yang lebih dari satu.
+
+**Adjusted R² (Adjusted R-Squared)**
+
+R² mengukur seberapa baik model regresi linier dapat menjelaskan variasi data. Nilainya antara 0 hingga 1, semakin tinggi nilai R², semakin baik model dalam menjelaskan data. Namun, R² bisa meningkat hanya dengan menambahkan variabel bebas ke dalam model, meskipun variabel tersebut mungkin tidak relevan. Karena itu, Adjusted R² digunakan untuk memberikan penilaian yang lebih akurat.
 
 Formula Adjusted R²:
 
@@ -912,7 +1118,7 @@ R²: Koefisien determinasi
 
 n: Jumlah data (observasi)
 
-p: Jumlah variabel independen
+p: Jumlah variabel bebas
 
 Cara Kerja:
 
@@ -922,7 +1128,7 @@ Adjusted R² lebih cocok digunakan untuk membandingkan model yang memiliki jumla
 Contoh:
 Jika Adjusted R² sebuah model adalah 0.85, itu berarti model tersebut dapat menjelaskan 85% variasi data dengan memperhitungkan jumlah variabel dalam model.
 
-* MSE (Mean Squared Error)
+**MSE (Mean Squared Error)**
 
 MSE adalah ukuran yang digunakan untuk menghitung rata-rata kesalahan kuadrat antara nilai yang diprediksi oleh model dan nilai aktual. Ini adalah alat yang digunakan untuk mengevaluasi akurasi prediksi model.
 
@@ -944,35 +1150,50 @@ MSE sangat sensitif terhadap outlier, karena kesalahan dihitung dalam bentuk kua
 Contoh:
 Jika MSE model adalah 4, itu berarti rata-rata kuadrat perbedaan antara nilai prediksi dan nilai aktual adalah 4, menunjukkan model memiliki kesalahan yang relatif besar dibandingkan dengan model dengan MSE lebih kecil.
 
-## Model Kalori Terbakar
+Selain metrik utama tersebut, Berikut metrik-metrik lain yang digunakan sebagai pembanding.
 
-Pembuatan data untuk model Kalori Terbakar yaitu dengan mendrop kolom Kalori Terbakar dari keseluruhan Data untuk membentuk nilai X sebagai variabel bebas. Semua kolom digunakan kecuali kolom Kalori Terbakar yang akan digunakan sebagai y atau variabek terikat.
+**R² Score (Coefficient of Determination)**
+   
+`R² = 1 - ( Σ(y_i - ŷ_i)² / Σ(y_i - ȳ)² )`
+
+Mengukur seberapa baik model menjelaskan variabilitas data target; nilai mendekati 1 menunjukkan model yang baik.
+
+**Root Mean Squared Error (RMSE)**
+   
+`RMSE = √( Σ(y_i - ŷ_i)² / n )`
+
+Mengukur rata-rata kesalahan prediksi model dalam satuan yang sama dengan data aslinya; semakin kecil, semakin baik.
+
+**Mean Absolute Error (MAE)**
+   
+`MAE = Σ|y_i - ŷ_i| / n`
+
+Mengukur rata-rata kesalahan absolut antara prediksi dan nilai aktual; mencerminkan kesalahan rata-rata model.
+
+**Explained Variance**
+   
+`Explained Variance = 1 - ( Var(y - ŷ) / Var(y) )`
+
+Mengukur proporsi varians data target yang dapat dijelaskan oleh model; semakin tinggi, semakin baik.
+
+- y_i: nilai sebenarnya
+- ŷ_i: nilai prediksi
+- ȳ: mean dari nilai sebenarnya
+- n: jumlah data
+- Var(x): varians dari x
+
+### **Grafik**
+
+Grafik yang disajikan dalam evaluasi ini adalah grafik antara hasil prediksi dengan nilai asli yang terdapat dalam data. seperti contoh berikut
+
+![gambar_97_2.png](data:image/png;base64,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)
+
+gambar tersebut menunjukan titik-titik berwarna biru hasil plot antara nilai prediksi pada sumbu y dan nilai sebenarnya pada sumbu X. Ketika nilai keduanya sama maka akan memenuhi garis diagonal 45 derajat berwarna merah. Jika nilai prediksi lebih kecil dari nilai sebenarnya maka titik akan berada diatas garis. Dan apabila nilai prediksi lebih besar dari nilai sebenarnya, titik tersebut akan berada di bawah garis. Grafik tersebut berguna untuk melihat persebaran data yang melenceng dari nilai prediksi
+
+## Model Kalori terbakar
+
+### Random Forest
 """
-
-# Prepare features and target
-X = data_processed.drop('Calories_Burned', axis=1)
-y = data_processed['Calories_Burned']
-
-# Split data
-X_train, X_test, y_train, y_test = train_test_split(X, y,
-                                                    test_size=0.2,
-                                                    random_state=42)
-X_train.head()
-
-# DataFrame untuk menyimpan hasil evaluasi
-# if 'metrics_df' not in locals() or metrics_df.empty:  # Memastikan DataFrame kosong atau belum ada
-
-metrics_df = pd.DataFrame(columns=["Model", "R2 Score", "Adjusted R2", "RMSE", "MAE", "MSE", "Explained Variance"])
-metrics_df.head()
-
-"""### Random Forest
-
-Model pertama yang dibuat adalah Random Forest Regressor dengan n_estimators sebesar 100 dan random_state sebesar 42.
-"""
-
-# Train model
-modelRF = RandomForestRegressor(n_estimators=100, random_state=42)
-modelRF.fit(X_train, y_train)
 
 # Evaluasi RF
 y_pred = modelRF.predict(X_test)
@@ -1016,12 +1237,7 @@ plt.show()
 """Model yang dihasilkan cukup bagus dengan Adjusted Rsquared sebesar 0.9676 dan MSE 0.0334 yang berada dibawah 0.1 nilainya.
 
 ### KNN
-
-Model selanjutnya adalah K-Nearest Neighbors dengan jumlah n_neighbors=10.
 """
-
-modelknn = KNeighborsRegressor(n_neighbors=10)
-modelknn.fit(X_train, y_train)
 
 # Evaluasi KNN
 y_pred = modelknn.predict(X_test)
@@ -1065,12 +1281,7 @@ plt.show()
 """Model ini tidak sebagus model sebelumnya namun masih cukup bagus di Adjusted Rsquared sebesar 0.8365 dan nilai MSE di atas 0.1 yaitu 0.1685 pada model ini.
 
 ### SVR
-
-Model Support Vector Regression dengan C sebesar 100 dan epsilon sebesar 0.1 ini digunakan untuk menentukan regresi.
 """
-
-modelSVR = SVR(kernel='rbf', C=100, epsilon=0.1)
-modelSVR.fit(X_train, y_train)
 
 # Evaluasi SVR
 y_pred = modelSVR.predict(X_test)
@@ -1114,20 +1325,7 @@ plt.show()
 """Hasil dari model ini sangat baik dengan Adjusted Rsquared sebesar 0.9696 dan MSE 0.0314.
 
 ### XGBoost
-
-Model terakhir diperkenalkan Algoritma Boosting dengan metode Extreme Gradient atau XGBoost. berikut parameter model yang digunakan yaitu n_estimators sebesar 100, learning rate 0.1, max_depth sebesar 6, colsample_bytree sebesar 0.8, dan subsample 0.8 poin.
 """
-
-# Initialize the model
-xgboost = xgb.XGBRegressor(objective='reg:squarederror',  # Regression task
-                         n_estimators=100,  # Number of boosting rounds
-                         learning_rate=0.1,  # Step size at each iteration
-                         max_depth=6,  # Maximum depth of a tree
-                         colsample_bytree=0.8,  # Proportion of features used by each tree
-                         subsample=0.8)  # Subsample ratio of the training set
-
-# Fit the model on the training data
-xgboost.fit(X_train, y_train)
 
 # Evaluasi XGBoost
 y_pred = xgboost.predict(X_test)  # Ganti `xgboost` dengan nama model Anda jika berbeda
@@ -1200,34 +1398,8 @@ plt.show()
 
 ## **Model Kadar Lemak Tubuh**
 
-Proses pembuatan data untuk model Kadar Lemak Tubuh dilakukan dengan menghapus kolom Kadar Lemak Tubuh dari seluruh dataset, sehingga menghasilkan nilai X sebagai variabel independen. Semua kolom lainnya digunakan, kecuali kolom Kadar Lemak Tubuh yang akan menjadi variabel dependen atau y.
+### Random Forest
 """
-
-# Prepare features and target
-X = data_processed.drop(['Fat_Percentage'], axis=1)
-y = data_processed['Fat_Percentage']
-
-# Split data
-X_train, X_test, y_train, y_test = train_test_split(X, y,
-                                                    test_size=0.2,
-                                                    random_state=42)
-
-X.head()
-
-# DataFrame untuk menyimpan hasil evaluasi
-# if 'metrics_df' not in locals() or metrics_df.empty:  # Memastikan DataFrame kosong atau belum ada
-
-metrics_df = pd.DataFrame(columns=["Model", "R2 Score", "Adjusted R2", "RMSE", "MAE", "MSE", "Explained Variance"])
-metrics_df.head()
-
-"""### Random Forest
-
-Model pertama yang dibuat adalah Random Forest Regressor dengan n_estimators sebesar 100 dan random_state sebesar 42.
-"""
-
-# Train model
-modelRF = RandomForestRegressor(n_estimators=100, random_state=42)
-modelRF.fit(X_train, y_train)
 
 # Evaluasi XGBoost
 y_pred = modelRF.predict(X_test)
@@ -1271,12 +1443,7 @@ plt.show()
 """Model yang dihasilkan kurang bagus dengan Adjusted Rsquared sebesar 0.7891 dan MSE 0.1981 yang relatif besar galatnya.
 
 ### KNN
-
-Model selanjutnya adalah K-Nearest Neighbors dengan jumlah n_neighbors=10.
 """
-
-modelknn = KNeighborsRegressor(n_neighbors=10)
-modelknn.fit(X_train, y_train)
 
 # Evaluasi KNN
 y_pred = modelknn.predict(X_test)
@@ -1320,32 +1487,7 @@ plt.show()
 """Model ini lebih buruk dari model sebelumnya namun masih cukup di Adjusted Rsquared sebesar 0.7590 dan nilai MSE tinggi di atas 0.1 yaitu 0.2264 pada model ini.
 
 ### SVR
-
-Model Support Vector Regression menggunakan teknik Gridsearch untuk menentukan parameternya. Gridsearcgh digunakan karena model awal SVR memiliki nilai metrik akurasi yang kurang bisa dipertanggung-jawabkan.
 """
-
-# Define the parameter grid
-param_grid = {
-    'C': [0.1, 1, 10, 100],
-    'epsilon': [0.01, 0.1, 0.5, 1],
-    'gamma': ['scale', 0.1, 1, 10]
-}
-
-# Initialize SVR model
-svr = SVR(kernel='rbf')
-
-# Perform grid search
-grid_search = GridSearchCV(estimator=svr, param_grid=param_grid, cv=5, scoring='neg_mean_squared_error')
-grid_search.fit(X, y)
-
-# Best parameters and score
-print("Best Parameters:", grid_search.best_params_)
-print("Best Score:", grid_search.best_score_)
-
-"""Parameter model terbaik melalui Gridsearch adalah dengan C sama dengan 1, epsilon sebesar 0.5, dan gamma bernilai 'scale'."""
-
-modelSVR = SVR(kernel='rbf', C=1, epsilon=0.5, gamma= 'scale')
-modelSVR.fit(X_train, y_train)
 
 # Evaluasi SVR
 y_pred = modelSVR.predict(X_test)
@@ -1389,65 +1531,7 @@ plt.show()
 """Hasil dari model ini kurang baik dengan Adjusted Rsquared sebesar 0.7469 dan MSE 0.2378.
 
 ### XGBoost
-
-Model terakhir diperkenalkan Algoritma Boosting dengan metode Extreme Gradient atau XGBoost. Berikut parameter model yang digunakan yaitu dicari melalu Gridsearch karena hasil iterasi pertama model menghasilkan akurasi yang sangat rendah.
 """
-
-# Define the parameter grid
-param_grid = {
-    'n_estimators': [50, 100, 200],
-    'max_depth': [3, 6, 10],
-    'learning_rate': [0.01, 0.1, 0.2],
-    'subsample': [0.8, 1.0],
-    'colsample_bytree': [0.8, 1.0],
-    'gamma': [0, 0.1, 0.2],
-    'reg_alpha': [0, 0.1, 1.0],
-    'reg_lambda': [1.0, 10.0]
-}
-
-# Initialize the XGBoost model
-xgb_model = XGBRegressor(objective='reg:squarederror', random_state=42)
-
-# Set up GridSearchCV
-grid_search = GridSearchCV(
-    estimator=xgb_model,
-    param_grid=param_grid,
-    scoring='neg_mean_squared_error',
-    cv=3,
-    verbose=1,
-    n_jobs=-1
-)
-
-# Perform grid search
-grid_search.fit(X_train, y_train)
-
-# Get the best parameters and score
-best_params = grid_search.best_params_
-best_score = -grid_search.best_score_
-print("Best Parameters:", best_params)
-print("Best Training RMSE:", np.sqrt(best_score))
-
-# Evaluate the best model on the test set
-best_model = grid_search.best_estimator_
-y_pred = best_model.predict(X_test)
-test_rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-print("Test RMSE:", test_rmse)
-
-"""Parameter yang didapat adalah n_estimators sebesar 50, learning rate 0.1, max_depth sebesar 3, colsample_bytree sebesar 0.8, subsample 1.0 lalu reg_alpha 0, dan reg_lambda sebesar 10.0 poin."""
-
-# Initialize the model
-xgboost = xgb.XGBRegressor(objective='reg:squarederror',  # Regression task
-                         n_estimators=50,  # Number of boosting rounds
-                         learning_rate=0.1,  # Step size at each iteration
-                         max_depth=3,  # Maximum depth of a tree
-                         colsample_bytree=0.8,  # Proportion of features used by each tree
-                         subsample=1.0,  # Subsample ratio of the training set
-                         reg_alpha= 0,
-                         reg_lambda= 10.0,
-                         gamma= 0.2)
-
-# Fit the model on the training data
-xgboost.fit(X_train, y_train)
 
 # Evaluasi XGBoost
 y_pred = xgboost.predict(X_test)  # Ganti `xgboost` dengan nama model Anda jika berbeda
@@ -1523,20 +1607,20 @@ plt.show()
 Kesimpulan berdasarkan hasil dari *goal* yang telah dicapai:  
 
 1. **Model Prediksi Kalori Terbakar**  
-   Model prediksi kalori terbakar menunjukkan kinerja yang sangat baik dengan *adjusted R²* sebesar **0.9854** dengan menggunakan algoritma XGBoost, menandakan bahwa model mampu menjelaskan sebagian besar variabilitas dalam jumlah kalori yang terbakar. Hal ini menunjukkan potensi yang tinggi untuk mengimplementasikan model ini dalam memberikan rekomendasi latihan yang efisien.
+   Model prediksi kalori terbakar terbaik diantara algoritma **Random Forest (RF**), **K-Nearest Neighbors (KNN)**, **Support Vector Regressor (SVR)**, dan **Extreme Gradient Boosting (XGBoost)** adalah dengan menggunakan algoritma **Extreme Gradient Boosting (XGBoost)**. Model menunjukkan kinerja yang sangat baik dengan *adjusted R²* sebesar **0.9854** , menandakan bahwa model mampu menjelaskan sebagian besar variabilitas dalam jumlah kalori yang terbakar. Hal ini menunjukkan potensi yang tinggi untuk mengimplementasikan model ini dalam memberikan rekomendasi latihan yang efisien.
 
 
 2. **Model Prediksi Kadar Lemak Tubuh**  
-   Model prediksi kadar lemak tubuh memiliki *adjusted R²* sebesar **0.7891** dengan menggunakan algoritma Random Forest, menunjukkan bahwa model ini cukup baik dalam memprediksi kadar lemak tubuh. Namun, masih ada ruang untuk meningkatkan akurasi model, mungkin dengan menambahkan variabel atau data yang lebih relevan.  
+   Model prediksi kadar lemak tubuh terbaik diantara algoritma **Random Forest (RF)**, **K-Nearest Neighbors (KNN)**, **Support Vector Regressor (SVR)**, dan **Extreme Gradient Boosting (XGBoost)** adalah dengan menggunakan algoritma **Random Forest (RF)**. Model prediksi kadar lemak tubuh memiliki *adjusted R²* sebesar **0.7891**, menunjukkan bahwa model ini cukup baik dalam memprediksi kadar lemak tubuh. Namun, masih ada ruang untuk meningkatkan akurasi model, mungkin dengan menambahkan variabel atau data yang lebih relevan.  
 
 3. **Preferensi Latihan Berdasarkan Gender**  
-   Analisis tidak menemukan perbedaan yang signifikan dalam preferensi latihan antara laki-laki dan perempuan. Hal ini mengindikasikan bahwa program latihan dapat dirancang dengan pendekatan yang lebih universal tanpa perlu segregasi berdasarkan gender.  
+   Analisis tidak menemukan perbedaan yang signifikan dalam preferensi latihan antara laki-laki dan perempuan. Hal ini mengindikasikan bahwa program latihan dapat dirancang dengan pendekatan yang lebih umum tanpa perlu pemisahan berdasarkan gender.  
 
 4. **Preferensi Berdasarkan Tingkat Kemahiran**  
-   Tidak ada hubungan signifikan yang ditemukan antara tingkat kemahiran dan preferensi latihan. Artinya, preferensi latihan kemungkinan lebih dipengaruhi oleh faktor lain, seperti tujuan kebugaran individu atau akses ke fasilitas, daripada tingkat pengalaman.  
+   Tidak ada hubungan signifikan yang ditemukan antara tingkat kemahiran dan preferensi latihan. Artinya, preferensi latihan kemungkinan lebih dipengaruhi oleh faktor lain, seperti tujuan kebugaran individu atau akses ke fasilitas, daripada tingkat kemahiran.  
 
 
-Secara keseluruhan, model prediksi yang kuat untuk kalori terbakar dan kadar lemak tubuh telah berhasil dibuat. Hasil analisis preferensi menunjukkan bahwa pendekatan universal dapat diambil tanpa perlu memperhatikan perbedaan gender atau tingkat kemahiran. Langkah selanjutnya dapat difokuskan pada pengembangan program latihan berbasis data, peningkatan model kadar lemak tubuh, atau eksplorasi faktor-faktor lain yang mungkin memengaruhi preferensi individu.
+Secara keseluruhan, model prediksi yang kuat untuk kalori terbakar dan kadar lemak tubuh telah berhasil dibuat. Hasil analisis preferensi menunjukkan bahwa pendekatan umum dapat diambil tanpa perlu memperhatikan perbedaan gender atau tingkat kemahiran. Langkah selanjutnya dapat difokuskan pada pengembangan program latihan berbasis data, peningkatan model kadar lemak tubuh, atau eksplorasi faktor-faktor lain yang mungkin memengaruhi preferensi individu.
 
 # Akhir
 """
