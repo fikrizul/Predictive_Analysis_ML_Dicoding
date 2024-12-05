@@ -713,9 +713,10 @@ Grafik ini menunjukkan hubungan antara jumlah kalori yang terbakar dengan berbag
 
 ## **Persiapan Data**
 
-Memanfaatkan beberapa fitur baru yang bisa dibuat dari beberapa variabel yang ada agar didapat akurasi yang lebih maksimal dalam model maka akan dilakukan rekayasa fitur.
+
 
 ### **Rekayasa Fitur**
+Fitur-fitur baru dapat dibuat dari beberapa variabel yang ada agar didapat akurasi yang lebih maksimal dalam model. Fitur tersebut akan dibuat melalui rekayasa fitur seperti di bawah ini.
 
 **Intensity Score**
 
@@ -1004,7 +1005,7 @@ Proses pembuatan data untuk model Kadar Lemak Tubuh dilakukan dengan menghapus k
 
 ## **Pemodelan**
 
-Model yang akan dibuat ada dua yaitu `Model Kalori Terbakar` yang digunakan untuk mencari faktor apa saja yang memeangaruhi efektifitas latihan dalam gym serta `Model Kadar Lemak Tubuh` yang digunakan untuk mencari kebiasaan-kebiasaan latihan apa saja yang harus dilakukan untuk mencapai target tipe tubuh tertentu.
+Model yang akan dibuat ada dua yaitu `Model Kalori Terbakar` yang digunakan untuk mencari faktor apa saja yang memengaruhi efektifitas latihan dalam gym serta `Model Kadar Lemak Tubuh` yang digunakan untuk mencari kebiasaan-kebiasaan latihan apa saja yang harus dilakukan untuk mencapai target tipe tubuh tertentu.
 
 Ada 4 algoritma yang dipilih dengan framework yang berbeda yaitu Random Forest, K-Nearest Neighbors, Support Vector Reressor dan XGboost. Random Forest (RF) unggul dalam menangani data kompleks dan besar, serta dapat mengurangi risiko overfitting dengan menggunakan banyak pohon keputusan tanpa membutuhkan praproses data yang rumit. Namun, proses pelatihan dan prediksi bisa lebih lambat dan sulit diinterpretasi. K-Nearest Neighbors (KNN) sederhana dan mudah dipahami, tidak memerlukan pelatihan, serta dapat digunakan untuk regresi dan klasifikasi, tetapi kinerjanya menurun pada dataset besar dan sangat sensitif terhadap noise serta data yang tidak seimbang. Support Vector Regression (SVR) efektif untuk data dengan dimensi tinggi dan linearitas kompleks serta dapat menangani noise, namun kurang efisien untuk dataset besar dan sulit diinterpretasi karena bergantung pada pemilihan kernel dan parameter yang tepat. XGBoost cepat, efisien, dan sering menghasilkan akurasi tinggi dengan regularisasi yang baik untuk mengurangi overfitting, namun dapat overfit jika tidak dikonfigurasi dengan benar, memerlukan pemilihan hyperparameter yang tepat, dan model yang dihasilkan sulit diinterpretasi.
 
@@ -1451,20 +1452,20 @@ Model terbaik untuk variabel Kadar Lemak Tubuh ternyata adalah model Random Fore
 Kesimpulan berdasarkan hasil dari *goal* yang telah dicapai:  
 
 1. **Model Prediksi Kalori Terbakar**  
-   Model prediksi kalori terbakar menunjukkan kinerja yang sangat baik dengan *adjusted R²* sebesar **0.9854** dengan menggunakan algoritma XGBoost, menandakan bahwa model mampu menjelaskan sebagian besar variabilitas dalam jumlah kalori yang terbakar. Hal ini menunjukkan potensi yang tinggi untuk mengimplementasikan model ini dalam memberikan rekomendasi latihan yang efisien.
+   Model prediksi kalori terbakar terbaik diantara algoritma **Random Forest (RF**), **K-Nearest Neighbors (KNN)**, **Support Vector Regressor (SVR)**, dan **Extreme Gradient Boosting (XGBoost)** adalah dengan menggunakan algoritma **Extreme Gradient Boosting (XGBoost)**. Model menunjukkan kinerja yang sangat baik dengan *adjusted R²* sebesar **0.9854** , menandakan bahwa model mampu menjelaskan sebagian besar variabilitas dalam jumlah kalori yang terbakar. Hal ini menunjukkan potensi yang tinggi untuk mengimplementasikan model ini dalam memberikan rekomendasi latihan yang efisien.
 
 
 2. **Model Prediksi Kadar Lemak Tubuh**  
-   Model prediksi kadar lemak tubuh memiliki *adjusted R²* sebesar **0.7891** dengan mengunakan algoritma Random Forest, menunjukkan bahwa model ini cukup baik dalam memprediksi kadar lemak tubuh. Namun, masih ada ruang untuk meningkatkan akurasi model, mungkin dengan menambahkan variabel atau data yang lebih relevan.  
+   Model prediksi kadar lemak tubuh terbaik diantara algoritma **Random Forest (RF)**, **K-Nearest Neighbors (KNN)**, **Support Vector Regressor (SVR)**, dan **Extreme Gradient Boosting (XGBoost)** adalah dengan menggunakan algoritma **Random Forest (RF)**. Model prediksi kadar lemak tubuh memiliki *adjusted R²* sebesar **0.7891**, menunjukkan bahwa model ini cukup baik dalam memprediksi kadar lemak tubuh. Namun, masih ada ruang untuk meningkatkan akurasi model, mungkin dengan menambahkan variabel atau data yang lebih relevan.  
 
 3. **Preferensi Latihan Berdasarkan Gender**  
-   Analisis tidak menemukan perbedaan yang signifikan dalam preferensi latihan antara laki-laki dan perempuan. Hal ini mengindikasikan bahwa program latihan dapat dirancang dengan pendekatan yang lebih universal tanpa perlu segregasi berdasarkan gender.  
+   Analisis tidak menemukan perbedaan yang signifikan dalam preferensi latihan antara laki-laki dan perempuan. Hal ini mengindikasikan bahwa program latihan dapat dirancang dengan pendekatan yang lebih umum tanpa perlu pemisahan berdasarkan gender.  
 
 4. **Preferensi Berdasarkan Tingkat Kemahiran**  
-   Tidak ada hubungan signifikan yang ditemukan antara tingkat kemahiran dan preferensi latihan. Artinya, preferensi latihan kemungkinan lebih dipengaruhi oleh faktor lain, seperti tujuan kebugaran individu atau akses ke fasilitas, daripada tingkat pengalaman.  
+   Tidak ada hubungan signifikan yang ditemukan antara tingkat kemahiran dan preferensi latihan. Artinya, preferensi latihan kemungkinan lebih dipengaruhi oleh faktor lain, seperti tujuan kebugaran individu atau akses ke fasilitas, daripada tingkat kemahiran.  
 
 
-Secara keseluruhan, model prediksi yang kuat untuk kalori terbakar dan kadar lemak tubuh telah berhasil dibuat. Hasil analisis preferensi menunjukkan bahwa pendekatan universal dapat diambil tanpa perlu memperhatikan perbedaan gender atau tingkat kemahiran. Langkah selanjutnya dapat difokuskan pada pengembangan program latihan berbasis data, peningkatan model kadar lemak tubuh, atau eksplorasi faktor-faktor lain yang mungkin memengaruhi preferensi individu.
+Secara keseluruhan, model prediksi yang kuat untuk kalori terbakar dan kadar lemak tubuh telah berhasil dibuat. Hasil analisis preferensi menunjukkan bahwa pendekatan umum dapat diambil tanpa perlu memperhatikan perbedaan gender atau tingkat kemahiran. Langkah selanjutnya dapat difokuskan pada pengembangan program latihan berbasis data, peningkatan model kadar lemak tubuh, atau eksplorasi faktor-faktor lain yang mungkin memengaruhi preferensi individu.
 
 
 
