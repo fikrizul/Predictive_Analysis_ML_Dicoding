@@ -1004,95 +1004,14 @@ Proses pembuatan data untuk model Kadar Lemak Tubuh dilakukan dengan menghapus k
 
 ## **Pemodelan**
 
-Model yang akan dibuat adalah 
+Model yang akan dibuat ada dua yaitu `Model Kalori Terbakar` yang digunakan untuk mencari faktor apa saja yang memeangaruhi efektifitas latihan dalam gym serta `Model Kadar Lemak Tubuh` yang digunakan untuk mencari kebiasaan-kebiasaan latihan apa saja yang harus dilakukan untuk mencapai target tipe tubuh tertentu.
 
 Ada 4 algoritma yang dipilih dengan framework yang berbeda yaitu Random Forest, K-Nearest Neighbors, Support Vector Reressor dan XGboost. Random Forest (RF) unggul dalam menangani data kompleks dan besar, serta dapat mengurangi risiko overfitting dengan menggunakan banyak pohon keputusan tanpa membutuhkan praproses data yang rumit. Namun, proses pelatihan dan prediksi bisa lebih lambat dan sulit diinterpretasi. K-Nearest Neighbors (KNN) sederhana dan mudah dipahami, tidak memerlukan pelatihan, serta dapat digunakan untuk regresi dan klasifikasi, tetapi kinerjanya menurun pada dataset besar dan sangat sensitif terhadap noise serta data yang tidak seimbang. Support Vector Regression (SVR) efektif untuk data dengan dimensi tinggi dan linearitas kompleks serta dapat menangani noise, namun kurang efisien untuk dataset besar dan sulit diinterpretasi karena bergantung pada pemilihan kernel dan parameter yang tepat. XGBoost cepat, efisien, dan sering menghasilkan akurasi tinggi dengan regularisasi yang baik untuk mengurangi overfitting, namun dapat overfit jika tidak dikonfigurasi dengan benar, memerlukan pemilihan hyperparameter yang tepat, dan model yang dihasilkan sulit diinterpretasi.
 
-Random Forest (RF) adalah algoritma ensemble learning yang bekerja dengan membangun banyak pohon keputusan secara independen menggunakan subset data dan fitur yang dipilih secara acak. Prediksi akhir ditentukan melalui rata-rata (untuk regresi) atau voting mayoritas (untuk klasifikasi). RF unggul dalam menangani data kompleks dan besar serta dapat mengurangi risiko overfitting melalui kombinasi banyak pohon. Selain itu, algoritma ini tidak memerlukan praproses data yang rumit, sehingga dapat langsung digunakan pada data mentah dengan outlier atau nilai kosong. Namun, proses pelatihannya relatif lambat karena memerlukan waktu untuk membangun banyak pohon, dan hasilnya sulit diinterpretasi karena merupakan agregasi dari model-model individual.
-Model pertama yang dibuat adalah Random Forest Regressor dengan n_estimators sebesar 100 dan random_state sebesar 42.
+### Random Forest
+Random Forest (RF) adalah algoritma ensemble learning yang bekerja dengan membangun banyak pohon keputusan secara independen menggunakan subset data dan fitur yang dipilih secara acak. Prediksi akhir ditentukan melalui rata-rata (untuk regresi) atau voting mayoritas (untuk klasifikasi). RF unggul dalam menangani data kompleks dan besar serta dapat mengurangi risiko overfitting melalui kombinasi banyak pohon keputusan. Selain itu, algoritma ini tidak memerlukan praproses data yang rumit, sehingga dapat langsung digunakan pada data mentah dengan outlier atau nilai kosong. Namun, proses pelatihannya relatif lambat karena memerlukan waktu untuk membangun banyak pohon, dan hasilnya sulit diinterpretasi karena merupakan agregasi dari model-model individual.
 
-K-Nearest Neighbors (KNN) adalah algoritma yang sederhana dan intuitif karena tidak memerlukan proses pelatihan. Algoritma ini bekerja dengan mencari sejumlah tetangga terdekat (k) dari titik data yang akan diprediksi menggunakan metrik jarak, seperti Euclidean, kemudian membuat prediksi berdasarkan rata-rata (untuk regresi) atau voting (untuk klasifikasi) dari tetangga tersebut. KNN sangat cocok untuk dataset kecil dan mudah dipahami, serta fleksibel untuk berbagai tipe distribusi data. Namun, algoritma ini memiliki kelemahan berupa kinerja yang lambat pada dataset besar karena perhitungan jarak yang mahal, serta sangat sensitif terhadap noise dan data yang tidak seimbang. Model selanjutnya adalah K-Nearest Neighbors dengan jumlah n_neighbors=10.
-
-Support Vector Regressor (SVR) adalah versi regresi dari Support Vector Machine (SVM) yang bekerja dengan mencari hyperplane terbaik dalam ruang dimensi tinggi untuk memprediksi nilai target. Algoritma ini menggunakan kernel seperti linear, polynomial, atau RBF untuk menangani hubungan data yang kompleks dan non-linear. SVR sangat efektif untuk data berdimensi tinggi dan dapat menangani noise dengan baik. Namun, algoritma ini kurang efisien pada dataset besar karena waktu komputasi yang tinggi, serta sulit diinterpretasi karena hasilnya bergantung pada pemilihan kernel dan parameter yang tepat seperti C, epsilon, dan gamma. Model Support Vector Regression dengan C sebesar 100 dan epsilon sebesar 0.1 ini digunakan untuk menentukan regresi. Model Support Vector Regression menggunakan teknik Gridsearch untuk menentukan parameternya. Gridsearcgh digunakan karena model awal SVR memiliki nilai metrik akurasi yang kurang bisa dipertanggung-jawabkan.
-
-
-
-
-    Best Parameters: {'C': 1, 'epsilon': 0.5, 'gamma': 'scale'}
-    Best Score: -0.23618483737773482
-
-
-Parameter model terbaik melalui Gridsearch adalah dengan C sama dengan 1, epsilon sebesar 0.5, dan gamma bernilai 'scale'.
-
-XGBoost adalah algoritma boosting berbasis pohon yang membangun model secara iteratif, di mana setiap pohon baru dirancang untuk memperbaiki kesalahan dari pohon sebelumnya. XGBoost dilengkapi dengan regularisasi L1 dan L2 yang membantu mengurangi risiko overfitting dan sering kali menghasilkan akurasi tinggi. Algoritma ini juga sangat cepat dan efisien, karena menggunakan teknik optimasi yang canggih. Namun, konfigurasi hyperparameter yang kompleks dan struktur model yang sulit diinterpretasi menjadi kelemahan utama. Selain itu, jika pengaturan model tidak tepat, XGBoost berpotensi mengalami overfitting. Model terakhir diperkenalkan Algoritma Boosting dengan metode Extreme Gradient atau XGBoost. berikut parameter model yang digunakan yaitu n_estimators sebesar 100, learning rate 0.1, max_depth sebesar 6, colsample_bytree sebesar 0.8, dan subsample 0.8 poin.
-
-Model terakhir diperkenalkan Algoritma Boosting dengan metode Extreme Gradient atau XGBoost. Berikut parameter model yang digunakan yaitu dicari melalui Gridsearch karena hasil iterasi pertama model menghasilkan akurasi yang sangat rendah.
-
-
-    Fitting 3 folds for each of 1944 candidates, totalling 5832 fits
-    Best Parameters: {'colsample_bytree': 0.8, 'gamma': 0.2, 'learning_rate': 0.1, 'max_depth': 3, 'n_estimators': 50, 'reg_alpha': 0, 'reg_lambda': 10.0, 'subsample': 1.0}
-    Best Training RMSE: 0.4484218489853021
-    Test RMSE: 0.45672201756778374
-
-
-Parameter yang didapat adalah n_estimators sebesar 50, learning rate 0.1, max_depth sebesar 3, colsample_bytree sebesar 0.8, subsample 1.0 lalu reg_alpha 0, dan reg_lambda sebesar 10.0 poin.
-
-
-
-## **Evaluasi**
-
-Setelah itu dipilih dua metrik utama untuk digunakan sebagai pembanding yaitu Adjusted R² dan Mean Squared Error. Keduanya dipilih karena variabel bebas digunakan tidak hanya satu jadi dibutuhkan metrik yang andal dengan jumlah variabel bebas yang lebih dari satu.
-
-* Adjusted R² (Adjusted R-Squared)
-
-R² mengukur seberapa baik model regresi linier dapat menjelaskan variasi data. Nilainya antara 0 hingga 1, semakin tinggi nilai R², semakin baik model dalam menjelaskan data. Namun, R² bisa meningkat hanya dengan menambahkan variabel bebas ke dalam model, meskipun variabel tersebut mungkin tidak relevan. Karena itu, Adjusted R² digunakan untuk memberikan penilaian yang lebih akurat.
-
-Formula Adjusted R²:
-
-`Adjusted R² = 1 - ((1 - R²) * (n - 1)) / (n - p - 1)`
-
-R²: Koefisien determinasi
-
-n: Jumlah data (observasi)
-
-p: Jumlah variabel bebas
-
-Cara Kerja:
-
-Adjusted R² memperhitungkan jumlah variabel dan jumlah data, membuatnya lebih andal daripada R² saat membandingkan model dengan jumlah variabel yang berbeda.
-Jika variabel baru ditambahkan dan relevan, Adjusted R² akan meningkat. Sebaliknya, jika variabel tersebut tidak relevan, Adjusted R² akan menurun, menunjukkan model menjadi lebih kompleks tanpa nilai tambah.
-Adjusted R² lebih cocok digunakan untuk membandingkan model yang memiliki jumlah variabel yang berbeda.
-Contoh:
-Jika Adjusted R² sebuah model adalah 0.85, itu berarti model tersebut dapat menjelaskan 85% variasi data dengan memperhitungkan jumlah variabel dalam model.
-
-* MSE (Mean Squared Error)
-
-MSE adalah ukuran yang digunakan untuk menghitung rata-rata kesalahan kuadrat antara nilai yang diprediksi oleh model dan nilai aktual. Ini adalah alat yang digunakan untuk mengevaluasi akurasi prediksi model.
-
-Formula MSE:
-
-`MSE = (1 / n) * Σ(yᵢ - ŷᵢ)²`
-
-yᵢ: Nilai aktual (observasi sebenarnya)
-
-ŷᵢ: Nilai prediksi model
-
-n: Jumlah data (observasi)
-
-Cara Kerja:
-
-MSE mengukur rata-rata kuadrat selisih antara nilai yang diprediksi dan nilai yang sebenarnya.
-Nilai MSE yang lebih kecil menunjukkan model yang lebih baik, karena perbedaan antara nilai yang diprediksi dan nilai aktual lebih kecil.
-MSE sangat sensitif terhadap outlier, karena kesalahan dihitung dalam bentuk kuadrat. Jadi, jika ada data yang sangat berbeda, MSE bisa menjadi lebih besar.
-Contoh:
-Jika MSE model adalah 4, itu berarti rata-rata kuadrat perbedaan antara nilai prediksi dan nilai aktual adalah 4, menunjukkan model memiliki kesalahan yang relatif besar dibandingkan dengan model dengan MSE lebih kecil.
-
-
-
-
-### Model Kalori Terbakar
-
-#### Random Forest
+Kedua model yang dibuat adalah Random Forest Regressor dengan n_estimators sebesar 100 dan random_state sebesar 42.
 
 <table style="width: 100%; text-align: center;">
   <tbody>
@@ -1105,32 +1024,11 @@ Jika MSE model adalah 4, itu berarti rata-rata kuadrat perbedaan antara nilai pr
   </tbody>
 </table>
 
+### K-Nearest Neighbors
 
-    Model Performance (RF):
-                               0
-    Model                     RF
-    R2 Score            0.970312
-    Adjusted R2         0.967643
-    RMSE                0.182629
-    MAE                  0.13895
-    MSE                 0.033353
-    Explained Variance  0.970519
+K-Nearest Neighbors (KNN) adalah algoritma yang sederhana dan intuitif karena tidak memerlukan proses pelatihan. Algoritma ini bekerja dengan mencari sejumlah tetangga terdekat (k) dari titik data yang akan diprediksi menggunakan metrik jarak, seperti Euclidean, kemudian membuat prediksi berdasarkan rata-rata (untuk regresi) atau voting (untuk klasifikasi) dari tetangga tersebut. KNN sangat cocok untuk dataset kecil dan mudah dipahami, serta fleksibel untuk berbagai tipe distribusi data. Namun, algoritma ini memiliki kelemahan berupa kinerja yang lambat pada dataset besar karena perhitungan jarak yang mahal, serta sangat sensitif terhadap noise dan data yang tidak seimbang. 
 
-
-
-    
-![png](gambar_files/gambar_97_2.png)
-    
-
-
-Model yang dihasilkan cukup bagus dengan Adjusted Rsquared sebesar 0.9676 dan MSE 0.0334 yang berada dibawah 0.1 nilainya.
-
-#### KNN
-
-
-
-
-
+Kedua model K-Nearest Neighbors yang dibuat adalah dengan jumlah n_neighbors=10.
 
 
 <table style="width: 100%; text-align: center;">
@@ -1149,35 +1047,10 @@ Model yang dihasilkan cukup bagus dengan Adjusted Rsquared sebesar 0.9676 dan MS
 
 
 
-    
-    Model Performance (KNN):
-                               0
-    Model                    KNN
-    R2 Score            0.849978
-    Adjusted R2         0.836493
-    RMSE                0.410542
-    MAE                 0.332696
-    MSE                 0.168544
-    Explained Variance  0.850501
+### Support Vector Regressor
+Support Vector Regressor (SVR) adalah versi regresi dari Support Vector Machine (SVM) yang bekerja dengan mencari hyperplane terbaik dalam ruang dimensi tinggi untuk memprediksi nilai target. Algoritma ini menggunakan kernel seperti linear, polynomial, atau RBF untuk menangani hubungan data yang kompleks dan non-linear. SVR sangat efektif untuk data berdimensi tinggi dan dapat menangani noise dengan baik. Namun, algoritma ini kurang efisien pada dataset besar karena waktu komputasi yang tinggi, serta sulit diinterpretasi karena hasilnya bergantung pada pemilihan kernel dan parameter yang tepat seperti C, epsilon, dan gamma.
 
-
-
-    
-![png](gambar_files/gambar_102_1.png)
-    
-
-
-Model ini tidak sebagus model sebelumnya namun masih cukup bagus di Adjusted Rsquared sebesar 0.8365 dan nilai MSE di atas 0.1 yaitu 0.1685 pada model ini.
-
-#### SVR
-
-
-
-
-
-
-
-
+`Model Kalori Terbakar` menggunakan Support Vector Regression dengan parameter standar dengan C sebesar 100 dan epsilon sebesar 0.1 untuk dilakukan regresi. 
 
 <table style="width: 100%; text-align: center;">
   <tbody>
@@ -1191,37 +1064,28 @@ Model ini tidak sebagus model sebelumnya namun masih cukup bagus di Adjusted Rsq
 </table>
 
 
+Model Support Vector Regression pada `Model Kadar Lemak Tubuh` menggunakan teknik Gridsearch untuk menentukan parameternya. Gridsearcgh digunakan karena model awal SVR memiliki nilai metrik akurasi yang sangat rendah. Hasil GridSearch adalah sebagai berikut.
 
-
-
+    Best Parameters: {'C': 1, 'epsilon': 0.5, 'gamma': 'scale'}
+    Best Score: -0.23618483737773482
     
-    Model Performance (SVR):
-                               0
-    Model                    SVR
-    R2 Score            0.972084
-    Adjusted R2         0.969575
-    RMSE                0.177094
-    MAE                 0.127105
-    MSE                 0.031362
-    Explained Variance  0.972092
+Parameter model terbaik melalui Gridsearch adalah dengan C sama dengan 1, epsilon sebesar 0.5, dan gamma bernilai 'scale'.
 
+<table>
+  <tbody>
+    <tr>
+      <td style="background-color: #add8e6; color: #000;">SVR</td>
+    </tr>
+    <tr>
+      <td style="background-color: #e6f7ff; color: #000;"><code>SVR(C=1, epsilon=0.5)</code></td>
+    </tr>
+  </tbody>
+</table>
 
+### XGBoost
+XGBoost adalah algoritma boosting berbasis pohon keputusan yang membangun model secara iteratif, di mana setiap pohon keputusan  baru dirancang untuk memperbaiki kesalahan dari pohon sebelumnya. XGBoost dilengkapi dengan regularisasi L1 dan L2 yang membantu mengurangi risiko overfitting dan sering kali menghasilkan akurasi tinggi. Algoritma ini juga sangat cepat dan efisien, karena menggunakan teknik optimasi yang canggih. Namun, konfigurasi hyperparameter yang kompleks dan struktur model yang sulit diinterpretasi menjadi kelemahan utama. Selain itu, jika pengaturan model tidak tepat, XGBoost berpotensi mengalami overfitting. 
 
-    
-![png](gambar_files/gambar_107_1.png)
-    
-
-
-Hasil dari model ini sangat baik dengan Adjusted Rsquared sebesar 0.9696 dan MSE 0.0314.
-
-#### XGBoost
-
-
-
-
-
-
-
+`Model Kalori Terbakar` dengan metode Extreme Gradient atau XGBoost menggunakan parameter sebagai berikut yaitu n_estimators sebesar 100, learning rate 0.1, max_depth sebesar 6, colsample_bytree sebesar 0.8, dan subsample 0.8 poin.
 
 <table style="width: 100%; text-align: center;">
   <tbody>
@@ -1244,11 +1108,183 @@ Hasil dari model ini sangat baik dengan Adjusted Rsquared sebesar 0.9696 dan MSE
   </tbody>
 </table>
 
+Parameter `Model Kadar Lemak Tubuh` dengan algoritma boosting metode Extreme Gradient atau XGBoost dicari melalui GridSearch karena hasil iterasi pertama model menghasilkan akurasi yang kurang memuaskan.
+
+
+    Fitting 3 folds for each of 1944 candidates, totalling 5832 fits
+    Best Parameters: {'colsample_bytree': 0.8, 'gamma': 0.2, 'learning_rate': 0.1, 'max_depth': 3, 'n_estimators': 50, 'reg_alpha': 0, 'reg_lambda': 10.0, 'subsample': 1.0}
+    Best Training RMSE: 0.4484218489853021
+    Test RMSE: 0.45672201756778374
+
+
+Parameter yang didapat adalah n_estimators sebesar 50, learning rate 0.1, max_depth sebesar 3, colsample_bytree sebesar 0.8, subsample 1.0 lalu reg_alpha 0, dan reg_lambda sebesar 10.0 poin.
+
+<table>
+  <tbody>
+    <tr>
+      <td style="background-color: #add8e6; color: #000;">XGBRegressor</td>
+    </tr>
+    <tr>
+      <td style="background-color: #e6f7ff; color: #000;"><code>XGBRegressor(base_score=None, booster=None, callbacks=None,
+             colsample_bylevel=None, colsample_bynode=None,
+             colsample_bytree=0.8, device=None, early_stopping_rounds=None,
+             enable_categorical=False, eval_metric=None, feature_types=None,
+             gamma=0.2, grow_policy=None, importance_type=None,
+             interaction_constraints=None, learning_rate=0.1, max_bin=None,
+             max_cat_threshold=None, max_cat_to_onehot=None,
+             max_delta_step=None, max_depth=3, max_leaves=None,
+             min_child_weight=None, missing=nan, monotone_constraints=None,
+             multi_strategy=None, n_estimators=50, n_jobs=None,
+             num_parallel_tree=None, random_state=None, ...)</code></td>
+    </tr>
+  </tbody>
+</table>
 
 
 
 
 
+## **Evaluasi**
+
+Setelah itu dipilih dua metrik utama untuk digunakan sebagai pembanding yaitu Adjusted R² dan Mean Squared Error. Keduanya dipilih karena variabel bebas digunakan tidak hanya satu jadi dibutuhkan metrik yang andal dengan jumlah variabel bebas yang lebih dari satu.
+
+**Adjusted R² (Adjusted R-Squared)**
+
+R² mengukur seberapa baik model regresi linier dapat menjelaskan variasi data. Nilainya antara 0 hingga 1, semakin tinggi nilai R², semakin baik model dalam menjelaskan data. Namun, R² bisa meningkat hanya dengan menambahkan variabel bebas ke dalam model, meskipun variabel tersebut mungkin tidak relevan. Karena itu, Adjusted R² digunakan untuk memberikan penilaian yang lebih akurat.
+
+Formula Adjusted R²:
+
+`Adjusted R² = 1 - ((1 - R²) * (n - 1)) / (n - p - 1)`
+
+R²: Koefisien determinasi
+
+n: Jumlah data (observasi)
+
+p: Jumlah variabel bebas
+
+Cara Kerja:
+
+Adjusted R² memperhitungkan jumlah variabel dan jumlah data, membuatnya lebih andal daripada R² saat membandingkan model dengan jumlah variabel yang berbeda.
+Jika variabel baru ditambahkan dan relevan, Adjusted R² akan meningkat. Sebaliknya, jika variabel tersebut tidak relevan, Adjusted R² akan menurun, menunjukkan model menjadi lebih kompleks tanpa nilai tambah.
+Adjusted R² lebih cocok digunakan untuk membandingkan model yang memiliki jumlah variabel yang berbeda.
+Contoh:
+Jika Adjusted R² sebuah model adalah 0.85, itu berarti model tersebut dapat menjelaskan 85% variasi data dengan memperhitungkan jumlah variabel dalam model.
+
+**MSE (Mean Squared Error)**
+
+MSE adalah ukuran yang digunakan untuk menghitung rata-rata kesalahan kuadrat antara nilai yang diprediksi oleh model dan nilai aktual. Ini adalah alat yang digunakan untuk mengevaluasi akurasi prediksi model.
+
+Formula MSE:
+
+`MSE = (1 / n) * Σ(yᵢ - ŷᵢ)²`
+
+yᵢ: Nilai aktual (observasi sebenarnya)
+
+ŷᵢ: Nilai prediksi model
+
+n: Jumlah data (observasi)
+
+Cara Kerja:
+
+MSE mengukur rata-rata kuadrat selisih antara nilai yang diprediksi dan nilai yang sebenarnya.
+Nilai MSE yang lebih kecil menunjukkan model yang lebih baik, karena perbedaan antara nilai yang diprediksi dan nilai aktual lebih kecil.
+MSE sangat sensitif terhadap outlier, karena kesalahan dihitung dalam bentuk kuadrat. Jadi, jika ada data yang sangat berbeda, MSE bisa menjadi lebih besar.
+Contoh:
+Jika MSE model adalah 4, itu berarti rata-rata kuadrat perbedaan antara nilai prediksi dan nilai aktual adalah 4, menunjukkan model memiliki kesalahan yang relatif besar dibandingkan dengan model dengan MSE lebih kecil.
+
+Selain metrik utama tersebut, Berikut metrik-metrik lain yang digunakan sebagai pembanding.
+**R² Score (Coefficient of Determination)**
+   
+`R² = 1 - ( Σ(y_i - ŷ_i)² / Σ(y_i - ȳ)² )`
+
+Mengukur seberapa baik model menjelaskan variabilitas data target; nilai mendekati 1 menunjukkan model yang baik.
+
+**Root Mean Squared Error (RMSE)**
+   
+`RMSE = √( Σ(y_i - ŷ_i)² / n )`
+
+Mengukur rata-rata kesalahan prediksi model dalam satuan yang sama dengan data aslinya; semakin kecil, semakin baik.
+
+**Mean Absolute Error (MAE)**
+   
+`MAE = Σ|y_i - ŷ_i| / n`
+
+Mengukur rata-rata kesalahan absolut antara prediksi dan nilai aktual; mencerminkan kesalahan rata-rata model.
+
+**Explained Variance**
+   
+`Explained Variance = 1 - ( Var(y - ŷ) / Var(y) )`
+
+Mengukur proporsi varians data target yang dapat dijelaskan oleh model; semakin tinggi, semakin baik.
+
+- y_i: nilai sebenarnya
+- ŷ_i: nilai prediksi
+- ȳ: mean dari nilai sebenarnya
+- n: jumlah data
+- Var(x): varians dari x
+
+
+
+
+
+### Model Kalori Terbakar
+
+#### Random Forest
+
+    Model Performance (RF):
+                               0
+    Model                     RF
+    R2 Score            0.970312
+    Adjusted R2         0.967643
+    RMSE                0.182629
+    MAE                  0.13895
+    MSE                 0.033353
+    Explained Variance  0.970519
+
+![png](gambar_files/gambar_97_2.png)
+    
+Model yang dihasilkan cukup bagus dengan Adjusted Rsquared sebesar 0.9676 dan MSE 0.0334 yang berada dibawah 0.1 nilainya.
+
+#### KNN
+
+    Model Performance (KNN):
+                               0
+    Model                    KNN
+    R2 Score            0.849978
+    Adjusted R2         0.836493
+    RMSE                0.410542
+    MAE                 0.332696
+    MSE                 0.168544
+    Explained Variance  0.850501
+    
+![png](gambar_files/gambar_102_1.png)
+    
+
+Model ini tidak sebagus model sebelumnya namun masih cukup bagus di Adjusted Rsquared sebesar 0.8365 dan nilai MSE di atas 0.1 yaitu 0.1685 pada model ini.
+
+#### SVR
+
+    
+    Model Performance (SVR):
+                               0
+    Model                    SVR
+    R2 Score            0.972084
+    Adjusted R2         0.969575
+    RMSE                0.177094
+    MAE                 0.127105
+    MSE                 0.031362
+    Explained Variance  0.972092
+
+
+
+    
+![png](gambar_files/gambar_107_1.png)
+    
+
+
+Hasil dari model ini sangat baik dengan Adjusted Rsquared sebesar 0.9696 dan MSE 0.0314.
+
+#### XGBoost
     
     Model Performance (XGBoost):
                                0
@@ -1296,44 +1332,11 @@ Hasilnya sangat bagus dengn Adjusted Rsquares sebesar 0.9854 dan MSE yang sangat
 Model terbaik untuk variabel Kalori Terbakar adalah dengan Metode XGBoost yaitu dengan Adjusted Rsquared 0.9854.
 
 
-
-
-
-
-
-
-
 ### Model Kadar Lemak Tubuh
-
-
 
 #### Random Forest
 
 
-
-
-
-
-
-<table>
-  <tbody>
-    <tr>
-      <td style="background-color: #add8e6; color: #000;">RandomForestRegressor</td>
-    </tr>
-    <tr>
-      <td style="background-color: #e6f7ff; color: #000;"><code>RandomForestRegressor(random_state=42)</code></td>
-    </tr>
-  </tbody>
-</table>
-
-
-
-
-
-
-
-
-    
     Model Performance (RF):
                                0
     Model                     RF
@@ -1344,37 +1347,12 @@ Model terbaik untuk variabel Kalori Terbakar adalah dengan Metode XGBoost yaitu 
     MSE                 0.198102
     Explained Variance   0.80439
 
-
-
     
 ![png](gambar_files/gambar_124_2.png)
     
-
-
 Model yang dihasilkan kurang bagus dengan Adjusted Rsquared sebesar 0.7891 dan MSE 0.1981 yang relatif besar galatnya.
 
 #### KNN
-
-
-
-
-
-
-
-
-
-<table>
-  <tbody>
-    <tr>
-      <td style="background-color: #add8e6; color: #000;">RandomForestRegressor</td>
-    </tr>
-    <tr>
-      <td style="background-color: #e6f7ff; color: #000;"><code>RandomForestRegressor(random_state=42)</code></td>
-    </tr>
-  </tbody>
-</table>
-
-
 
 
 
@@ -1388,38 +1366,12 @@ Model yang dihasilkan kurang bagus dengan Adjusted Rsquared sebesar 0.7891 dan M
     MSE                 0.226398
     Explained Variance  0.778555
 
-
-
-    
 ![png](gambar_files/gambar_129_1.png)
     
-
 
 Model ini lebih buruk dari model sebelumnya namun masih cukup di Adjusted Rsquared sebesar 0.7590 dan nilai MSE tinggi di atas 0.1 yaitu 0.2264 pada model ini.
 
 #### SVR
-
-
-
-
-
-
-
-
-
-<table>
-  <tbody>
-    <tr>
-      <td style="background-color: #add8e6; color: #000;">SVR</td>
-    </tr>
-    <tr>
-      <td style="background-color: #e6f7ff; color: #000;"><code>SVR(C=1, epsilon=0.5)</code></td>
-    </tr>
-  </tbody>
-</table>
-
-
-
 
     
     Model Performance (SVR):
@@ -1432,8 +1384,6 @@ Model ini lebih buruk dari model sebelumnya namun masih cukup di Adjusted Rsquar
     MSE                 0.237811
     Explained Variance  0.767112
 
-
-
     
 ![png](gambar_files/gambar_136_1.png)
     
@@ -1442,40 +1392,6 @@ Model ini lebih buruk dari model sebelumnya namun masih cukup di Adjusted Rsquar
 Hasil dari model ini kurang baik dengan Adjusted Rsquared sebesar 0.7469 dan MSE 0.2378.
 
 #### XGBoost
-
-
-
-
-
-
-
-
-
-<table>
-  <tbody>
-    <tr>
-      <td style="background-color: #add8e6; color: #000;">XGBRegressor</td>
-    </tr>
-    <tr>
-      <td style="background-color: #e6f7ff; color: #000;"><code>XGBRegressor(base_score=None, booster=None, callbacks=None,
-             colsample_bylevel=None, colsample_bynode=None,
-             colsample_bytree=0.8, device=None, early_stopping_rounds=None,
-             enable_categorical=False, eval_metric=None, feature_types=None,
-             gamma=0.2, grow_policy=None, importance_type=None,
-             interaction_constraints=None, learning_rate=0.1, max_bin=None,
-             max_cat_threshold=None, max_cat_to_onehot=None,
-             max_delta_step=None, max_depth=3, max_leaves=None,
-             min_child_weight=None, missing=nan, monotone_constraints=None,
-             multi_strategy=None, n_estimators=50, n_jobs=None,
-             num_parallel_tree=None, random_state=None, ...)</code></td>
-    </tr>
-  </tbody>
-</table>
-
-
-
-
-
 
     
     Model Performance (XGBoost):
