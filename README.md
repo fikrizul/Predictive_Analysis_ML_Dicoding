@@ -1461,10 +1461,10 @@ Kesimpulan berdasarkan hasil dari *goal* yang telah dicapai:
    Model prediksi kadar lemak tubuh terbaik diantara algoritma **Random Forest (RF)**, **K-Nearest Neighbors (KNN)**, **Support Vector Regressor (SVR)**, dan **Extreme Gradient Boosting (XGBoost)** adalah dengan menggunakan algoritma **Random Forest (RF)**. Model prediksi kadar lemak tubuh memiliki *adjusted R²* sebesar **0.7891**, menunjukkan bahwa model ini cukup baik dalam memprediksi kadar lemak tubuh. Namun, masih ada ruang untuk meningkatkan akurasi model, mungkin dengan menambahkan variabel atau data yang lebih relevan.  
 
 3. **Preferensi Latihan Berdasarkan Gender**  
-   Analisis tidak menemukan perbedaan yang signifikan dalam preferensi latihan antara laki-laki dan perempuan. Hal ini mengindikasikan bahwa program latihan dapat dirancang dengan pendekatan yang lebih umum tanpa perlu pemisahan berdasarkan gender.  
+   Analisis **EDA** tidak menemukan perbedaan yang signifikan dalam preferensi latihan antara laki-laki dan perempuan. Hal ini mengindikasikan bahwa program latihan dapat dirancang dengan pendekatan yang lebih umum tanpa perlu pemisahan berdasarkan gender.  
 
 4. **Preferensi Berdasarkan Tingkat Kemahiran**  
-   Tidak ada hubungan signifikan yang ditemukan antara tingkat kemahiran dan preferensi latihan. Artinya, preferensi latihan kemungkinan lebih dipengaruhi oleh faktor lain, seperti tujuan kebugaran individu atau akses ke fasilitas, daripada tingkat kemahiran.  
+   Tidak ada hubungan signifikan yang ditemukan antara tingkat kemahiran dan preferensi latihan dari analisis **EDA**. Artinya, preferensi latihan kemungkinan lebih dipengaruhi oleh faktor lain, seperti tujuan kebugaran individu atau akses ke fasilitas, daripada tingkat kemahiran.  
 
 
 Secara keseluruhan, model prediksi yang kuat untuk kalori terbakar dan kadar lemak tubuh telah berhasil dibuat. Hasil analisis preferensi menunjukkan bahwa pendekatan umum dapat diambil tanpa perlu memperhatikan perbedaan gender atau tingkat kemahiran. Langkah selanjutnya dapat difokuskan pada pengembangan program latihan berbasis data, peningkatan model kadar lemak tubuh, atau eksplorasi faktor-faktor lain yang mungkin memengaruhi preferensi individu.
