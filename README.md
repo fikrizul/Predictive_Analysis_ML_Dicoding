@@ -1193,6 +1193,7 @@ Contoh:
 Jika MSE model adalah 4, itu berarti rata-rata kuadrat perbedaan antara nilai prediksi dan nilai aktual adalah 4, menunjukkan model memiliki kesalahan yang relatif besar dibandingkan dengan model dengan MSE lebih kecil.
 
 Selain metrik utama tersebut, Berikut metrik-metrik lain yang digunakan sebagai pembanding.
+
 **R² Score (Coefficient of Determination)**
    
 `R² = 1 - ( Σ(y_i - ŷ_i)² / Σ(y_i - ȳ)² )`
