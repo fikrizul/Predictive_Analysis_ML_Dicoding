@@ -1143,7 +1143,9 @@ Parameter yang didapat adalah n_estimators sebesar 50, learning rate 0.1, max_de
 
 
 
+### Model Terbaik
 
+Berdasarakan evaluasi metrik utama pembanding maka model terbaik untuk memprediksi `kalori terbakar` adalah model **XGBoost** dan model terbaik untuk memprediksi `kadar lemak tubuh` adalah model **Random Forest**. Kedua model ini dipilih karena memiliki Adjusted Rsquared paling mendekati 1 dan MSE yang paling minimum. Penjelasan lebih lanjut tentang metrik evaluasi akan dijelaskan di rubrik evaluasi.
 
 ## **Evaluasi**
 
