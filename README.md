@@ -1146,6 +1146,8 @@ Parameter yang didapat adalah n_estimators sebesar 50, learning rate 0.1, max_de
 
 ## **Evaluasi**
 
+### Metrik
+
 Setelah itu dipilih dua metrik utama untuk digunakan sebagai pembanding yaitu Adjusted R² dan Mean Squared Error. Keduanya dipilih karena variabel bebas digunakan tidak hanya satu jadi dibutuhkan metrik yang andal dengan jumlah variabel bebas yang lebih dari satu.
 
 **Adjusted R² (Adjusted R-Squared)**
@@ -1225,7 +1227,13 @@ Mengukur proporsi varians data target yang dapat dijelaskan oleh model; semakin 
 - Var(x): varians dari x
 
 
+### Grafik
 
+Grafik yang disajikan dalam evaluasi ini adalah grafik antara hasil prediksi dengan nilai asli yang terdapat dalam data. seperti contoh berikut
+
+![png](gambar_files/gambar_97_2.png)
+
+gambar tersebut menunjukan titik-titik hasil plot antara nilai prediksi pada sumbu y dan nilai ebenarnya pada sumbu X. Ketika nilai keduanya sama maka akan memenuhi garis diagonal 45 derajat. Jika nilai prediksi lebih kecil dari nilai sebenarnya maka titik akan berada diatas garis. Dan apabila nilai prediksi lebih besar dari nilai sebenarnya, titik tersebut akan berada di bawah garis. Grafik tersebut berguna untuk melihat persebaran data yang melenceng dari nilai prediksi
 
 
 ### Model Kalori Terbakar
