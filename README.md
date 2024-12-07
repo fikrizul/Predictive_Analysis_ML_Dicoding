@@ -1165,12 +1165,13 @@ $$
 
 $$
 \begin{aligned}
-R^2: \text{Koefisien determinasi}
-n: \text{Jumlah data (observasi)}
-p: \text{Jumlah variabel bebas}
-R_{\text{adj}}^2 : \text{Adjusted } R^2
+R^2 & : \text{Koefisien determinasi} \\
+n & : \text{Jumlah data (observasi)} \\
+p & : \text{Jumlah variabel bebas} \\
+R_{\text{adj}}^2 & : \text{Adjusted } R^2
 \end{aligned}
 $$
+
 
 
 
@@ -1196,11 +1197,12 @@ $$
 
 $$
 \begin{aligned}
-y_i : \text{Nilai aktual (observasi sebenarnya)}
-\hat{y}_i : \text{Nilai prediksi model}
-n : \text{Jumlah data (observasi)}
+y_i & : \text{Nilai aktual (observasi sebenarnya)} \\
+\hat{y}_i & : \text{Nilai prediksi model} \\
+n & : \text{Jumlah data (observasi)}
 \end{aligned}
 $$
+
 
 
 Cara Kerja:
@@ -1223,7 +1225,7 @@ $$
 Mengukur seberapa baik model menjelaskan variabilitas data target; nilai mendekati 1 menunjukkan model yang baik.
 
 **Root Mean Squared Error (RMSE)**
-   
+
 $$
 \text{RMSE} = \sqrt{\frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{n}}
 $$
