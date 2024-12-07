@@ -762,9 +762,9 @@ Data yang sudah dalam bentuk numerik dari beberapa proses diatas akan dinormalis
 
 Data kemudian displit dengan perbandingan 80% training data dan 20% test data, proses ini dilakukan secara acak dengan `random state` bernilai 42.
 
-#### Model Kalori Terbakar
+#### **Model Optimasi Pengeluaran Energi**
 
-Pembuatan data untuk model Kalori Terbakar yaitu dengan mendrop kolom Kalori Terbakar dari keseluruhan Data untuk membentuk nilai X sebagai variabel bebas. Semua kolom digunakan kecuali kolom Kalori Terbakar yang akan digunakan sebagai y atau variabel terikat.
+Pembuatan data untuk `Model Optimasi Pengeluaran Energi` yaitu dengan mendrop kolom `Kalori Terbakar` dari keseluruhan Data untuk membentuk nilai X sebagai variabel bebas. Kolom `Kalori Terbakar` dibuatkan dataframe baru yang akan digunakan sebagai y atau variabel terikat.
 
 
  
@@ -889,9 +889,9 @@ Pembuatan data untuk model Kalori Terbakar yaitu dengan mendrop kolom Kalori Ter
   </tbody>
 </table>
 
-### **Model Kadar Lemak Tubuh**
+#### **Model Penyesuaian Kadar Lemak Tubuh**
 
-Proses pembuatan data untuk model Kadar Lemak Tubuh dilakukan dengan menghapus kolom Kadar Lemak Tubuh dari seluruh dataset, sehingga menghasilkan nilai X sebagai variabel bebas. Semua kolom lainnya digunakan, kecuali kolom Kadar Lemak Tubuh yang akan menjadi variabel terikat atau y.
+Proses pembuatan data untuk `Model Penyesuaian Kadar Lemak Tubuh` dilakukan dengan menghapus kolom `Kadar Lemak Tubuh` dari seluruh dataset, sehingga menghasilkan nilai X sebagai variabel bebas. Semua kolom lainnya digunakan, kecuali kolom `Kadar Lemak Tubuh` yang akan menjadi variabel terikat atau y yang dibuat dataframe baru dengan satu kolom tersebut.
 
  
 <table border="1" class="dataframe">
@@ -1005,7 +1005,7 @@ Proses pembuatan data untuk model Kadar Lemak Tubuh dilakukan dengan menghapus k
 
 ## **Pemodelan**
 
-Model yang akan dibuat ada dua yaitu `Model Kalori Terbakar` yang digunakan untuk mencari faktor apa saja yang memengaruhi efektifitas latihan dalam gym serta `Model Kadar Lemak Tubuh` yang digunakan untuk mencari kebiasaan-kebiasaan latihan apa saja yang harus dilakukan untuk mencapai target tipe tubuh tertentu.
+Model yang akan dibuat ada dua yaitu `Model Optimasi Pengeluaran Energi` yang digunakan untuk mencari faktor apa saja yang memengaruhi efektifitas pembakaran kalori latihan dalam gym serta `Model Penyesuaian Kadar Lemak Tubuh` yang digunakan untuk mencari kebiasaan-kebiasaan latihan apa saja yang harus dilakukan untuk mencapai target tipe tubuh dengan kadar lemak tubuh tertentu.
 
 Ada 4 algoritma yang dipilih dengan framework yang berbeda yaitu Random Forest, K-Nearest Neighbors, Support Vector Reressor dan XGboost. Random Forest (RF) unggul dalam menangani data kompleks dan besar, serta dapat mengurangi risiko overfitting dengan menggunakan banyak pohon keputusan tanpa membutuhkan praproses data yang rumit. Namun, proses pelatihan dan prediksi bisa lebih lambat dan sulit diinterpretasi. K-Nearest Neighbors (KNN) sederhana dan mudah dipahami, tidak memerlukan pelatihan, serta dapat digunakan untuk regresi dan klasifikasi, tetapi kinerjanya menurun pada dataset besar dan sangat sensitif terhadap noise serta data yang tidak seimbang. Support Vector Regression (SVR) efektif untuk data dengan dimensi tinggi dan linearitas kompleks serta dapat menangani noise, namun kurang efisien untuk dataset besar dan sulit diinterpretasi karena bergantung pada pemilihan kernel dan parameter yang tepat. XGBoost cepat, efisien, dan sering menghasilkan akurasi tinggi dengan regularisasi yang baik untuk mengurangi overfitting, namun dapat overfit jika tidak dikonfigurasi dengan benar, memerlukan pemilihan hyperparameter yang tepat, dan model yang dihasilkan sulit diinterpretasi.
 
@@ -1051,7 +1051,7 @@ Kedua model K-Nearest Neighbors yang dibuat adalah dengan jumlah n_neighbors=10.
 ### Support Vector Regressor
 Support Vector Regressor (SVR) adalah versi regresi dari Support Vector Machine (SVM) yang bekerja dengan mencari hyperplane terbaik dalam ruang dimensi tinggi untuk memprediksi nilai target. Algoritma ini menggunakan kernel seperti linear, polynomial, atau RBF untuk menangani hubungan data yang kompleks dan non-linear. SVR sangat efektif untuk data berdimensi tinggi dan dapat menangani noise dengan baik. Namun, algoritma ini kurang efisien pada dataset besar karena waktu komputasi yang tinggi, serta sulit diinterpretasi karena hasilnya bergantung pada pemilihan kernel dan parameter yang tepat seperti C, epsilon, dan gamma.
 
-`Model Kalori Terbakar` menggunakan Support Vector Regression dengan parameter standar dengan C sebesar 100 dan epsilon sebesar 0.1 untuk dilakukan regresi. 
+`Model Optimasi Pengeluaran Energi` menggunakan Support Vector Regression dengan parameter standar dengan C sebesar 100 dan epsilon sebesar 0.1 untuk dilakukan regresi. 
 
 <table style="width: 100%; text-align: center;">
   <tbody>
@@ -1065,7 +1065,7 @@ Support Vector Regressor (SVR) adalah versi regresi dari Support Vector Machine 
 </table>
 
 
-Model Support Vector Regression pada `Model Kadar Lemak Tubuh` menggunakan teknik Gridsearch untuk menentukan parameternya. Gridsearcgh digunakan karena model awal SVR memiliki nilai metrik akurasi yang sangat rendah. Hasil GridSearch adalah sebagai berikut.
+Model Support Vector Regression pada `Model Penyesuaian Kadar Lemak Tubuh` menggunakan teknik Gridsearch untuk menentukan parameternya. Gridsearch digunakan karena model awal SVR memiliki nilai metrik akurasi yang sangat rendah. Hasil GridSearch adalah sebagai berikut.
 
     Best Parameters: {'C': 1, 'epsilon': 0.5, 'gamma': 'scale'}
     Best Score: -0.23618483737773482
@@ -1084,9 +1084,9 @@ Parameter model terbaik melalui Gridsearch adalah dengan C sama dengan 1, epsilo
 </table>
 
 ### XGBoost
-XGBoost adalah algoritma boosting berbasis pohon keputusan yang membangun model secara iteratif, di mana setiap pohon keputusan  baru dirancang untuk memperbaiki kesalahan dari pohon sebelumnya. XGBoost dilengkapi dengan regularisasi L1 dan L2 yang membantu mengurangi risiko overfitting dan sering kali menghasilkan akurasi tinggi. Algoritma ini juga sangat cepat dan efisien, karena menggunakan teknik optimasi yang canggih. Namun, konfigurasi hyperparameter yang kompleks dan struktur model yang sulit diinterpretasi menjadi kelemahan utama. Selain itu, jika pengaturan model tidak tepat, XGBoost berpotensi mengalami overfitting. 
+XGBoost adalah algoritma boosting berbasis pohon keputusan yang membangun model secara iteratif, yang setiap pohon keputusan  baru dirancang untuk memperbaiki kesalahan dari pohon keputusan sebelumnya. XGBoost dilengkapi dengan regularisasi L1 dan L2 yang membantu mengurangi risiko overfitting dan sering kali menghasilkan akurasi tinggi. Algoritma ini juga sangat cepat dan efisien, karena menggunakan teknik optimasi yang canggih. Namun, konfigurasi hyperparameter yang kompleks dan struktur model yang sulit diinterpretasi menjadi kelemahan utama. Selain itu, jika pengaturan model tidak tepat, XGBoost berpotensi mengalami overfitting. 
 
-`Model Kalori Terbakar` dengan metode Extreme Gradient atau XGBoost menggunakan parameter sebagai berikut yaitu n_estimators sebesar 100, learning rate 0.1, max_depth sebesar 6, colsample_bytree sebesar 0.8, dan subsample 0.8 poin.
+`Model Optimasi Pengeluaran Energi` dengan metode Extreme Gradient atau XGBoost menggunakan parameter sebagai berikut yaitu n_estimators sebesar 100, learning rate 0.1, max_depth sebesar 6, colsample_bytree sebesar 0.8, dan subsample 0.8 poin.
 
 <table style="width: 100%; text-align: center;">
   <tbody>
@@ -1109,7 +1109,7 @@ XGBoost adalah algoritma boosting berbasis pohon keputusan yang membangun model 
   </tbody>
 </table>
 
-Parameter `Model Kadar Lemak Tubuh` dengan algoritma boosting metode Extreme Gradient atau XGBoost dicari melalui GridSearch karena hasil iterasi pertama model menghasilkan akurasi yang kurang memuaskan.
+Parameter `Model Penyesuaian Kadar Lemak Tubuh` dengan algoritma boosting metode Extreme Gradient atau XGBoost dicari melalui GridSearch karena hasil iterasi pertama model menghasilkan akurasi yang kurang memuaskan.
 
 
     Fitting 3 folds for each of 1944 candidates, totalling 5832 fits
@@ -1145,7 +1145,7 @@ Parameter yang didapat adalah n_estimators sebesar 50, learning rate 0.1, max_de
 
 ### Model Terbaik
 
-Berdasarakan evaluasi metrik utama pembanding maka model terbaik untuk memprediksi `kalori terbakar` adalah model **XGBoost** dan model terbaik untuk memprediksi `kadar lemak tubuh` adalah model **Random Forest**. Kedua model ini dipilih karena memiliki Adjusted Rsquared paling mendekati 1 dan MSE yang paling minimum. Penjelasan lebih lanjut tentang metrik evaluasi akan dijelaskan di rubrik evaluasi.
+Berdasarakan evaluasi metrik utama pembanding maka model terbaik dari `Model Optimasi Pengeluaran Energi` adalah dengan metode **XGBoost** dan model terbaik dari `Model Penyesuaian Kadar Lemak Tubuh` adalah model dengan metode **Random Forest**. Kedua model ini dipilih karena memiliki Adjusted Rsquared paling mendekati 1 dan MSE yang paling minimum. Penjelasan lebih lanjut tentang metrik evaluasi akan dijelaskan di rubrik evaluasi.
 
 ## **Evaluasi**
 
@@ -1159,13 +1159,28 @@ R² mengukur seberapa baik model regresi linier dapat menjelaskan variasi data. 
 
 Formula Adjusted R²:
 
-`Adjusted R² = 1 - ((1 - R²) * (n - 1)) / (n - p - 1)`
+$$
+R_{\text{adj}}^2 = 1 - \frac{(1 - R^2)(n - 1)}{n - p - 1}
+$$
 
-R²: Koefisien determinasi
+$$
+R^2: \text{Koefisien determinasi}
+$$
 
-n: Jumlah data (observasi)
+$$
+n: \text{Jumlah data (observasi)}
+$$
 
-p: Jumlah variabel bebas
+$$
+p: \text{Jumlah variabel bebas}
+$$
+
+$$
+R_{\text{adj}}^2 : \text{Adjusted } R^2
+$$
+
+
+
 
 Cara Kerja:
 
@@ -1181,13 +1196,23 @@ MSE adalah ukuran yang digunakan untuk menghitung rata-rata kesalahan kuadrat an
 
 Formula MSE:
 
-`MSE = (1 / n) * Σ(yᵢ - ŷᵢ)²`
 
-yᵢ: Nilai aktual (observasi sebenarnya)
+$$
+\text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
+$$
 
-ŷᵢ: Nilai prediksi model
+$$
+y_i : \text{Nilai aktual (observasi sebenarnya)}
+$$
 
-n: Jumlah data (observasi)
+$$
+\hat{y}_i : \text{Nilai prediksi model}
+$$
+
+$$
+n : \text{Jumlah data (observasi)}
+$$
+
 
 Cara Kerja:
 
@@ -1201,33 +1226,62 @@ Selain metrik utama tersebut, Berikut metrik-metrik lain yang digunakan sebagai 
 
 **R² Score (Coefficient of Determination)**
    
-`R² = 1 - ( Σ(y_i - ŷ_i)² / Σ(y_i - ȳ)² )`
+$$
+R^2 = 1 - \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} (y_i - \bar{y})^2}
+$$
+
 
 Mengukur seberapa baik model menjelaskan variabilitas data target; nilai mendekati 1 menunjukkan model yang baik.
 
 **Root Mean Squared Error (RMSE)**
    
-`RMSE = √( Σ(y_i - ŷ_i)² / n )`
+$$
+\text{RMSE} = \sqrt{\frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{n}}
+$$
+
 
 Mengukur rata-rata kesalahan prediksi model dalam satuan yang sama dengan data aslinya; semakin kecil, semakin baik.
 
 **Mean Absolute Error (MAE)**
    
-`MAE = Σ|y_i - ŷ_i| / n`
+$$
+\text{MAE} = \frac{\sum_{i=1}^{n} |y_i - \hat{y}_i|}{n}
+$$
+
 
 Mengukur rata-rata kesalahan absolut antara prediksi dan nilai aktual; mencerminkan kesalahan rata-rata model.
 
 **Explained Variance**
-   
-`Explained Variance = 1 - ( Var(y - ŷ) / Var(y) )`
 
+$$
+\text{Explained Variance} = 1 - \frac{\text{Var}(y - \hat{y})}{\text{Var}(y)}
+$$
+
+   
 Mengukur proporsi varians data target yang dapat dijelaskan oleh model; semakin tinggi, semakin baik.
 
-- y_i: nilai sebenarnya
-- ŷ_i: nilai prediksi
-- ȳ: mean dari nilai sebenarnya
-- n: jumlah data
-- Var(x): varians dari x
+penjelasan simbol:
+
+$$
+y_i : \text{nilai sebenarnya}
+$$
+
+$$
+\hat{y}_i : \text{nilai prediksi}
+$$
+
+$$
+\bar{y} : \text{mean dari nilai sebenarnya}
+$$
+
+$$
+n : \text{jumlah data}
+$$
+
+$$
+\text{Var}(x) : \text{varians dari } x
+$$
+
 
 
 ### Grafik
@@ -1239,7 +1293,7 @@ Grafik yang disajikan dalam evaluasi ini adalah grafik antara hasil prediksi den
 gambar tersebut menunjukan titik-titik berwarna biru hasil plot antara nilai prediksi pada sumbu y dan nilai sebenarnya pada sumbu X. Ketika nilai keduanya sama maka akan memenuhi garis diagonal 45 derajat berwarna merah. Jika nilai prediksi lebih kecil dari nilai sebenarnya maka titik akan berada diatas garis. Dan apabila nilai prediksi lebih besar dari nilai sebenarnya, titik tersebut akan berada di bawah garis. Grafik tersebut berguna untuk melihat persebaran data yang melenceng dari nilai prediksi
 
 
-### Model Kalori Terbakar
+### Model Optimasi Pengeluaran Energi
 
 #### Random Forest
 
@@ -1341,10 +1395,10 @@ Hasilnya sangat bagus dengn Adjusted Rsquares sebesar 0.9854 dan MSE yang sangat
     
 
 
-Model terbaik untuk variabel Kalori Terbakar adalah dengan Metode XGBoost yaitu dengan Adjusted Rsquared 0.9854.
+Model terbaik dalam `Model Optimasi Pengeluaran Energi` adalah dengan Metode XGBoost yaitu dengan Adjusted Rsquared 0.9854 dan MSE 0.015 yang sangat baik memprediksi jumlah `kalori terbakar` dari pola kebiasaan dalam gym.
 
 
-### Model Kadar Lemak Tubuh
+### Model Penyesuaian Kadar Lemak Tubuh
 
 #### Random Forest
 
@@ -1447,18 +1501,18 @@ Hasilnya agak sedikit lebih baik dengn Adjusted Rsquares sebesar 0.777978 dan MS
 ![png](gambar_files/gambar_146_1.png)
     
 
-Model terbaik untuk variabel Kadar Lemak Tubuh ternyata adalah model Random Forest dengan Adjusted Rsquared sebesar 0.7891 terbesar dari yang lain.
+Model terbaik dari `Model Penyesuaian Kadar Lemak Tubuh` ternyata adalah model Random Forest dengan Adjusted Rsquared sebesar 0.7891 dan MSE 0.1981 terbaik dari yang lain meskipun masih perlu ditingkatkan lagi.
 
 ## Kesimpulan
 
 Kesimpulan berdasarkan hasil dari *goal* yang telah dicapai:  
 
-1. **Model Prediksi Kalori Terbakar**  
-   Model prediksi kalori terbakar terbaik diantara algoritma **Random Forest (RF**), **K-Nearest Neighbors (KNN)**, **Support Vector Regressor (SVR)**, dan **Extreme Gradient Boosting (XGBoost)** adalah dengan menggunakan algoritma **Extreme Gradient Boosting (XGBoost)**. Model menunjukkan kinerja yang sangat baik dengan *adjusted R²* sebesar **0.9854** , menandakan bahwa model mampu menjelaskan sebagian besar variabilitas dalam jumlah kalori yang terbakar. Hal ini menunjukkan potensi yang tinggi untuk mengimplementasikan model ini dalam memberikan rekomendasi latihan yang efisien.
+1. **Model Optimasi Pengeluaran Energi**  
+   `Model Optimasi Pengeluaran Energi` terbaik diantara algoritma **Random Forest (RF**), **K-Nearest Neighbors (KNN)**, **Support Vector Regressor (SVR)**, dan **Extreme Gradient Boosting (XGBoost)** adalah dengan menggunakan algoritma **Extreme Gradient Boosting (XGBoost)**. Model menunjukkan kinerja yang sangat baik dengan *adjusted R²* sebesar **0.9854** dan *MSE* **0.0151**, menandakan bahwa model mampu menjelaskan sebagian besar variabilitas dalam jumlah kalori yang terbakar. Hal ini menunjukkan potensi yang tinggi untuk mengimplementasikan model ini dalam memberikan rekomendasi latihan yang efisien.
 
 
 2. **Model Prediksi Kadar Lemak Tubuh**  
-   Model prediksi kadar lemak tubuh terbaik diantara algoritma **Random Forest (RF)**, **K-Nearest Neighbors (KNN)**, **Support Vector Regressor (SVR)**, dan **Extreme Gradient Boosting (XGBoost)** adalah dengan menggunakan algoritma **Random Forest (RF)**. Model prediksi kadar lemak tubuh memiliki *adjusted R²* sebesar **0.7891**, menunjukkan bahwa model ini cukup baik dalam memprediksi kadar lemak tubuh. Namun, masih ada ruang untuk meningkatkan akurasi model, mungkin dengan menambahkan variabel atau data yang lebih relevan.  
+   Model prediksi kadar lemak tubuh terbaik diantara algoritma **Random Forest (RF)**, **K-Nearest Neighbors (KNN)**, **Support Vector Regressor (SVR)**, dan **Extreme Gradient Boosting (XGBoost)** adalah dengan menggunakan algoritma **Random Forest (RF)**. Model prediksi kadar lemak tubuh memiliki *adjusted R²* sebesar **0.7891** dan *MSE* **0.1981**, menunjukkan bahwa model ini cukup baik dalam memprediksi kadar lemak tubuh. Namun, masih ada ruang untuk meningkatkan akurasi model, mungkin dengan menambahkan variabel atau data yang lebih relevan.  
 
 3. **Preferensi Latihan Berdasarkan Gender**  
    Analisis **EDA** tidak menemukan perbedaan yang signifikan dalam preferensi latihan antara laki-laki dan perempuan. Hal ini mengindikasikan bahwa program latihan dapat dirancang dengan pendekatan yang lebih umum tanpa perlu pemisahan berdasarkan gender.  
