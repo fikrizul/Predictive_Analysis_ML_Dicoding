@@ -1012,7 +1012,7 @@ Ada 4 algoritma yang dipilih dengan framework yang berbeda yaitu Random Forest, 
 ### Random Forest
 Random Forest (RF) adalah algoritma ensemble learning yang bekerja dengan membangun banyak pohon keputusan secara independen menggunakan subset data dan fitur yang dipilih secara acak. Prediksi akhir ditentukan melalui rata-rata (untuk regresi) atau voting mayoritas (untuk klasifikasi). RF unggul dalam menangani data kompleks dan besar serta dapat mengurangi risiko overfitting melalui kombinasi banyak pohon keputusan. Selain itu, algoritma ini tidak memerlukan praproses data yang rumit, sehingga dapat langsung digunakan pada data mentah dengan outlier atau nilai kosong. Namun, proses pelatihannya relatif lambat karena memerlukan waktu untuk membangun banyak pohon, dan hasilnya sulit diinterpretasi karena merupakan agregasi dari model-model individual.
 
-Kedua model yang dibuat adalah Random Forest Regressor dengan n_estimators sebesar 100 dan random_state sebesar 42.
+Kedua model yang dibuat adalah Random Forest Regressor dengan n_estimators sebesar 100 dan random_state sebesar 42. n_estimators adalah jumlah pohon keputusan yang dibuat semakin besar jumlah pohon keputusan maka akan semakin kompleks modelnya dan beresiko overfitting sedangkan random_state adalah aturan pengacakan dari model, nilai yang sama akan menghasilkan situasi acak yang sama.
 
 <table style="width: 100%; text-align: center;">
   <tbody>
@@ -1029,7 +1029,7 @@ Kedua model yang dibuat adalah Random Forest Regressor dengan n_estimators sebes
 
 K-Nearest Neighbors (KNN) adalah algoritma yang sederhana dan intuitif karena tidak memerlukan proses pelatihan. Algoritma ini bekerja dengan mencari sejumlah tetangga terdekat (k) dari titik data yang akan diprediksi menggunakan metrik jarak, seperti Euclidean, kemudian membuat prediksi berdasarkan rata-rata (untuk regresi) atau voting (untuk klasifikasi) dari tetangga tersebut. KNN sangat cocok untuk dataset kecil dan mudah dipahami, serta fleksibel untuk berbagai tipe distribusi data. Namun, algoritma ini memiliki kelemahan berupa kinerja yang lambat pada dataset besar karena perhitungan jarak yang mahal, serta sangat sensitif terhadap noise dan data yang tidak seimbang. 
 
-Kedua model K-Nearest Neighbors yang dibuat adalah dengan jumlah n_neighbors=10.
+Kedua model K-Nearest Neighbors yang dibuat adalah dengan jumlah n_neighbors=10. Jumlah n_neighbors ini adalah seberapa banyak titik nilai terdekat yang diperhitungkan, semakin besar nilainya maka semakin banyak data diperhitungkan dan modelnya akan semakin general.
 
 
 <table style="width: 100%; text-align: center;">
@@ -1050,6 +1050,8 @@ Kedua model K-Nearest Neighbors yang dibuat adalah dengan jumlah n_neighbors=10.
 
 ### Support Vector Regressor
 Support Vector Regressor (SVR) adalah versi regresi dari Support Vector Machine (SVM) yang bekerja dengan mencari hyperplane terbaik dalam ruang dimensi tinggi untuk memprediksi nilai target. Algoritma ini menggunakan kernel seperti linear, polynomial, atau RBF untuk menangani hubungan data yang kompleks dan non-linear. SVR sangat efektif untuk data berdimensi tinggi dan dapat menangani noise dengan baik. Namun, algoritma ini kurang efisien pada dataset besar karena waktu komputasi yang tinggi, serta sulit diinterpretasi karena hasilnya bergantung pada pemilihan kernel dan parameter yang tepat seperti C, epsilon, dan gamma.
+
+Parameter C menentukan penalti terhadap error, sehingga nilai C yang lebih besar membuat model lebih sensitif terhadap data, berisiko overfitting, sementara C yang kecil menghasilkan model yang lebih sederhana, tetapi mungkin underfitting. Epsilon (𝜖) mengatur margin toleransi error di sekitar prediksi, di mana error dalam margin ini tidak dikenakan penalti; nilai 𝜖 yang besar meningkatkan toleransi error tetapi dapat mengurangi presisi. Gamma mengontrol pengaruh setiap titik data, di mana gamma yang tinggi membuat model lebih fokus pada data terdekat (risiko overfitting), sedangkan gamma rendah membuat pengaruh meluas ke lebih banyak data (risiko underfitting). 
 
 `Model Optimasi Pengeluaran Energi` menggunakan Support Vector Regression dengan parameter standar dengan C sebesar 100 dan epsilon sebesar 0.1 untuk dilakukan regresi. 
 
@@ -1086,7 +1088,9 @@ Parameter model terbaik melalui Gridsearch adalah dengan C sama dengan 1, epsilo
 ### XGBoost
 XGBoost adalah algoritma boosting berbasis pohon keputusan yang membangun model secara iteratif, yang setiap pohon keputusan  baru dirancang untuk memperbaiki kesalahan dari pohon keputusan sebelumnya. XGBoost dilengkapi dengan regularisasi L1 dan L2 yang membantu mengurangi risiko overfitting dan sering kali menghasilkan akurasi tinggi. Algoritma ini juga sangat cepat dan efisien, karena menggunakan teknik optimasi yang canggih. Namun, konfigurasi hyperparameter yang kompleks dan struktur model yang sulit diinterpretasi menjadi kelemahan utama. Selain itu, jika pengaturan model tidak tepat, XGBoost berpotensi mengalami overfitting. 
 
-`Model Optimasi Pengeluaran Energi` dengan metode Extreme Gradient atau XGBoost menggunakan parameter sebagai berikut yaitu n_estimators sebesar 100, learning rate 0.1, max_depth sebesar 6, colsample_bytree sebesar 0.8, dan subsample 0.8 poin.
+n_estimators adalah jumlah pohon keputusan yang jika terlalu besar beresiko overfitting, learning rate menentukan besar langkah yang diambil ketika melakukan iterasi yang semakin besar berarti setiap batch pelatihan mengolah lebih banyak data yang menjadikan model terlalu simple, max_depth menentukan jumlah sub pohon keputusan yang semakin besar maka semakin rumit modelnya, colsample_bytree adalah persentase pohon keputusan yang diperhitungkan yang semakin mendekati 1 berarti seluruh pohon keputusan diperhitungkan dan beresiko overfitting, subsample juga menentukan jumlah persentase sub pohon keputusan yang diperhitungkan sama seperti colsample_bytree jika mendekati 1 maka hampir semua sub pohon keputusan digunakan dan model akan semakin kompleks. untuk gamma, reg_alpha, reg_lambda adalah model regularization untuk mengurangi overfitting.
+
+`Model Optimasi Pengeluaran Energi` dengan metode Extreme Gradient atau XGBoost menggunakan parameter sebagai berikut yaitu n_estimators sebesar 100, learning rate 0.1, max_depth sebesar 6, colsample_bytree sebesar 0.8, dan subsample 0.8 poin.  
 
 <table style="width: 100%; text-align: center;">
   <tbody>
