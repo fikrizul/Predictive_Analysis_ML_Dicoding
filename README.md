@@ -1164,19 +1164,12 @@ R_{\text{adj}}^2 = 1 - \frac{(1 - R^2)(n - 1)}{n - p - 1}
 $$
 
 $$
+\begin{aligned}
 R^2: \text{Koefisien determinasi}
-$$
-
-$$
 n: \text{Jumlah data (observasi)}
-$$
-
-$$
 p: \text{Jumlah variabel bebas}
-$$
-
-$$
 R_{\text{adj}}^2 : \text{Adjusted } R^2
+\end{aligned}
 $$
 
 
@@ -1202,15 +1195,11 @@ $$
 $$
 
 $$
+\begin{aligned}
 y_i : \text{Nilai aktual (observasi sebenarnya)}
-$$
-
-$$
 \hat{y}_i : \text{Nilai prediksi model}
-$$
-
-$$
 n : \text{Jumlah data (observasi)}
+\end{aligned}
 $$
 
 
@@ -1262,26 +1251,16 @@ Mengukur proporsi varians data target yang dapat dijelaskan oleh model; semakin 
 
 penjelasan simbol:
 
-$$
-y_i : \text{nilai sebenarnya}
-$$
 
 $$
-\hat{y}_i : \text{nilai prediksi}
+\begin{aligned}
+y_i & : \text{nilai sebenarnya} \\
+\hat{y}_i & : \text{nilai prediksi} \\
+\bar{y} & : \text{mean dari nilai sebenarnya} \\
+n & : \text{jumlah data} \\
+\text{Var}(x) & : \text{varians dari } x
+\end{aligned}
 $$
-
-$$
-\bar{y} : \text{mean dari nilai sebenarnya}
-$$
-
-$$
-n : \text{jumlah data}
-$$
-
-$$
-\text{Var}(x) : \text{varians dari } x
-$$
-
 
 
 ### Grafik
