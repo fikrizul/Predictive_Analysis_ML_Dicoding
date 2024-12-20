@@ -1220,11 +1220,11 @@ Jika MSE model adalah 4, itu berarti rata-rata kuadrat perbedaan antara nilai pr
 Selain metrik utama tersebut, Berikut metrik-metrik lain yang digunakan sebagai pembanding.
 
 **R² Score (Coefficient of Determination)**
-   
-$$
-R^2 = 1 - \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} (y_i - \bar{y})^2}
-$$
 
+
+```math
+R^2 = 1 - \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} (y_i - \bar{y})^2}
+```
 
 Mengukur seberapa baik model menjelaskan variabilitas data target; nilai mendekati 1 menunjukkan model yang baik.
 
